@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 const config: Config = {
 	content: [
@@ -6,12 +7,16 @@ const config: Config = {
 		'./src/components/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/app/**/*.{js,ts,jsx,tsx,mdx}',
 	],
+	darkMode: 'class',
 	theme: {
 		extend: {
-			colors: {
-				background: 'var(--background)',
-				foreground: 'var(--foreground)',
+			fontFamily: {
+				primary: ['Roboto Thin', ...defaultTheme.fontFamily.sans],
 			},
+			colors: {
+				dark: '#0c1018',
+				light: '#f1f1f1',
+			}
 		},
 	},
 	plugins: [],

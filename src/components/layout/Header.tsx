@@ -13,11 +13,11 @@ import ThemeToggle from '@/components/atoms/ThemeToggle';
 import { MobileMenu } from '@/components/molecules/MobileMenu';
 
 export const links = [
-	{ href: '/about', label: 'headerMenu.about' },
-	{ href: '/cv', label: 'headerMenu.cv' },
-	{ href: '/projects', label: 'headerMenu.projects' },
-	{ href: '/uses', label: 'headerMenu.uses' },
-	{ href: '/contacts', label: 'headerMenu.contact' },
+	{ href: '/about', label: 'About' },
+	{ href: '/cv', label: 'CV' },
+	{ href: '/projects', label: 'Project' },
+	{ href: '/uses', label: 'Uses' },
+	{ href: '/contacts', label: 'Contacts' },
 ];
 
 export default function Header() {

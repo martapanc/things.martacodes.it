@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 import { FiMail } from 'react-icons/fi';
 import {
@@ -33,8 +32,6 @@ export default function Footer() {
 }
 
 function FooterLinks() {
-	const { t } = useTranslation();
-
 	return (
 		<div className='flex flex-wrap justify-center gap-x-8 gap-y-4'>
 			{footerLinks.map(({ href, label, name }) => (
@@ -44,7 +41,7 @@ function FooterLinks() {
 					href={href}
 					aria-label={name}
 				>
-					{t(label)}
+					{label}
 				</UnstyledLink>
 			))}
 		</div>
@@ -99,41 +96,37 @@ type FooterLink = {
 const footerLinks: FooterLink[] = [
 	{
 		href: 'https://martas-links.vercel.app',
-		label: 'footerMenu.links',
+		label: 'Links',
 		name: "Marta's Links",
 	},
 	{
 		href: '/recruiters-info',
-		label: 'footerMenu.recruiters',
+		label: 'Recruiters',
 		name: 'Info for Recruiters',
 	},
 	{
 		href: 'https://github.com/martapanc/martacodes.it',
-		label: 'footerMenu.sourceCode',
-		name: 'Sourcecode',
+		label: 'Source Code',
+		name: 'Source code',
 	},
 	{
 		href: 'https://martapancaldi.hashnode.dev/',
-		label: 'footerMenu.blog',
+		label: 'Blog',
 		name: 'Hashnode - Blog',
 	},
 	{
 		href: 'https://www.polywork.com/marta_pancaldi',
-		label: 'footerMenu.updates',
+		label: 'Updates',
 		name: 'Polywork - Updates',
 	},
 	{
 		href: 'https://analytics.eu.umami.is/share/Dw94G9vRDiMT9YXN/MartaCodes.it',
-		label: 'footerMenu.analytics',
+		label: 'Analytics',
 		name: 'Umami - Analytics',
 	},
-	// {
-	//   href: '/',
-	//   label: 'footerMenu.guestbook',
-	// },
 	{
 		href: '/contacts',
-		label: 'footerMenu.feedback',
+		label: 'Contacts',
 		name: 'Contacts',
 	},
 ];
@@ -185,5 +178,3 @@ const socialLinks: SocialLink[] = [
 		id: 'Steam',
 	},
 ];
-
-//TODO: extract links

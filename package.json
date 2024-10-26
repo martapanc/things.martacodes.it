@@ -14,6 +14,7 @@
 		"@anatoliygatt/dark-mode-toggle": "^1.0.1",
 		"@emotion/react": "^11.13.3",
 		"@emotion/styled": "^11.13.0",
+		"@theme-toggles/react": "^4.1.0",
 		"clsx": "^2.1.1",
 		"focus-trap-react": "^10.3.0",
 		"framer-motion": "^11.11.10",
@@ -22,7 +23,8 @@
 		"react": "19.0.0-rc-69d4b800-20241021",
 		"react-dom": "19.0.0-rc-69d4b800-20241021",
 		"react-headroom": "^3.2.1",
-		"react-icons": "^5.3.0"
+		"react-icons": "^5.3.0",
+		"theme-toggles": "^4.10.1"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.1.0",

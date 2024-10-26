@@ -56,7 +56,7 @@ export const MobileMenu = ({ isOpen }: MobileMenuProps) => {
 								animate='visible'
 								custom={0.5 + (links.length + 3) * 0.1}
 							>
-								<ThemeToggle includeLabels={false} />
+								<ThemeToggle />
 							</motion.li>
 						</ul>
 					</FocusTrap>

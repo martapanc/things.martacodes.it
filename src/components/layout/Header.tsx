@@ -67,7 +67,7 @@ export default function Header() {
 						</ul>
 
 						<div className='hidden md:flex md:flex-row'>
-							<ThemeToggle includeLabels={true} />
+							<ThemeToggle />
 						</div>
 					</nav>
 

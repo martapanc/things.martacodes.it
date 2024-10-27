@@ -34,7 +34,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
             <div className="flex justify-between mb-2">
               <span className="flex gap-1.5">
                 <TbCategory className="h-6" />
-                <a href={`/categories/${post.category ?? 'uncategorized'}`} className="hover:underline">
+                <a href={`/blog/categories/${post.category ?? 'uncategorized'}`} className="hover:underline">
                   {categories[post.category] ?? 'Uncategorized'}
                 </a>
               </span>

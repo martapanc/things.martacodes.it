@@ -25,7 +25,6 @@ export default function PostPreview({ post }: PostPreviewProps) {
             <h1>{post.title}</h1>
             <div className='italic mb-2'>{post.date}</div>
             <div className='mb-5 font-semibold'>{post.description}</div>
-            <div>{post.body.substring(0, 300)}...</div>
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
-import getPosts from '@/lib/get-posts';
-import PostPreview from "@/app/blog/PostPreview";
+import getPosts from '@/lib/blog-posts';
+import PostPreview from "@/app/blog/posts/PostPreview";
 
 export async function PostList() {
   const posts = await getPosts();
 
   return (
-    <section className='dark:bg-dark bg-almost-white'>
-      <div className='layout relative flex flex-col py-12 gap-4'>
+    <section>
+      <div className='flex flex-col py-10 gap-4'>
         {posts
           .filter((post) => post !== null)
           .map((post, index) => (

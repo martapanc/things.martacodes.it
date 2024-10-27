@@ -14,4 +14,11 @@ export type Post = Base & {
   isThirdParty?: boolean;
   type: 'post';
   image: string;
+  category: string;
 };
+
+export const categories: {[key: string]: string} = {
+  ai: "AI",
+  development: 'Software Development',
+  'job-search': 'Job Search'
+}

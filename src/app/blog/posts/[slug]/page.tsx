@@ -1,7 +1,7 @@
 import {notFound} from 'next/navigation';
 
-import getPosts, {getPost} from '@/lib/get-posts';
-import {PostBody} from "@/app/blog/[slug]/PostBody";
+import getPosts, {getPost} from '@/lib/blog-posts';
+import {PostBody} from "@/app/blog/posts/[slug]/PostBody";
 
 
 export async function generateStaticParams() {

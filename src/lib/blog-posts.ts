@@ -4,6 +4,7 @@ import path from 'path';
 import { cache } from 'react';
 
 import { Post } from '@/types/Post';
+import moment from "moment/moment";
 
 const postDirectory = 'src/content/posts/';
 
@@ -31,6 +32,17 @@ export const getPosts = cache(async () => {
 export async function getPost(slug: string) {
   const posts = await getPosts();
   return posts.find((post) => post && post.slug === slug);
+}
+
+export function formatDate(date: string) {
+    return date ? moment(date).format('Do MMMM, YYYY') : null;
+}
+
+export function calcWordsAndReadingTime(content: string) {
+    const words = content.trim().split(/\s+/).length;
+    const readingTime = Math.ceil(words / 200);
+
+    return { words, readingTime: `${readingTime} minute${readingTime !== 1 ? 's' : ''}` };
 }
 
 export default getPosts;

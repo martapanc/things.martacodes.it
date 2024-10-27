@@ -2,8 +2,9 @@ import {Metadata} from 'next';
 
 import '@/styles/blog.css';
 
-import getPosts from '@/lib/get-posts';
+import getPosts, {formatDate} from '@/lib/blog-posts';
 import LayoutClient from "@/app/layout-client";
+import {ReactNode} from "react";
 
 export async function generateStaticParams() {
     const posts = await getPosts();
@@ -48,41 +49,25 @@ async function getData(slug: string) {
     };
 }
 
-export default async function PostLayout({
-                                             children,
-                                             params,
-                                         }: {
-    children: JSX.Element;
+export default async function PostLayout({children, params}: {
+    children: ReactNode;
     params: {
         slug: string;
     };
 }) {
     const {slug} = await params;
-    const {title, description, date, image, lastModified} =
+    const {title, description, date, image} =
         await getData(slug);
-
-    const lastModifiedDate = lastModified
-        ? new Date(lastModified).toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-        })
-        : null;
 
     return (
         <LayoutClient headerText="Marta Writes">
-            <section className='dark:bg-dark bg-almost-white'>
+            <section className='dark:bg-dark bg-white rounded-2xl drop-shadow-sm'>
                 <div className='layout relative flex flex-col py-12'>
                     <div className='flex flex-col items-end'>
-                        <span className='italic'>{date}</span>
-                        {lastModified ? (
-                            <span className=''>Last modified {lastModifiedDate}</span>
-                        ) : null}
-                        {/* {updatedViews && <FadeIn>{updatedViews} views</FadeIn>} */}
+                        <span className='italic'>{formatDate(date)}</span>
                     </div>
                     <article>
                         <h1 className='my-4'>{title}</h1>
-                        <div className='my-4 font-semibold text-xl'>{description}</div>
 
                         <div className='flex justify-center mb-4'>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -93,6 +78,7 @@ export default async function PostLayout({
                                 width='40%'
                             />
                         </div>
+                        <div className='my-6 font-semibold text-xl'>{description}</div>
 
                         {children}
                     </article>

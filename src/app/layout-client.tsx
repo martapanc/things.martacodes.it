@@ -23,7 +23,7 @@ export default function LayoutClient({
 		>
 			<Header headerText={headerText} />
 
-			<main id='content' className='min-h-main layout relative mt-10'>
+			<main id='content' className='min-h-main layout relative my-5'>
 				{children}
 			</main>
 

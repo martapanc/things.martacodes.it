@@ -25,6 +25,7 @@ const ThemeToggle = () => {
 
 	return (
 		<div className='flex w-full justify-center'>
+			{/* @ts-expect-error: required props */}
 			<Expand toggle={toggleTheme} toggled={theme === 'light'} placeholder={'Theme toggle'} />
 		</div>
 	);

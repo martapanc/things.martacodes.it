@@ -1,6 +1,6 @@
 import { FiMail } from 'react-icons/fi';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
-import {footerItems, socialLinks} from "@/data/Navigation";
+import {footerItems, socialLinks} from "@/content/Navigation";
 
 export default function Footer() {
 	return (

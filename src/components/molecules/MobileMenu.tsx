@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { NavigationItem } from '@/components/atoms/NavigationItem';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
-import {headerItems} from "@/data/Navigation";
+import {headerItems} from "@/content/Navigation";
 
 export interface MobileMenuProps {
 	isOpen: boolean;

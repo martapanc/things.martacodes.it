@@ -11,9 +11,9 @@ import { BurgerIcon } from '@/components/atoms/BurgerIcon';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
 import { MobileMenu } from '@/components/molecules/MobileMenu';
-import {headerItems} from "@/data/Navigation";
+import {headerItems} from "@/content/Navigation";
 
-import meta from '@/data/meta.json';
+import meta from '@/content/meta.json';
 
 export default function Header({ headerText }: { headerText?: string }) {
 	const [isOpen, setIsOpen] = useState(false);

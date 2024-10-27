@@ -3,7 +3,7 @@
 import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import * as React from 'react';
 
-import meta from '@/data/meta.json';
+import meta from '@/content/meta.json';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
@@ -23,7 +23,7 @@ export default function LayoutClient({
 		>
 			<Header headerText={headerText} />
 
-			<main id='content' className='min-h-main dark:bg-dark bg-white'>
+			<main id='content' className='min-h-main layout relative mt-10'>
 				{children}
 			</main>
 

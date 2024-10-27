@@ -8,7 +8,6 @@ import remarkGfm from 'remark-gfm';
 import remarkHeadingId from 'remark-heading-id';
 import remarkToc from 'remark-toc';
 
-import { mdxComponents } from '@/components/organisms/blog/mdx';
 
 export function PostBody({ children }: { children: string }) {
   return (
@@ -33,7 +32,6 @@ export function PostBody({ children }: { children: string }) {
           rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
         },
       }}
-      components={mdxComponents}
     />
   );
 }

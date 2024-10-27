@@ -1,7 +1,7 @@
 import {notFound} from 'next/navigation';
 
 import getPosts, {getPost} from '@/lib/get-posts';
-import { MDXRemote } from 'next-mdx-remote/rsc'
+import {PostBody} from "@/app/blog/[slug]/PostBody";
 
 
 export async function generateStaticParams() {
@@ -12,14 +12,10 @@ export async function generateStaticParams() {
 export default async function PostPage({params}: {
     params: { slug: string };
 }) {
-    const { slug } = await params;
+    const {slug} = await params;
     const post = await getPost(slug);
 
     if (!post) return notFound();
 
-    return (
-        <div>
-            <MDXRemote source={post?.body}></MDXRemote>
-        </div>
-    )
+    return <PostBody>{post.body}</PostBody>
 }

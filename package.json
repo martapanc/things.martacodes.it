@@ -14,6 +14,7 @@
 		"@anatoliygatt/dark-mode-toggle": "^1.0.1",
 		"@emotion/react": "^11.13.3",
 		"@emotion/styled": "^11.13.0",
+		"@fec/remark-a11y-emoji": "^4.0.2",
 		"@mdx-js/loader": "^3.1.0",
 		"@mdx-js/react": "^3.1.0",
 		"@next/mdx": "^15.0.1",
@@ -30,6 +31,12 @@
 		"react-dom": "19.0.0-rc-69d4b800-20241021",
 		"react-headroom": "^3.2.1",
 		"react-icons": "^5.3.0",
+		"rehype-autolink-headings": "^7.1.0",
+		"rehype-slug": "^6.0.0",
+		"remark-frontmatter": "^5.0.0",
+		"remark-gfm": "^4.0.0",
+		"remark-heading-id": "^1.0.1",
+		"remark-toc": "^9.0.0",
 		"theme-toggles": "^4.10.1"
 	},
 	"devDependencies": {
@@ -39,6 +46,7 @@
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@types/react-headroom": "^3.2.3",
+		"@types/remark-heading-id": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.11.0",
 		"autoprefixer": "^10.4.20",
 		"eslint": "^8",

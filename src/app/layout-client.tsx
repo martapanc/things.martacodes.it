@@ -9,8 +9,10 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 
 export default function LayoutClient({
+	headerText,
 	children,
 }: {
+	headerText?: string,
 	children: React.ReactNode;
 }) {
 	return (
@@ -19,7 +21,7 @@ export default function LayoutClient({
 			defaultTheme={meta.defaultTheme}
 			enableSystem={false}
 		>
-			<Header />
+			<Header headerText={headerText} />
 
 			<main id='content' className='min-h-main dark:bg-dark bg-white'>
 				{children}

@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { NavigationItem } from '@/components/atoms/NavigationItem';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
-import { links } from '@/components/layout/Header';
+import {headerItems} from "@/data/Navigation";
 
 export interface MobileMenuProps {
 	isOpen: boolean;
@@ -38,7 +38,7 @@ export const MobileMenu = ({ isOpen }: MobileMenuProps) => {
 						}}
 					>
 						<ul className='align-center flex h-full flex-col justify-center gap-4 text-center'>
-							{links.map(({ href, label }, i) => (
+							{headerItems.map(({ href, label }, i) => (
 								<NavigationItem
 									key={href}
 									href={href}
@@ -54,7 +54,7 @@ export const MobileMenu = ({ isOpen }: MobileMenuProps) => {
 								variants={navigationVariants}
 								initial='hidden'
 								animate='visible'
-								custom={0.5 + (links.length + 3) * 0.1}
+								custom={0.5 + (headerItems.length + 3) * 0.1}
 							>
 								<ThemeToggle />
 							</motion.li>

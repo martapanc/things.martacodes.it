@@ -11,16 +11,11 @@ import { BurgerIcon } from '@/components/atoms/BurgerIcon';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
 import { MobileMenu } from '@/components/molecules/MobileMenu';
+import {headerItems} from "@/data/Navigation";
 
-export const links = [
-	{ href: '/about', label: 'About' },
-	{ href: '/cv', label: 'CV' },
-	{ href: '/projects', label: 'Project' },
-	{ href: '/uses', label: 'Uses' },
-	{ href: '/contacts', label: 'Contacts' },
-];
+import meta from '@/data/meta.json';
 
-export default function Header() {
+export default function Header({ headerText }: { headerText?: string }) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const pathname = usePathname();
@@ -48,13 +43,13 @@ export default function Header() {
 					<nav className='m-4 flex w-full items-center justify-between text-xl'>
 						<UnstyledLink
 							href='/'
-							className='font-bold text-slate-900 hover:text-slate-700 dark:text-blue-50 dark:hover:text-blue-200'
+							className='font-bold text-slate-900 hover:text-slate-700 dark:text-blue-50 dark:hover:text-blue-200 w-48'
 						>
-							&lt;MartaCodes /&gt;
+							{headerText ?? meta.title}
 						</UnstyledLink>
 
-						<ul className='hidden items-center justify-between space-x-6 text-lg md:flex'>
-							{links.map(({ href, label }) => (
+						<ul className='hidden items-center justify-between space-x-10 text-lg md:flex'>
+							{headerItems.map(({ href, label }) => (
 								<li key={`${href}${label}`}>
 									<UnstyledLink
 										href={href}

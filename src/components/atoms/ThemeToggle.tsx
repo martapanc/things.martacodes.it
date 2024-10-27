@@ -25,7 +25,7 @@ const ThemeToggle = () => {
 
 	return (
 		<div className='flex w-full justify-center'>
-			<Expand placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} toggle={toggleTheme} toggled={theme === 'light'}/>
+			<Expand toggle={toggleTheme} toggled={theme === 'light'} placeholder={'Theme toggle'} />
 		</div>
 	);
 };

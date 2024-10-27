@@ -1,17 +1,6 @@
-import { IconType } from 'react-icons';
 import { FiMail } from 'react-icons/fi';
-import {
-	SiGithub,
-	SiGoodreads,
-	SiInstagram,
-	SiLinkedin,
-	SiMedium,
-	SiSteam,
-	SiThreads,
-	SiYoutube,
-} from 'react-icons/si';
-
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
+import {footerItems, socialLinks} from "@/data/Navigation";
 
 export default function Footer() {
 	return (
@@ -34,7 +23,7 @@ export default function Footer() {
 function FooterLinks() {
 	return (
 		<div className='flex flex-wrap justify-center gap-x-8 gap-y-4'>
-			{footerLinks.map(({ href, label, name }) => (
+			{footerItems.map(({ href, label, name }) => (
 				<UnstyledLink
 					key={name}
 					className='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
@@ -87,94 +76,3 @@ function Copyright() {
 
 	return <div className='mt-10 flex md:mt-0'>© {year} ~ Marta Pancaldi</div>;
 }
-
-type FooterLink = {
-	href: string;
-	label: string;
-	name: string;
-};
-const footerLinks: FooterLink[] = [
-	{
-		href: 'https://martas-links.vercel.app',
-		label: 'Links',
-		name: "Marta's Links",
-	},
-	{
-		href: '/recruiters-info',
-		label: 'Recruiters',
-		name: 'Info for Recruiters',
-	},
-	{
-		href: 'https://github.com/martapanc/martacodes.it',
-		label: 'Source Code',
-		name: 'Source code',
-	},
-	{
-		href: 'https://martapancaldi.hashnode.dev/',
-		label: 'Blog',
-		name: 'Hashnode - Blog',
-	},
-	{
-		href: 'https://www.polywork.com/marta_pancaldi',
-		label: 'Updates',
-		name: 'Polywork - Updates',
-	},
-	{
-		href: 'https://analytics.eu.umami.is/share/Dw94G9vRDiMT9YXN/MartaCodes.it',
-		label: 'Analytics',
-		name: 'Umami - Analytics',
-	},
-	{
-		href: '/contacts',
-		label: 'Contacts',
-		name: 'Contacts',
-	},
-];
-
-type SocialLink = {
-	href: string;
-	icon: IconType;
-	id: string;
-};
-const socialLinks: SocialLink[] = [
-	{
-		href: 'https://github.com/martapanc',
-		icon: SiGithub,
-		id: 'Github',
-	},
-	{
-		href: 'https://www.linkedin.com/in/martapancaldi',
-		icon: SiLinkedin,
-		id: 'Linkedin',
-	},
-	{
-		href: 'https://www.instagram.com/pancakemarta',
-		icon: SiInstagram,
-		id: 'Instagram',
-	},
-	{
-		href: 'https://www.threads.net/@pancakemarta',
-		icon: SiThreads,
-		id: 'Threads',
-	},
-	{
-		href: 'https://medium.com/@marta.panc',
-		icon: SiMedium,
-		id: 'Medium',
-	},
-	{
-		href: 'https://www.goodreads.com/topolinamarta',
-		icon: SiGoodreads,
-		id: 'Goodreads',
-	},
-	{
-		href: 'https://youtube.com/@pancakemarta',
-		icon: SiYoutube,
-		id: 'Youtube',
-	},
-	{
-		href: 'https://steamcommunity.com/id/martap/',
-		icon: SiSteam,
-		id: 'Steam',
-	},
-];

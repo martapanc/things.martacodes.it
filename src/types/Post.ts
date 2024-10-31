@@ -22,3 +22,17 @@ export const categories: {[key: string]: string} = {
   development: 'Software Development',
   'job-search': 'Job Search'
 }
+
+export const tags:  {[key: string]: string} = {
+  chatgpt: "ChatGpt",
+  italy: 'Italy',
+  gdpr: 'GDPR',
+  sanity: 'Sanity',
+  strapi: 'Strapi',
+  cms: 'CMS',
+  'tool-comparison': 'tool comparison',
+  hiring: 'hiring',
+  recruiters: 'recruiters',
+  'red-flags': 'red flags',
+  'software-development': 'software dev'
+}

@@ -5,12 +5,7 @@ import {categories} from "@/types/Post";
 import {Breadcrumbs, Typography} from "@mui/material";
 import Link from "next/link";
 
-export async function generateStaticParams() {
-    const posts = await getPosts();
-    return posts.map((post) => post && {slug: post.slug});
-}
-
-export default async function PostPage({params}: {
+export default async function CategoryPage({params}: {
     params: { slug: string };
 }) {
     const {slug} = await params;
@@ -29,14 +24,23 @@ export default async function PostPage({params}: {
                     <Link color="inherit" href="/blog/categories">
                         Categories
                     </Link>
-                    <Typography className="text-slate-900">{categories[category]}</Typography>
+                    {posts.length > 0 &&
+                        <Typography className="text-slate-900">{categories[category]}</Typography>
+                    }
                 </Breadcrumbs>
             </div>
             <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm">
                 <div className='layout relative flex flex-col py-12'>
-                    <h1>Category: {categories[category]}</h1>
+                    {posts.length > 0 ?
+                        <>
+                            <h1>Category: {categories[category]}</h1>
 
-                    <PostList posts={posts}/>
+                            <PostList posts={posts}/>
+                        </> :
+                        <h3>
+                            No posts found with category &apos;{category}&apos;
+                        </h3>
+                    }
                 </div>
             </section>
         </LayoutClient>

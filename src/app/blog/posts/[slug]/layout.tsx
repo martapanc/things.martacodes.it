@@ -7,6 +7,7 @@ import LayoutClient from "@/app/layout-client";
 import {ReactNode} from "react";
 import {Breadcrumbs, Typography} from "@mui/material";
 import Link from "next/link";
+import {categories} from "@/types/Post";
 
 export async function generateStaticParams() {
     const posts = await getPosts();
@@ -58,7 +59,7 @@ export default async function PostLayout({children, params}: {
     };
 }) {
     const {slug} = await params;
-    const {title, description, date, image} =
+    const {title, category, description, date, image} =
         await getData(slug);
 
     return (
@@ -67,6 +68,9 @@ export default async function PostLayout({children, params}: {
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" href="/blog">
                         Blog
+                    </Link>
+                    <Link color="inherit" href={`/blog/categories/${category}`}>
+                        {categories[category]}
                     </Link>
                     <Typography className="text-slate-900">{title}</Typography>
                 </Breadcrumbs>

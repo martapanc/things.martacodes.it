@@ -5,6 +5,8 @@ import '@/styles/blog.css';
 import getPosts, {formatDate} from '@/lib/blog-posts';
 import LayoutClient from "@/app/layout-client";
 import {ReactNode} from "react";
+import {Breadcrumbs, Typography} from "@mui/material";
+import Link from "next/link";
 
 export async function generateStaticParams() {
     const posts = await getPosts();
@@ -61,6 +63,14 @@ export default async function PostLayout({children, params}: {
 
     return (
         <LayoutClient headerText="Marta Writes">
+            <div className="mb-4">
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" href="/blog">
+                        Blog
+                    </Link>
+                    <Typography className="text-slate-900">{title}</Typography>
+                </Breadcrumbs>
+            </div>
             <section className='dark:bg-dark bg-white rounded-2xl drop-shadow-sm'>
                 <div className='layout relative flex flex-col py-12'>
                     <div className='flex flex-col items-end'>

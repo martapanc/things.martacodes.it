@@ -5,7 +5,7 @@ import LayoutClient from "@/app/layout-client";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function TagPage({params}: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>
 }) {
     const {slug} = await params;
     const tag = slug;

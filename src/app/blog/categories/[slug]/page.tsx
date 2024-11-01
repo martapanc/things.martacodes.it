@@ -5,9 +5,9 @@ import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function CategoryPage({params}: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>
 }) {
-    const {slug} = await params;
+    const { slug} = await params;
     const category = slug;
 
     const allPosts = await getPosts();

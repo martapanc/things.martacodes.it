@@ -14,9 +14,7 @@ export async function generateStaticParams() {
 }
 
 export const generateMetadata = async ({params}: {
-    params: {
-        slug: string;
-    };
+    params: Promise<{ slug: string }>
 }): Promise<Metadata> => {
 
     const {slug} = await params;
@@ -53,9 +51,7 @@ async function getData(slug: string) {
 
 export default async function PostLayout({children, params}: {
     children: ReactNode;
-    params: {
-        slug: string;
-    };
+    params: Promise<{ slug: string }>
 }) {
     const {slug} = await params;
     const {title, category, description, date, image} =

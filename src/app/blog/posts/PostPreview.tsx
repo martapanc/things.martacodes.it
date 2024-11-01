@@ -4,7 +4,7 @@ import {allCategories, Post, allTags} from '@/types/Post';
 import moment from "moment/moment";
 import {calcWordsAndReadingTime} from "@/lib/blog-posts";
 import {TbCategory} from "react-icons/tb";
-import {FaChevronRight, FaRegCalendarAlt} from "react-icons/fa";
+import {FaRegCalendarAlt} from "react-icons/fa";
 import {AiOutlineRead} from "react-icons/ai";
 import {MdOutlineTimer} from "react-icons/md";
 import {FaHashtag} from "react-icons/fa6";

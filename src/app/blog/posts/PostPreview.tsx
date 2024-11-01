@@ -15,7 +15,7 @@ type PostPreviewProps = {
 };
 
 export default function PostPreview({post}: PostPreviewProps) {
-    const formattedDate = post.date ? moment(post.date).format('Do MMMM, YYYY') : null;
+    const formattedDate = post.date ? moment(post.date, 'YYYY MMM D').format('Do MMMM, YYYY') : null;
 
     const {words, readingTime} = calcWordsAndReadingTime(post.body);
 

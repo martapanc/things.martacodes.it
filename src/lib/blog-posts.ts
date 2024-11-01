@@ -35,7 +35,7 @@ export async function getPost(slug: string) {
 }
 
 export function formatDate(date: string) {
-    return date ? moment(date).format('Do MMMM, YYYY') : null;
+    return date ? moment(date, 'YYYY MMM D').format('Do MMMM, YYYY') : null;
 }
 
 export function calcWordsAndReadingTime(content: string) {

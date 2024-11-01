@@ -17,14 +17,14 @@ export type Post = Base & {
   category: string;
 };
 
-export const categories: {[key: string]: string} = {
+export const allCategories: {[key: string]: string} = {
   ai: "AI",
-  development: 'Software Development',
+  'software-development': 'Software Development',
   'job-search': 'Job Search'
 }
 
-export const tags:  {[key: string]: string} = {
-  chatgpt: "ChatGpt",
+export const allTags:  {[key: string]: string} = {
+  chatgpt: "ChatGPT",
   italy: 'Italy',
   gdpr: 'GDPR',
   sanity: 'Sanity',

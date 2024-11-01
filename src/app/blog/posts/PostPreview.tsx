@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import {categories, Post, tags} from '@/types/Post';
+import {allCategories, Post, allTags} from '@/types/Post';
 import moment from "moment/moment";
 import {calcWordsAndReadingTime} from "@/lib/blog-posts";
 import {TbCategory} from "react-icons/tb";
@@ -21,9 +21,9 @@ export default function PostPreview({post}: PostPreviewProps) {
 
     return (
         <div
-            className='my-3 p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 transition ease-in-out duration-400 h-68 xl:h-56'>
-            <div className='flex flex-row gap-5 h-full'>
-                <div className='flex w-[20rem] xl:w-[16rem] relative'>
+            className='my-3 p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 transition ease-in-out duration-400 h-auto lg:h-68 xl:h-56'>
+            <div className='flex flex-col lg:flex-row gap-5 h-full'>
+                <div className='flex w-full h-44 lg:h-auto lg:w-[20rem] xl:w-[16rem] relative'>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         alt='Post preview image'
@@ -33,15 +33,15 @@ export default function PostPreview({post}: PostPreviewProps) {
                 </div>
                 <div className='flex flex-col justify-between h-full w-full'>
                     <div>
-                        <div className="flex justify-between mb-2">
+                        <div className="flex mb-2 items-start sm:justify-between flex-col sm:flex-row">
                             <span className="flex gap-1.5">
-                                <TbCategory className="h-6"/>
+                                <TbCategory className="h-6 w-5"/>
                                 <UnstyledLink
                                     className='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
                                     href={`/blog/categories/${post.category ?? 'uncategorized'}`}
-                                    aria-label={categories[post.category]}
+                                    aria-label={allCategories[post.category]}
                                 >
-                                    {categories[post.category] ?? 'Uncategorized'}
+                                    {allCategories[post.category] ?? 'Uncategorized'}
                                 </UnstyledLink>
                             </span>
                             <span className='italic flex justify-end gap-1.5'>
@@ -61,7 +61,7 @@ export default function PostPreview({post}: PostPreviewProps) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col xl:flex-row justify-between">
+                    <div className="flex flex-col md:flex-row lg:flex-col xl:flex-row justify-between gap-1">
                         <div className="flex gap-6">
                             <span className="flex gap-1.5">
                               <AiOutlineRead className="h-6"/>
@@ -72,12 +72,12 @@ export default function PostPreview({post}: PostPreviewProps) {
                                 {readingTime}
                             </span>
                         </div>
-                        <div className="flex gap-1">
-                            <FaHashtag className="h-6"/>
+                        <div className="flex gap-1 flex-wrap">
+                            <FaHashtag className="h-6 w-3.5 mx-0.5"/>
                             {post.tags.map(tag => (
                                 <Link key={tag} href={`/blog/tags/${tag}`}
-                                      className="dark:bg-indigo-900 bg-indigo-300 hover:bg-indigo-200 rounded-md px-1 dark:text-white font-semibold">
-                                    {tags[tag]}
+                                      className="dark:bg-indigo-900 bg-indigo-300 hover:bg-indigo-200 rounded-md px-1 dark:text-white font-semibold text-sm lg:text-base">
+                                    {allTags[tag]}
                                 </Link>
                             ))}
                         </div>

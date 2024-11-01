@@ -1,9 +1,8 @@
 import getPosts from "@/lib/blog-posts";
-import {Breadcrumbs, Typography} from "@mui/material";
-import Link from "next/link";
-import {categories, tags} from "@/types/Post";
+import {allTags} from "@/types/Post";
 import {PostList} from "@/app/blog/posts/PostList";
 import LayoutClient from "@/app/layout-client";
+import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function TagPage({params}: {
     params: { slug: string };
@@ -16,26 +15,19 @@ export default async function TagPage({params}: {
         .filter(post => post !== null)
         .filter(post => post.tags.includes(tag));
 
+    const breadCrumbs = {
+        past: [{ path: '/blog', label: 'Blog' }, { path: '/blog/tags', label: 'Tags' }],
+        current: allTags[tag]
+    };
+
     return (
         <LayoutClient headerText="Marta Writes">
-            <div className="mb-4">
-                <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/blog">
-                        Blog
-                    </Link>
-                    <Link color="inherit" href="/blog/tags">
-                        Tags
-                    </Link>
-                    {posts.length > 0 &&
-                        <Typography className="text-slate-900">{tags[tag]}</Typography>
-                    }
-                </Breadcrumbs>
-            </div>
-            <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm">
-                <div className='layout relative flex flex-col py-12'>
+            <Breadcrumbs {...breadCrumbs} />
+            <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm min-h-96">
+                <div className='layout relative flex flex-col py-6'>
                     {posts.length > 0 ?
                         <>
-                            <h1>Tag: {tags[tag]}</h1>
+                            <h1>Tag: {allTags[tag]}</h1>
 
                             <PostList posts={posts}/>
                         </> :

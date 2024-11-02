@@ -7,6 +7,7 @@ import LayoutClient from "@/app/layout-client";
 import {ReactNode} from "react";
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
+import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
     const posts = await getPosts();
@@ -33,9 +34,7 @@ async function getData(slug: string) {
     const postIndex = posts.findIndex((p) => p?.slug === slug);
 
     if (postIndex === -1) {
-        throw new Error(
-            `${slug} not found in posts. Did you forget to rename the file?`,
-        );
+        notFound();
     }
 
     const post = posts[postIndex];

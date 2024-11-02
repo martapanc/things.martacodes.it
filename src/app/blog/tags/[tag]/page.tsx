@@ -3,6 +3,7 @@ import {allTags} from "@/types/Post";
 import {PostList} from "@/app/blog/posts/PostList";
 import LayoutClient from "@/app/layout-client";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
+import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
     const allPosts = (await getPosts()).filter(post => post !== null);
@@ -25,6 +26,10 @@ export default async function TagPage({params}: {
         .filter(post => post !== null)
         .filter(post => post.tags.includes(tag));
 
+    if (posts.length === 0) {
+        notFound();
+    }
+
     const breadCrumbs = {
         past: [{ path: '/blog', label: 'Blog' }, { path: '/blog/tags', label: 'Tags' }],
         current: allTags[tag]
@@ -35,15 +40,12 @@ export default async function TagPage({params}: {
             <Breadcrumbs {...breadCrumbs} />
             <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm min-h-96">
                 <div className='layout relative flex flex-col py-6'>
-                    {posts.length > 0 ?
+                    {posts.length > 0 &&
                         <>
                             <h1>Tag: {allTags[tag]}</h1>
 
                             <PostList posts={posts}/>
-                        </> :
-                        <h3>
-                            No posts found with tag &apos;{tag}&apos;
-                        </h3>
+                        </>
                     }
                 </div>
             </section>

@@ -6,7 +6,7 @@ import { cache } from 'react';
 import { Post } from '@/types/Post';
 import moment from "moment/moment";
 
-const postDirectory = 'src/content/posts/';
+const postDirectory = 'posts/';
 
 export const getPosts = cache(async () => {
     const posts = await fs.readdir(postDirectory);

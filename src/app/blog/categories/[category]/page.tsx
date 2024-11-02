@@ -4,11 +4,21 @@ import {PostList} from "@/app/blog/posts/PostList";
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
+export async function generateStaticParams() {
+    const allPosts = (await getPosts()).filter(post => post !== null);
+    const categories = new Set<string>();
+
+    allPosts.forEach(post => {
+        categories.add(post.category);
+    });
+
+    return Array.from(categories).map(category => ({ category }));
+}
+
 export default async function CategoryPage({params}: {
-    params: Promise<{ slug: string }>
+    params: Promise<{ category: string }>
 }) {
-    const { slug} = await params;
-    const category = slug;
+    const { category } = await params;
 
     const allPosts = await getPosts();
     const posts = allPosts.filter((post) => post && post.category === category);

@@ -4,11 +4,21 @@ import {PostList} from "@/app/blog/posts/PostList";
 import LayoutClient from "@/app/layout-client";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
+export async function generateStaticParams() {
+    const allPosts = (await getPosts()).filter(post => post !== null);
+    const tags = new Set<string>();
+
+    allPosts.forEach(post => {
+        post.tags?.forEach(tag => tags.add(tag));
+    });
+
+    return Array.from(tags).map(tag => ({ tag }));
+}
+
 export default async function TagPage({params}: {
-    params: Promise<{ slug: string }>
+    params: Promise<{ tag: string }>
 }) {
-    const {slug} = await params;
-    const tag = slug;
+    const { tag} = await params;
 
     const allPosts = await getPosts();
     const posts = allPosts

@@ -1,6 +1,4 @@
 import LayoutClient from "@/app/layout-client";
-import Link from 'next/link';
-import { PostList } from '@/app/blog/posts/PostList';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
 import * as React from 'react';
 

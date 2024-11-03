@@ -1,11 +1,11 @@
 import fs from 'fs';
 import matter from 'gray-matter';
-import path from 'path';
+import path, { join } from 'path';
 
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
 
-const postDirectory = '_posts/';
+const postDirectory = join(process.cwd(), "_posts");
 
 export function getPostSlugs() {
     return fs.readdirSync(postDirectory);

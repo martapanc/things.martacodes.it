@@ -4,34 +4,41 @@ import path from 'path';
 import { cache } from 'react';
 
 import { Post } from '@/types/Post';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 
 const postDirectory = 'posts/';
 
 export const getPosts = cache(async () => {
     const posts = await fs.readdir(postDirectory);
 
-  return Promise.all(
-    posts
-      .filter((file) => path.extname(file) === '.mdx')
-      .map(async (file) => {
-        const filePath = `${postDirectory}${file}`;
-        const postContent = await fs.readFile(filePath, 'utf-8');
+    const postPromises = posts
+        .filter((file) => path.extname(file) === '.mdx')
+        .map(async (file) => {
+            const filePath = path.join(postDirectory, file);
+            try {
 
-        const { data, content } = matter(postContent);
+                const postContent = await fs.readFile(filePath, 'utf-8');
 
-        if (data.published === false) {
-          return null;
-        }
+                const { data, content } = matter(postContent);
 
-        return { ...data, body: content } as Post;
-      }),
-  );
+                if (data.published === false) {
+                    return null;
+                }
+
+                return { ...data, body: content } as Post;
+            } catch (error) {
+                console.error(`Error reading file ${filePath}:`, error);
+                return null;
+            }
+        });
+
+    const resolvedPosts = await Promise.all(postPromises);
+    return resolvedPosts.filter(Boolean);
 });
 
 export async function getPost(slug: string) {
-  const posts = await getPosts();
-  return posts.find((post) => post && post.slug === slug);
+    const posts = await getPosts();
+    return posts.find((post) => post && post.slug === slug);
 }
 
 export function formatDate(date: string) {

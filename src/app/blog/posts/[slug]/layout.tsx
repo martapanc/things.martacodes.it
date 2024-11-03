@@ -1,24 +1,23 @@
-import {Metadata} from 'next';
+import { Metadata } from 'next';
 
 import '@/styles/blog.css';
 
-import getAllPosts, {formatDate} from '@/lib/blog-posts';
-import {ReactNode} from "react";
-import {allCategories} from "@/types/Post";
-import Breadcrumbs from "@/components/molecules/Breadcrumbs";
+import getAllPosts, { formatDate } from '@/lib/blog-posts';
+import { ReactNode } from 'react';
+import { allCategories } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 
 export async function generateStaticParams() {
     const posts = getAllPosts();
-    return posts.map((post) => ({slug: post?.slug}));
+    return posts.map((post) => ({ slug: post?.slug }));
 }
 
-export const generateMetadata = async ({params}: {
+export const generateMetadata = async ({ params }: {
     params: Promise<{ slug: string }>
 }): Promise<Metadata> => {
 
-    const {slug} = await params;
+    const { slug } = await params;
     const post = getAllPosts().find((p) => p?.slug === slug);
     return {
         title: post?.title,
@@ -39,7 +38,7 @@ async function getData(slug: string) {
 
     const post = posts[postIndex];
 
-    const {...rest} = post;
+    const { ...rest } = post;
 
     return {
         previous: posts[postIndex + 1] || null,
@@ -48,46 +47,44 @@ async function getData(slug: string) {
     };
 }
 
-export default async function PostLayout({children, params}: {
+export default async function PostLayout({ children, params }: {
     children: ReactNode;
     params: Promise<{ slug: string }>
 }) {
-    const {slug} = await params;
-    const {title, category, description, date, image} =
+    const { slug } = await params;
+    const { title, category, description, date, image } =
         await getData(slug);
 
-    const breadCrumbs = {
+    const breadcrumbs = {
         past: [
             { path: '/blog', label: 'Blog' },
-            { path: `/blog/categories/${category}`, label: allCategories[category] }
+            { path: `/blog/categories/${category}`, label: allCategories[category] },
         ],
-        current: title
+        current: title,
     };
 
     return (
-        <BlogLayoutWrapper breadcrumbs={<Breadcrumbs {...breadCrumbs } />}>
-
-                <div className='layout relative flex flex-col py-6'>
-                    <div className='flex flex-col items-end'>
-                        <span className='italic'>{formatDate(date)}</span>
-                    </div>
-                    <article>
-                        <h1 className='my-4'>{title}</h1>
-
-                        <div className='flex justify-center mb-4'>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                alt='Post preview image'
-                                src={image}
-                                className='rounded-xl'
-                                width='40%'
-                            />
-                        </div>
-                        <div className='my-6 font-semibold text-xl'>{description}</div>
-
-                        {children}
-                    </article>
+        <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
+            <div className="layout relative flex flex-col py-6">
+                <div className="flex flex-col items-end">
+                    <span className="italic">{formatDate(date)}</span>
                 </div>
+                <article>
+                    <h1 className="my-4">{title}</h1>
+
+                    <div className="flex justify-center mb-4">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            alt="Post preview image"
+                            src={image}
+                            className="rounded-xl w-[40%]"
+                        />
+                    </div>
+                    <div className="my-6 font-semibold text-xl">{description}</div>
+
+                    {children}
+                </article>
+            </div>
         </BlogLayoutWrapper>
     );
 }

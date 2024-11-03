@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import LayoutClient from '@/app/layout-client';
 import getAllPosts, { listCategoriesWithCounts, listTags } from '@/lib/blog-posts';
 import Sidebar from '@/app/blog/Sidebar';
+import Breadcrumbs, { BreadcrumbsProps } from '@/components/molecules/Breadcrumbs';
 
 export default function BlogLayout({ children }: {
     children: ReactNode;
@@ -25,14 +26,16 @@ export default function BlogLayout({ children }: {
 
 interface BlogLayoutWrapperProps {
     children: ReactNode;
-    breadcrumbs?: ReactNode;
+    breadcrumbs?: BreadcrumbsProps;
     params?: Promise<{ slug: string }>;
 }
 
 export function BlogLayoutWrapper({ children, breadcrumbs, params }: BlogLayoutWrapperProps) {
     return (
         <LayoutClient headerText="Marta Writes">
-            {breadcrumbs}
+            {breadcrumbs &&
+                <Breadcrumbs {...breadcrumbs} />
+            }
             <BlogLayout params={params}>
                 {children}
             </BlogLayout>

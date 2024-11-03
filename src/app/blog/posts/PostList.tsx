@@ -1,7 +1,7 @@
 import PostPreview from "@/app/blog/posts/PostPreview";
 import {Post} from "@/types/Post";
 
-export async function PostList({ posts }: {posts: (Post | null)[]}) {
+export async function PostList({ posts }: {posts: Post[]}) {
   return (
     <section>
       <div className='flex flex-col py-10 gap-4'>

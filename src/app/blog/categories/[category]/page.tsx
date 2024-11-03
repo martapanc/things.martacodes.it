@@ -1,7 +1,6 @@
 import getAllPosts from '@/lib/blog-posts';
 import { PostList } from '@/app/blog/posts/PostList';
 import { allCategories } from '@/types/Post';
-import Breadcrumbs from '@/components/molecules/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 
@@ -28,7 +27,7 @@ export default async function CategoryPage({ params }: {
         notFound();
     }
 
-    const breadCrumbs = {
+    const breadcrumbs = {
         past: [
             { path: '/blog', label: 'Blog' },
             { path: `/blog/categories`, label: 'Categories' },
@@ -37,18 +36,12 @@ export default async function CategoryPage({ params }: {
     };
 
     return (
-        <BlogLayoutWrapper breadcrumbs={<Breadcrumbs {...breadCrumbs} />}>
-            <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm min-h-96">
-                <div className="layout relative flex flex-col py-6">
-                    {posts.length > 0 &&
-                        <>
-                            <h1>Category: {allCategories[category]}</h1>
+        <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
+            <div className="layout relative flex flex-col py-6">
+                <h1>Category: {allCategories[category]}</h1>
 
-                            <PostList posts={posts} />
-                        </>
-                    }
-                </div>
-            </section>
+                <PostList posts={posts} />
+            </div>
         </BlogLayoutWrapper>
     );
 }

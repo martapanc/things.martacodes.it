@@ -8,8 +8,11 @@ import moment from 'moment/moment';
 const postDirectory = join(process.cwd(), "_posts");
 
 export function getPostSlugs() {
-    return fs.readdirSync(postDirectory);
+    const filePaths = fs.readdirSync(postDirectory);
+
+    return filePaths.map(filePath => filePath.replace(".mdx", ""));
 }
+
 export const getAllPosts = (): Post[] => {
     const slugs = getPostSlugs();
 
@@ -21,7 +24,7 @@ export const getAllPosts = (): Post[] => {
 };
 
 export function getPost(slug: string): Post | null {
-    const fullPath = path.join(postDirectory, slug);
+    const fullPath = path.join(postDirectory, `${slug}.mdx`);
 
     try {
         if (fs.existsSync(fullPath)) {

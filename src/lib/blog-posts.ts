@@ -15,17 +15,28 @@ export const getAllPosts = (): Post[] => {
 
     return slugs
         .map((slug) => getPost(slug))
+        .filter(post => post !== null)
         .filter(post => post.published)
         .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 };
 
-export function getPost(slug: string): Post {
+export function getPost(slug: string): Post | null {
     const fullPath = path.join(postDirectory, slug);
 
-    const postContent = fs.readFileSync(fullPath, 'utf-8');
+    try {
+        if (fs.existsSync(fullPath)) {
+            const postContent = fs.readFileSync(fullPath, 'utf-8');
 
-    const { data, content } = matter(postContent);
-    return { ...data, slug, body: content } as Post;
+            const { data, content } = matter(postContent);
+            return { ...data, slug, body: content } as Post;
+        } else {
+            console.warn(`File ${slug} not found`);
+            return null;
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
 
 export function formatDate(date: string) {

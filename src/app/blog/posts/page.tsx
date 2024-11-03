@@ -1,9 +1,9 @@
 import LayoutClient from "@/app/layout-client";
 import {PostList} from "@/app/blog/posts/PostList";
-import getPosts from "@/lib/blog-posts";
+import getAllPosts from "@/lib/blog-posts";
 
 export default async function Blog() {
-    const posts = await getPosts();
+    const posts = getAllPosts();
 
     return (
         <LayoutClient headerText="Marta Writes">

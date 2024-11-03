@@ -1,4 +1,4 @@
-import getPosts from "@/lib/blog-posts";
+import getAllPosts from "@/lib/blog-posts";
 import {allTags} from "@/types/Post";
 import {PostList} from "@/app/blog/posts/PostList";
 import LayoutClient from "@/app/layout-client";
@@ -6,7 +6,7 @@ import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
-    const allPosts = (await getPosts()).filter(post => post !== null);
+    const allPosts = getAllPosts();
     const tags = new Set<string>();
 
     allPosts.forEach(post => {
@@ -21,7 +21,7 @@ export default async function TagPage({params}: {
 }) {
     const { tag} = await params;
 
-    const allPosts = await getPosts();
+    const allPosts = getAllPosts();
     const posts = allPosts
         .filter(post => post !== null)
         .filter(post => post.tags.includes(tag));

@@ -1,44 +1,31 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
-import { cache } from 'react';
 
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
 
-const postDirectory = 'posts/';
+const postDirectory = '_posts/';
 
-export const getPosts = cache(async () => {
-    const posts = await fs.readdir(postDirectory);
+export function getPostSlugs() {
+    return fs.readdirSync(postDirectory);
+}
+export const getAllPosts = (): Post[] => {
+    const slugs = getPostSlugs();
 
-    const postPromises = posts
-        .filter((file) => path.extname(file) === '.mdx')
-        .map(async (file) => {
-            const filePath = path.join(postDirectory, file);
-            try {
+    return slugs
+        .map((slug) => getPost(slug))
+        .filter(post => post.published)
+        .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+};
 
-                const postContent = await fs.readFile(filePath, 'utf-8');
+export function getPost(slug: string): Post {
+    const fullPath = path.join(postDirectory, slug);
 
-                const { data, content } = matter(postContent);
+    const postContent = fs.readFileSync(fullPath, 'utf-8');
 
-                if (data.published === false) {
-                    return null;
-                }
-
-                return { ...data, body: content } as Post;
-            } catch (error) {
-                console.error(`Error reading file ${filePath}:`, error);
-                return null;
-            }
-        });
-
-    const resolvedPosts = await Promise.all(postPromises);
-    return resolvedPosts.filter(Boolean);
-});
-
-export async function getPost(slug: string) {
-    const posts = await getPosts();
-    return posts.find((post) => post && post.slug === slug);
+    const { data, content } = matter(postContent);
+    return { ...data, slug, body: content } as Post;
 }
 
 export function formatDate(date: string) {
@@ -52,4 +39,4 @@ export function calcWordsAndReadingTime(content: string) {
     return { words, readingTime: `${readingTime} minute${readingTime !== 1 ? 's' : ''}` };
 }
 
-export default getPosts;
+export default getAllPosts;

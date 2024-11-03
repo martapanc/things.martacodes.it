@@ -1,12 +1,11 @@
 import LayoutClient from "@/app/layout-client";
-import getPosts from "@/lib/blog-posts";
+import getAllPosts from "@/lib/blog-posts";
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function Categories() {
-    const posts = await getPosts();
+    const posts = getAllPosts();
     const categories = new Set<string>(posts
-        .filter(post => post !== null)
         .map(post => post.category));
     const categoriesSorted = Array.from(categories).sort();
 

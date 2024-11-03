@@ -2,7 +2,7 @@ import {Metadata} from 'next';
 
 import '@/styles/blog.css';
 
-import getPosts, {formatDate} from '@/lib/blog-posts';
+import getAllPosts, {formatDate} from '@/lib/blog-posts';
 import LayoutClient from "@/app/layout-client";
 import {ReactNode} from "react";
 import {allCategories} from "@/types/Post";
@@ -10,7 +10,7 @@ import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
-    const posts = await getPosts();
+    const posts = getAllPosts();
     return posts.map((post) => ({slug: post?.slug}));
 }
 
@@ -19,7 +19,7 @@ export const generateMetadata = async ({params}: {
 }): Promise<Metadata> => {
 
     const {slug} = await params;
-    const post = (await getPosts()).find((p) => p?.slug === slug);
+    const post = getAllPosts().find((p) => p?.slug === slug);
     return {
         title: post?.title,
         description: post?.description,
@@ -30,7 +30,7 @@ export const generateMetadata = async ({params}: {
 };
 
 async function getData(slug: string) {
-    const posts = await getPosts();
+    const posts = getAllPosts();
     const postIndex = posts.findIndex((p) => p?.slug === slug);
 
     if (postIndex === -1) {

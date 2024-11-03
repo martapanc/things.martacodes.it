@@ -1,12 +1,11 @@
 import LayoutClient from "@/app/layout-client";
-import getPosts from "@/lib/blog-posts";
+import getAllPosts from "@/lib/blog-posts";
 import TagList from "@/components/organisms/TagList";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function Tags() {
-    const posts = await getPosts();
+    const posts = getAllPosts();
     const tags = new Set<string>(posts
-        .filter(post => post !== null)
         .flatMap(post => post.tags));
 
     const sortedTags = Array.from(tags).sort();

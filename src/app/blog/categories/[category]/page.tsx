@@ -1,12 +1,12 @@
 import LayoutClient from '@/app/layout-client';
-import getPosts from '@/lib/blog-posts';
+import getAllPosts from '@/lib/blog-posts';
 import {PostList} from "@/app/blog/posts/PostList";
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
-    const allPosts = (await getPosts()).filter(post => post !== null);
+    const allPosts = getAllPosts();
     const categories = new Set<string>();
 
     allPosts.forEach(post => {
@@ -21,7 +21,7 @@ export default async function CategoryPage({params}: {
 }) {
     const { category } = await params;
 
-    const allPosts = await getPosts();
+    const allPosts = getAllPosts();
     const posts = allPosts.filter((post) => post && post.category === category);
 
     if (posts.length === 0) {

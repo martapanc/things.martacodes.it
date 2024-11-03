@@ -12,6 +12,7 @@ export type Post = Base & {
   lastModified?: number;
   views?: number;
   isThirdParty?: boolean;
+  published: boolean;
   type: 'post';
   image: string;
   category: string;

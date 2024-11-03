@@ -1,14 +1,11 @@
 import LayoutClient from "@/app/layout-client";
-import getAllPosts from "@/lib/blog-posts";
-import TagList from "@/components/organisms/TagList";
+import getAllPosts, { listTags } from '@/lib/blog-posts';
+import TagList from "@/components/molecules/TagList";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 
 export default async function Tags() {
     const posts = getAllPosts();
-    const tags = new Set<string>(posts
-        .flatMap(post => post.tags));
-
-    const sortedTags = Array.from(tags).sort();
+    const tags = listTags(posts);
 
     const breadCrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],
@@ -23,7 +20,7 @@ export default async function Tags() {
                     <h1>Tags</h1>
 
                     <div className="flex flex-col gap-2">
-                        <TagList tags={sortedTags} />
+                        <TagList tags={tags} />
                     </div>
                 </div>
             </section>

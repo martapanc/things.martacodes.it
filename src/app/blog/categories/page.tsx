@@ -1,13 +1,12 @@
 import LayoutClient from "@/app/layout-client";
-import getAllPosts from "@/lib/blog-posts";
+import getAllPosts, { listCategoriesWithCounts } from '@/lib/blog-posts';
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
+import Link from 'next/link';
 
 export default async function Categories() {
     const posts = getAllPosts();
-    const categories = new Set<string>(posts
-        .map(post => post.category));
-    const categoriesSorted = Array.from(categories).sort();
+    const categories = listCategoriesWithCounts(posts);
 
     const breadCrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],
@@ -21,9 +20,13 @@ export default async function Categories() {
                 <div className='layout relative flex flex-col py-6 gap-5'>
                     <h1>Categories</h1>
 
-                    {Array.from(categoriesSorted).map(category =>
-                        <a key={category} href={`/blog/categories/${category}`}>{allCategories[category]}</a>
-                    )}
+                    <div className="flex flex-col gap-1">
+                        {Object.keys(categories).sort().map((category) => (
+                            <Link key={category} href={`/blog/categories/${category}`}>
+                                {allCategories[category]} ({categories[category]})
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </section>
         </LayoutClient>

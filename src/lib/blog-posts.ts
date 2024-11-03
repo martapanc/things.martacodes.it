@@ -4,13 +4,14 @@ import path, { join } from 'path';
 
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
+import { tag } from 'postcss-selector-parser';
 
-const postDirectory = join(process.cwd(), "src/content/posts");
+const postDirectory = join(process.cwd(), 'src/content/posts');
 
 export function getPostSlugs() {
     const filePaths = fs.readdirSync(postDirectory);
 
-    return filePaths.map(filePath => filePath.replace(".mdx", ""));
+    return filePaths.map(filePath => filePath.replace('.mdx', ''));
 }
 
 export const getAllPosts = (): Post[] => {
@@ -22,6 +23,28 @@ export const getAllPosts = (): Post[] => {
         .filter(post => post.published)
         .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 };
+
+export const listCategoriesWithCounts = (posts: Post[]) => {
+    const categoryMap: Record<string, number> = {};
+
+    posts.forEach(post => {
+        const category = post.category;
+        if (categoryMap[category]) {
+            categoryMap[category]++;
+        } else {
+            categoryMap[category] = 1;
+        }
+    });
+
+    return categoryMap;
+};
+
+export const listTags = (posts: Post[]) => {
+    const tags = new Set<string>(posts
+        .flatMap(post => post.tags));
+
+    return Array.from(tags).sort();
+}
 
 export function getPost(slug: string): Post | null {
     const fullPath = path.join(postDirectory, `${slug}.mdx`);

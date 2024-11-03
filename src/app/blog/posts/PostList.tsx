@@ -4,7 +4,7 @@ import {Post} from "@/types/Post";
 export async function PostList({ posts }: {posts: Post[]}) {
   return (
     <section>
-      <div className='flex flex-col py-10 gap-4'>
+      <div className='flex flex-col pt-5 pb-10 gap-4'>
         {posts
           .filter((post) => post !== null)
           .map((post, index) => (

@@ -13,12 +13,10 @@ export default async function Tags() {
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
-            <div className="layout relative flex flex-col py-6 gap-5">
-                <h1>Tags</h1>
+            <h1>Tags</h1>
 
-                <div className="flex flex-col gap-2">
-                    <TagList tags={tags} />
-                </div>
+            <div className="flex flex-col gap-2">
+                <TagList tags={tags} />
             </div>
         </BlogLayoutWrapper>
     );

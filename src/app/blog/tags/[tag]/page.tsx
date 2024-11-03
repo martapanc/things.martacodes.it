@@ -36,11 +36,9 @@ export default async function TagPage({ params }: {
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
-            <div className="layout relative flex flex-col py-6">
-                <h1>Tag: {allTags[tag]}</h1>
+            <h1>Tag: {allTags[tag]}</h1>
 
-                <PostList posts={posts} />
-            </div>
+            <PostList posts={posts} />
         </BlogLayoutWrapper>
     );
 }

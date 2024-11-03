@@ -37,11 +37,9 @@ export default async function CategoryPage({ params }: {
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
-            <div className="layout relative flex flex-col py-6">
-                <h1>Category: {allCategories[category]}</h1>
+            <h1>Category: {allCategories[category]}</h1>
 
-                <PostList posts={posts} />
-            </div>
+            <PostList posts={posts} />
         </BlogLayoutWrapper>
     );
 }

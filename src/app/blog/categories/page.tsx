@@ -14,16 +14,14 @@ export default async function Categories() {
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
-            <div className="layout relative flex flex-col py-6 gap-5">
-                <h1>Categories</h1>
+            <h1>Categories</h1>
 
-                <div className="flex flex-col gap-1">
-                    {Object.keys(categories).sort().map((category) => (
-                        <Link key={category} href={`/blog/categories/${category}`}>
-                            {allCategories[category]} ({categories[category]})
-                        </Link>
-                    ))}
-                </div>
+            <div className="flex flex-col gap-1">
+                {Object.keys(categories).sort().map((category) => (
+                    <Link key={category} href={`/blog/categories/${category}`}>
+                        {allCategories[category]} ({categories[category]})
+                    </Link>
+                ))}
             </div>
         </BlogLayoutWrapper>
     );

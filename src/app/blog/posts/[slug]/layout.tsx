@@ -65,26 +65,24 @@ export default async function PostLayout({ children, params }: {
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
-            <div className="layout relative flex flex-col py-6">
-                <div className="flex flex-col items-end">
-                    <span className="italic">{formatDate(date)}</span>
-                </div>
-                <article>
-                    <h1 className="my-4">{title}</h1>
-
-                    <div className="flex justify-center mb-4">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            alt="Post preview image"
-                            src={image}
-                            className="rounded-xl w-[40%]"
-                        />
-                    </div>
-                    <div className="my-6 font-semibold text-xl">{description}</div>
-
-                    {children}
-                </article>
+            <div className="flex flex-col items-end">
+                <span className="italic">{formatDate(date)}</span>
             </div>
+            <article>
+                <h1 className="my-4">{title}</h1>
+
+                <div className="flex justify-center mb-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        alt="Post preview image"
+                        src={image}
+                        className="rounded-xl w-[40%]"
+                    />
+                </div>
+                <div className="my-6 font-semibold text-xl">{description}</div>
+
+                {children}
+            </article>
         </BlogLayoutWrapper>
     );
 }

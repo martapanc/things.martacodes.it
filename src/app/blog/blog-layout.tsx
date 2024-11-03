@@ -16,7 +16,9 @@ export default function BlogLayout({ children }: {
         <div
             className="grid gap-4 grid-cols-1 lg:grid-cols-[auto_17.5rem] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]">
             <section className="dark:bg-dark bg-white rounded-xl drop-shadow-sm w-auto">
-                {children}
+                <div className="layout relative flex flex-col py-6 gap-5">
+                    {children}
+                </div>
             </section>
 
             <Sidebar categories={categories} tags={tags} />

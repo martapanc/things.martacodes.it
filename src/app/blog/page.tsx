@@ -7,11 +7,9 @@ export default async function Blog() {
 
     return (
         <BlogLayoutWrapper>
-            <div className="layout relative flex flex-col py-6">
-                <h1>Blog</h1>
+            <h1>Blog</h1>
 
-                <PostList posts={posts} />
-            </div>
+            <PostList posts={posts} />
         </BlogLayoutWrapper>
     );
 }

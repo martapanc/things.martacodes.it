@@ -5,7 +5,7 @@ import path, { join } from 'path';
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
 
-const postDirectory = join(process.cwd(), "_posts");
+const postDirectory = join(process.cwd(), "src/content/posts");
 
 export function getPostSlugs() {
     const filePaths = fs.readdirSync(postDirectory);

@@ -3,11 +3,11 @@ import {Metadata} from 'next';
 import '@/styles/blog.css';
 
 import getAllPosts, {formatDate} from '@/lib/blog-posts';
-import LayoutClient from "@/app/layout-client";
 import {ReactNode} from "react";
 import {allCategories} from "@/types/Post";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 import { notFound } from 'next/navigation';
+import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 
 export async function generateStaticParams() {
     const posts = getAllPosts();
@@ -65,9 +65,8 @@ export default async function PostLayout({children, params}: {
     };
 
     return (
-        <LayoutClient headerText="Marta Writes">
-            <Breadcrumbs {...breadCrumbs } />
-            <section className='dark:bg-dark bg-white rounded-2xl drop-shadow-sm'>
+        <BlogLayoutWrapper breadcrumbs={<Breadcrumbs {...breadCrumbs } />}>
+
                 <div className='layout relative flex flex-col py-6'>
                     <div className='flex flex-col items-end'>
                         <span className='italic'>{formatDate(date)}</span>
@@ -89,8 +88,6 @@ export default async function PostLayout({children, params}: {
                         {children}
                     </article>
                 </div>
-            </section>
-            {/*<PostFooter />*/}
-        </LayoutClient>
+        </BlogLayoutWrapper>
     );
 }

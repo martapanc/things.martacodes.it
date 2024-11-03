@@ -4,7 +4,6 @@ import path, { join } from 'path';
 
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
-import { tag } from 'postcss-selector-parser';
 
 const postDirectory = join(process.cwd(), 'src/content/posts');
 

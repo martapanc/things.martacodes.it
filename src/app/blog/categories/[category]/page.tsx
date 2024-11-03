@@ -1,9 +1,9 @@
-import LayoutClient from '@/app/layout-client';
 import getAllPosts from '@/lib/blog-posts';
-import {PostList} from "@/app/blog/posts/PostList";
-import {allCategories} from "@/types/Post";
-import Breadcrumbs from "@/components/molecules/Breadcrumbs";
+import { PostList } from '@/app/blog/posts/PostList';
+import { allCategories } from '@/types/Post';
+import Breadcrumbs from '@/components/molecules/Breadcrumbs';
 import { notFound } from 'next/navigation';
+import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 
 export async function generateStaticParams() {
     const allPosts = getAllPosts();
@@ -16,7 +16,7 @@ export async function generateStaticParams() {
     return Array.from(categories).map(category => ({ category }));
 }
 
-export default async function CategoryPage({params}: {
+export default async function CategoryPage({ params }: {
     params: Promise<{ category: string }>
 }) {
     const { category } = await params;
@@ -31,25 +31,24 @@ export default async function CategoryPage({params}: {
     const breadCrumbs = {
         past: [
             { path: '/blog', label: 'Blog' },
-            { path: `/blog/categories`, label: 'Categories' }
+            { path: `/blog/categories`, label: 'Categories' },
         ],
-        current: posts.length > 0 ? allCategories[category] : undefined
+        current: posts.length > 0 ? allCategories[category] : undefined,
     };
 
     return (
-        <LayoutClient headerText="Marta Writes">
-            <Breadcrumbs {...breadCrumbs} />
+        <BlogLayoutWrapper breadcrumbs={<Breadcrumbs {...breadCrumbs} />}>
             <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm min-h-96">
-                <div className='layout relative flex flex-col py-6'>
+                <div className="layout relative flex flex-col py-6">
                     {posts.length > 0 &&
                         <>
                             <h1>Category: {allCategories[category]}</h1>
 
-                            <PostList posts={posts}/>
+                            <PostList posts={posts} />
                         </>
                     }
                 </div>
             </section>
-        </LayoutClient>
-    )
+        </BlogLayoutWrapper>
+    );
 }

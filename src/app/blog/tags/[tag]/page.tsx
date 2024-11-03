@@ -1,9 +1,9 @@
 import getAllPosts from "@/lib/blog-posts";
 import {allTags} from "@/types/Post";
 import {PostList} from "@/app/blog/posts/PostList";
-import LayoutClient from "@/app/layout-client";
 import Breadcrumbs from "@/components/molecules/Breadcrumbs";
 import { notFound } from 'next/navigation';
+import { BlogLayoutWrapper } from "@/app/blog/blog-layout";
 
 export async function generateStaticParams() {
     const allPosts = getAllPosts();
@@ -36,8 +36,7 @@ export default async function TagPage({params}: {
     };
 
     return (
-        <LayoutClient headerText="Marta Writes">
-            <Breadcrumbs {...breadCrumbs} />
+        <BlogLayoutWrapper breadcrumbs={<Breadcrumbs {...breadCrumbs } />}>
             <section className="dark:bg-dark bg-white rounded-2xl drop-shadow-sm min-h-96">
                 <div className='layout relative flex flex-col py-6'>
                     {posts.length > 0 &&
@@ -49,6 +48,6 @@ export default async function TagPage({params}: {
                     }
                 </div>
             </section>
-        </LayoutClient>
+        </BlogLayoutWrapper>
     )
 }

@@ -6,7 +6,12 @@ type BreadcrumbItem = {
     label: string;
 }
 
-const Breadcrumbs = (breadCrumbs: { past: BreadcrumbItem[], current?: string }) => {
+export interface BreadcrumbsProps {
+    past: BreadcrumbItem[];
+    current?: string
+}
+
+const Breadcrumbs = (breadCrumbs: BreadcrumbsProps) => {
     const { past, current } = breadCrumbs;
 
     return (

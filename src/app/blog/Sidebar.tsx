@@ -2,11 +2,23 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import { allCategories } from '@/types/Post';
 import TagList from '@/components/molecules/TagList';
+import { TocItem } from '@/lib/blog-posts';
+import { TableOfContents } from '@/app/blog/posts/[slug]/TableOfContents';
 
-const Sidebar = ({ categories, tags }: { categories: Record<string, number>, tags: string[] }) => {
+interface SidebarProps {
+    categories: Record<string, number>;
+    tags: string[];
+    toc?: TocItem[];
+}
+const Sidebar = ({ categories, tags, toc }: SidebarProps) => {
 
     return (
         <div className="flex flex-col gap-5">
+            {toc &&
+                <SidebarBox>
+                    <TableOfContents toc={toc} />
+                </SidebarBox>
+            }
             <SidebarBox>
                 <Link href="/blog/categories">
                     <h3 className="hover:text-indigo-700">

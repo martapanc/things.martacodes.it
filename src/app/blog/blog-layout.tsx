@@ -1,16 +1,29 @@
 import { ReactNode } from 'react';
 import LayoutClient from '@/app/layout-client';
-import getAllPosts, { listCategoriesWithCounts, listTags } from '@/lib/blog-posts';
+import getAllPosts, {
+    getPost,
+    getToc,
+    listCategoriesWithCounts,
+    listTags,
+} from '@/lib/blog-posts';
 import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, { BreadcrumbsProps } from '@/components/molecules/Breadcrumbs';
 
-export default function BlogLayout({ children }: {
+export default async function BlogLayout({ children, params }: {
     children: ReactNode;
     params?: Promise<{ slug: string }>
 }) {
     const posts = getAllPosts();
     const categories = listCategoriesWithCounts(posts);
     const tags = listTags(posts);
+
+    let slug;
+    if (params) {
+        slug = (await params).slug;
+    }
+
+    const post = getPost(slug);
+    const toc = (post && post.toc) ? getToc(post.body, post.toc) : undefined;
 
     return (
         <div
@@ -21,7 +34,7 @@ export default function BlogLayout({ children }: {
                 </div>
             </section>
 
-            <Sidebar categories={categories} tags={tags} />
+            <Sidebar categories={categories} tags={tags} toc={toc}/>
         </div>
     );
 }

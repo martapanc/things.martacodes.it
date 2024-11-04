@@ -4,6 +4,10 @@ import path, { join } from 'path';
 
 import { Post } from '@/types/Post';
 import moment from 'moment/moment';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import { Heading, Link, Text } from 'mdast';
+import { visit } from 'unist-util-visit';
 
 const postDirectory = join(process.cwd(), 'src/content/posts');
 
@@ -45,7 +49,11 @@ export const listTags = (posts: Post[]) => {
     return Array.from(tags).sort();
 }
 
-export function getPost(slug: string): Post | null {
+export function getPost(slug?: string): Post | null {
+    if (!slug) {
+        return null;
+    }
+
     const fullPath = path.join(postDirectory, `${slug}.mdx`);
 
     try {
@@ -62,6 +70,86 @@ export function getPost(slug: string): Post | null {
         console.error(error);
         return null;
     }
+}
+
+export interface TocItem {
+    depth: number;
+    value: string;
+    id: string;
+}
+
+export function getToc(postContent: string, autoToc: boolean = true): TocItem[] {
+    if (autoToc) {
+        return extractToc(postContent);
+    } else {
+        return extractCustomTocSection(postContent);
+    }
+}
+
+export function extractToc(postContent: string): TocItem[] {
+    const toc: TocItem[] = [];
+
+    try {
+        const tree = unified().use(remarkParse).parse(postContent);
+        visit(tree, 'heading', (node: Heading) => {
+            const depth = node.depth;
+            const value = node.children
+                .filter((child) => child.type === 'text')
+                .map((child) => (child as Text).value)
+                .join(' ');
+
+            const id = value.toLowerCase().replace(/\s+/g, '-');
+
+            toc.push({ depth, value, id });
+        })
+
+    } catch (error) {
+        console.error(error);
+    }
+
+    return toc;
+}
+
+function extractCustomTocSection(content: string): TocItem[] {
+    const customToc: TocItem[] = [];
+    const tree = unified().use(remarkParse).parse(content);
+
+    let isInCustomToc = false;
+
+    visit(tree, (node) => {
+        if (
+            node.type === 'heading' &&
+            node.depth === 3 &&
+            node.children?.[0]?.type === 'text' &&
+            node.children[0].value === 'Chapters'
+        ) {
+            isInCustomToc = true; // Start extracting links after this heading
+        }
+
+        if (isInCustomToc && node.type === 'list') {
+            for (const listItem of node.children) {
+                // Ensure listItem is a ListItem node and has children
+                if (listItem.type === 'listItem' && 'children' in listItem) {
+                    const firstChild = listItem.children[0];
+
+                    // Check if firstChild is a Paragraph and contains a link
+                    if (firstChild?.type === 'paragraph' && firstChild.children?.[0]?.type === 'link') {
+                        const linkNode = firstChild.children[0] as Link;
+                        const textNode = linkNode.children[0] as Text;
+
+                        customToc.push({
+                            depth: 1,
+                            value: textNode.value,
+                            id: linkNode.url.replace('#', ''),
+                        });
+                    }
+                }
+            }
+            isInCustomToc = false; // Stop after the ToC section is processed
+        }
+    });
+
+    return customToc;
 }
 
 export function formatDate(date: string) {

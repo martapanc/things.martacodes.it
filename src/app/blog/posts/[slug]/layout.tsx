@@ -64,7 +64,7 @@ export default async function PostLayout({ children, params }: {
     };
 
     return (
-        <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
+        <BlogLayoutWrapper breadcrumbs={breadcrumbs} params={params}>
             <div className="flex flex-col items-end">
                 <span className="italic">{formatDate(date)}</span>
             </div>

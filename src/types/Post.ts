@@ -16,6 +16,7 @@ export type Post = Base & {
   type: 'post';
   image: string;
   category: string;
+  toc: boolean;
 };
 
 export const allCategories: {[key: string]: string} = {

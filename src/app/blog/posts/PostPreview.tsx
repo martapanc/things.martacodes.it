@@ -3,15 +3,12 @@ import Link from 'next/link';
 import {allCategories, Post, allTags} from '@/types/Post';
 import moment from "moment/moment";
 import {calcWordsAndReadingTime} from "@/lib/blog-posts";
-import {TbCategory} from "react-icons/tb";
 import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
-import {AiOutlineRead} from "react-icons/ai";
 import {MdOutlineTimer} from "react-icons/md";
 import {FaHashtag} from "react-icons/fa6";
 import UnstyledLink from "@/components/atoms/links/UnstyledLink";
 import { BsTextLeft } from 'react-icons/bs';
 import BgIcon from '@/components/atoms/BgIcon';
-import { CiCalendarDate } from 'react-icons/ci';
 
 type PostPreviewProps = {
     post: Post;

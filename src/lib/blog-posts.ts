@@ -160,7 +160,7 @@ export function calcWordsAndReadingTime(content: string) {
     const words = content.trim().split(/\s+/).length;
     const readingTime = Math.ceil(words / 200);
 
-    return { words, readingTime: `${readingTime} minute${readingTime !== 1 ? 's' : ''}` };
+    return { words, readingTime: `${readingTime} min.` };
 }
 
 export default getAllPosts;

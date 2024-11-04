@@ -1,8 +1,8 @@
 'use client';
 
-import {useTheme} from "next-themes";
-import Link from "next/link";
-import { allTags } from "@/types/Post";
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { allTags } from '@/types/Post';
 import clsx from 'clsx';
 
 type TagListProps = {
@@ -22,14 +22,17 @@ const TagList = ({ tags, className }: TagListProps) => {
 
                 return (
                     <Link key={tag} href={`/blog/tags/${tag}`}
-                          className={clsx("px-2 py-1 rounded-md border-dark/40 dark:border-dark/60 border-2 w-fit hover:drop-shadow-md", className)}
-                          style={{backgroundColor}}>
+                          className={clsx(
+                              'px-2 py-1 rounded-md border-dark/40 dark:border-dark/60 border-2 w-fit hover:brightness-110 dark:hover:brightness-125',
+                              className
+                          )}
+                          style={{ backgroundColor }}>
                         {allTags[tag]}
                     </Link>
-                )
+                );
             })}
         </>
-    )
-}
+    );
+};
 
 export default TagList;

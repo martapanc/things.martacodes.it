@@ -4,11 +4,14 @@ import {allCategories, Post, allTags} from '@/types/Post';
 import moment from "moment/moment";
 import {calcWordsAndReadingTime} from "@/lib/blog-posts";
 import {TbCategory} from "react-icons/tb";
-import {FaRegCalendarAlt} from "react-icons/fa";
+import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
 import {AiOutlineRead} from "react-icons/ai";
 import {MdOutlineTimer} from "react-icons/md";
 import {FaHashtag} from "react-icons/fa6";
 import UnstyledLink from "@/components/atoms/links/UnstyledLink";
+import { BsTextLeft } from 'react-icons/bs';
+import BgIcon from '@/components/atoms/BgIcon';
+import { CiCalendarDate } from 'react-icons/ci';
 
 type PostPreviewProps = {
     post: Post;
@@ -35,7 +38,7 @@ export default function PostPreview({post}: PostPreviewProps) {
                     <div>
                         <div className="flex mb-2 items-start sm:justify-between flex-col sm:flex-row">
                             <span className="flex gap-1.5">
-                                <TbCategory className="h-6 w-5"/>
+                                <BgIcon icon={<FaTag />} accent />
                                 <UnstyledLink
                                     className='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
                                     href={`/blog/categories/${post.category ?? 'uncategorized'}`}
@@ -44,8 +47,8 @@ export default function PostPreview({post}: PostPreviewProps) {
                                     {allCategories[post.category] ?? 'Uncategorized'}
                                 </UnstyledLink>
                             </span>
-                            <span className='italic flex justify-end gap-1.5'>
-                                <FaRegCalendarAlt className="h-6"/>
+                            <span className='italic flex justify-end gap-1'>
+                                <BgIcon icon={ <FaRegCalendarAlt /> }/>
                                 {formattedDate}
                             </span>
                         </div>
@@ -64,19 +67,19 @@ export default function PostPreview({post}: PostPreviewProps) {
                     <div className="flex flex-col md:flex-row lg:flex-col xl:flex-row justify-between gap-1">
                         <div className="flex gap-6">
                             <span className="flex gap-1.5">
-                              <AiOutlineRead className="h-6"/>
+                                <BgIcon icon={<BsTextLeft />} />
                                 {words} words
                             </span>
                             <span className="flex gap-1.5">
-                                <MdOutlineTimer className="h-6"/>
+                                <BgIcon icon={<MdOutlineTimer />} />
                                 {readingTime}
                             </span>
                         </div>
                         <div className="flex gap-1 flex-wrap">
-                            <FaHashtag className="h-6 w-3.5 mx-0.5"/>
+                            <BgIcon icon={<FaHashtag />} accent />
                             {post.tags.map(tag => (
                                 <Link key={tag} href={`/blog/tags/${tag}`}
-                                      className="dark:bg-indigo-900 bg-indigo-300 hover:bg-indigo-200 rounded-md px-1 dark:text-white font-semibold text-sm lg:text-base">
+                                      className="dark:bg-indigo-900 bg-indigo-300 hover:brightness-110 dark:hover:brightness-125 rounded-md px-1 dark:text-white font-semibold text-sm lg:text-base">
                                     {allTags[tag]}
                                 </Link>
                             ))}

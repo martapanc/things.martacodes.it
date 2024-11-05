@@ -4,6 +4,7 @@ import { allCategories } from '@/types/Post';
 import TagList from '@/components/molecules/TagList';
 import { TocItem } from '@/lib/blog-posts';
 import { TableOfContents } from '@/app/blog/posts/[slug]/TableOfContents';
+import { CategoryRow } from '@/app/blog/categories/page';
 
 interface SidebarProps {
     categories: Record<string, number>;
@@ -26,11 +27,9 @@ const Sidebar = ({ categories, tags, toc }: SidebarProps) => {
                     </h3>
                 </Link>
 
-                <div className="flex flex-col gap-1 mt-2">
+                <div className="flex flex-col gap-1.5 mt-2">
                     {Object.keys(categories).sort().map((category) => (
-                        <Link key={category} href={`/blog/categories/${category}`}>
-                            {allCategories[category]} ({categories[category]})
-                        </Link>
+                        <CategoryRow key={category} category={category} count={categories[category]} />
                     ))}
                 </div>
             </SidebarBox>

@@ -2,6 +2,7 @@ import getAllPosts, { listCategoriesWithCounts } from '@/lib/blog-posts';
 import { allCategories } from '@/types/Post';
 import Link from 'next/link';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
+import { CategoryRow } from '@/components/molecules/CategoryRow';
 
 export default async function Categories() {
     const posts = getAllPosts();
@@ -23,15 +24,4 @@ export default async function Categories() {
             </div>
         </BlogLayoutWrapper>
     );
-}
-
-export function CategoryRow({category, count}: {category: string, count: number}) {
-
-    return (
-        <Link key={category} href={`/blog/categories/${category}`}
-              className="flex justify-between hover:bg-indigo-200 dark:hover:bg-indigo-900/50 rounded-md">
-            <span className="px-1.5">{allCategories[category]}</span>
-            <span className="bg-indigo-600/20 font-semibold text-indigo-900 dark:text-indigo-100 rounded-md px-2">{count}</span>
-        </Link>
-    )
 }

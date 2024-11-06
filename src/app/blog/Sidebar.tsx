@@ -3,7 +3,7 @@ import Link from 'next/link';
 import TagList from '@/components/molecules/TagList';
 import { TocItem } from '@/lib/blog-posts';
 import { TableOfContents } from '@/app/blog/posts/[slug]/TableOfContents';
-import { CategoryRow } from '@/app/blog/categories/page';
+import { CategoryRow } from '@/components/molecules/CategoryRow';
 
 interface SidebarProps {
     categories: Record<string, number>;

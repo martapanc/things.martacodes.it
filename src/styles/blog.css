@@ -6,9 +6,7 @@ article ul > li {
   margin-left: 1rem;
   list-style-position: inside;
   list-style-type: disc;
-  font-weight: 500;
-  color: #092c9c;
-  text-decoration: underline;
+  line-height: 1.8rem;
 }
 
 [class='dark'] article ul > li {

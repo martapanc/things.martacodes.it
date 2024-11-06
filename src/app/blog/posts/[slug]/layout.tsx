@@ -58,7 +58,7 @@ export default async function PostLayout({ children, params }: {
     const breadcrumbs = {
         past: [
             { path: '/blog', label: 'Blog' },
-            { path: `/blog/categories/${category}`, label: allCategories[category] },
+            { path: `/blog/categories/${category ?? 'uncategorized'}`, label: allCategories[category] ?? 'Uncategorized' },
         ],
         current: title,
     };

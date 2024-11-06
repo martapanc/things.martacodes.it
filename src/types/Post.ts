@@ -36,5 +36,5 @@ export const allTags:  {[key: string]: string} = {
   hiring: 'hiring',
   recruiters: 'recruiters',
   'red-flags': 'red flags',
-  'software-development': 'software dev'
+  'software-development': 'software dev',
 }

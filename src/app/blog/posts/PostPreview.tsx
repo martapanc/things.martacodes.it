@@ -72,15 +72,17 @@ export default function PostPreview({post}: PostPreviewProps) {
                                 {readingTime}
                             </span>
                         </div>
-                        <div className="flex gap-1 flex-wrap">
-                            <BgIcon icon={<FaHashtag />} accent />
-                            {post.tags.map(tag => (
-                                <Link key={tag} href={`/blog/tags/${tag}`}
-                                      className="dark:bg-indigo-900 bg-indigo-300 hover:brightness-110 dark:hover:brightness-125 rounded-md px-1 dark:text-white font-semibold text-sm lg:text-base">
-                                    {allTags[tag]}
-                                </Link>
-                            ))}
-                        </div>
+                        {post.tags && post.tags.length > 0 &&
+                            <div className="flex gap-1 flex-wrap">
+                                <BgIcon icon={<FaHashtag />} accent />
+                                {post.tags.map(tag => (
+                                    <Link key={tag} href={`/blog/tags/${tag}`}
+                                          className="dark:bg-indigo-900 bg-indigo-300 hover:brightness-110 dark:hover:brightness-125 rounded-md px-1 dark:text-white font-semibold text-sm lg:text-base">
+                                        {allTags[tag]}
+                                    </Link>
+                                ))}
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { allCategories } from '@/types/Post';
 import TagList from '@/components/molecules/TagList';
 import { TocItem } from '@/lib/blog-posts';
 import { TableOfContents } from '@/app/blog/posts/[slug]/TableOfContents';

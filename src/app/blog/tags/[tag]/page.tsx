@@ -23,7 +23,7 @@ export default async function TagPage({ params }: {
     const allPosts = getAllPosts();
     const posts = allPosts
         .filter(post => post !== null)
-        .filter(post => post.tags.includes(tag));
+        .filter(post => post.tags?.includes(tag));
 
     if (posts.length === 0) {
         notFound();

@@ -22,7 +22,8 @@ export type Post = Base & {
 export const allCategories: {[key: string]: string} = {
   ai: "AI",
   'software-development': 'Software Development',
-  'job-search': 'Job Search'
+  'job-search': 'Job Search',
+  'uncategorized': 'Uncategorized'
 }
 
 export const allTags:  {[key: string]: string} = {

@@ -46,7 +46,7 @@ export const listTags = (posts: Post[]) => {
     const tags = new Set<string>(posts
         .flatMap(post => post.tags));
 
-    return Array.from(tags).sort();
+    return Array.from(tags).filter((tag) => !!tag).sort();
 }
 
 export function getPost(slug?: string): Post | null {

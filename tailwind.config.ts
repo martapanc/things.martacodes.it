@@ -12,13 +12,18 @@ const config: Config = {
 		extend: {
 			fontFamily: {
 				primary: ['Roboto Thin', ...defaultTheme.fontFamily.sans],
+				handwritten: ['Caveat', ...defaultTheme.fontFamily.sans],
 			},
 			colors: {
 				dark: '#0c1018',
 				light: '#f1f1f1',
-			}
+				cork: '#ffcc8f'
+			},
+			backgroundImage: theme => ({
+				'cork-gradient': 'linear-gradient(to bottom right, #f8cf6a, #2178dd)',
+			})
 		},
 	},
-	plugins: [],
+	plugins: [require('@tailwindcss/aspect-ratio')],
 };
 export default config;

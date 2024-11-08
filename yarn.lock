@@ -850,6 +850,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.8.tgz#21a907684723bbbaa5f0974cf7730bd797eb8e62"
   integrity sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==
 
+"@fontsource/caveat@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/caveat/-/caveat-5.1.0.tgz#4eeb5f57f735a1fb7326b40c052149015ae7eb58"
+  integrity sha512-k7X12XF3BKtUlqV81Vcvc5k88dFJvg11txEOFyF39kspJ9rKfuWk3h4dTxovANahvGpdYaDuK1d1ywt2tBVi6g==
+
 "@graphiql/react@^0.18.0-alpha.1":
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.18.0.tgz#7ddff7c664385c1a05f0eac1d69cd9147d38006e"

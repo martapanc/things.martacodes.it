@@ -1,4 +1,5 @@
 @import '@fontsource/caveat/500.css';
+@import "flag-icons/css/flag-icons.min.css";
 
 @tailwind base;
 @tailwind components;

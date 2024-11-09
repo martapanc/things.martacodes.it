@@ -1,19 +1,26 @@
 'use client';
 
-import { PhotoProps } from 'react-photo-gallery';
+import { ImageProps } from '@/lib/cloudinary';
+import { Gallery, Item } from 'react-photoswipe-gallery'
 
-const PhotoGallery = ({ images }: { images: PhotoProps[] }) => {
+import 'photoswipe/dist/photoswipe.css'
+import { useMemo } from 'react';
+
+const PhotoGallery = ({ images }: { images: ImageProps[] }) => {
+    const memoizedImages = useMemo(() => images, [images]);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1.5">
-            {images.map((image, index) =>
-                <div className="h-52 sm:h-60 lg:h-50 w-full relative">
-                    <img key={index} src={image.src} alt="photo"
-                         className="object-cover absolute top-0 left-0 w-full h-full"
-                    />
-                </div>
-            )}
-        </div>
+        <Gallery>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1.5">
+                {memoizedImages.map((image, index) => (
+                    <Item key={index} original={image.src} thumbnail={image.src} width={1536} height={1024}>
+                        {({ ref, open }) => (
+                            <img ref={ref} onClick={open} src={image.src}  alt="image"/>
+                        )}
+                    </Item>
+                ))}
+            </div>
+        </Gallery>
     )
 }
 

@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { photos } from '@/app/food/food';
 
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -8,6 +9,13 @@ cloudinary.config({
 
 export interface ImageProps {
     src: string;
+    alt: string;
+}
+
+export interface Transformation {
+    width: number;
+    height: number;
+    crop: 'fill' | string;
 }
 
 type CloudinaryResource = {
@@ -30,10 +38,13 @@ export async function getTravelImages(albumId: string) {
 }
 
 export async function getFoodImages() {
-    return await getImagesByFolder('Food');
+    return await getImagesByFolder(
+        'Food',
+        { width: 768, height: 512, crop: "fill" }
+    );
 }
 
-async function getImagesByFolder(folder: string) {
+async function getImagesByFolder(folder: string, transformation?: Transformation) {
     const response = await cloudinary.api.resources({
         type: 'upload',
         prefix: folder,
@@ -49,11 +60,21 @@ async function getImagesByFolder(folder: string) {
         .map((resource: CloudinaryResource) =>
             cloudinary.url(resource.public_id, {
                 transformation: [
-                    { width: 1536, height: 1024, crop: 'fill' }
+                    transformation ?? { width: 1536, height: 1024, crop: 'fill' }
                 ],
                 secure: true
             })
     );
 
-    return transformedUrls.map((src: string) => ({ src }));
+    return transformedUrls.map((src: string) => {
+        const fileName = extractFilename(src);
+        const alt = photos.filter((photo) => photo.src === fileName)[0].alt;
+        return { src, alt }
+    });
+}
+
+function extractFilename(filePath: string): string {
+    const url = new URL(filePath);
+    const pathNameSegments = url.pathname.split('/');
+    return pathNameSegments[pathNameSegments.length - 1];
 }

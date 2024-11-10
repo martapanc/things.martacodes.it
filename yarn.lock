@@ -901,6 +901,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource/caveat/-/caveat-5.1.0.tgz#4eeb5f57f735a1fb7326b40c052149015ae7eb58"
   integrity sha512-k7X12XF3BKtUlqV81Vcvc5k88dFJvg11txEOFyF39kspJ9rKfuWk3h4dTxovANahvGpdYaDuK1d1ywt2tBVi6g==
 
+"@fontsource/kalam@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/kalam/-/kalam-5.1.0.tgz#8078633aec2832863000e2f7e4a3a489d705912d"
+  integrity sha512-kR9RhDMFMpODN2Wfp+Ksbc2vpRRZiCugGn8FdckO2/qljWm+x7gOygMwlkz+d42p8HJt8iGq9airKncwH+PB/Q==
+
 "@graphiql/react@^0.18.0-alpha.1":
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/@graphiql/react/-/react-0.18.0.tgz#7ddff7c664385c1a05f0eac1d69cd9147d38006e"

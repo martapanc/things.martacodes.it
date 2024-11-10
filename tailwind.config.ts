@@ -13,6 +13,7 @@ const config: Config = {
 			fontFamily: {
 				primary: ['Roboto Thin', ...defaultTheme.fontFamily.sans],
 				handwritten: ['Caveat', ...defaultTheme.fontFamily.sans],
+				'handwritten-2': ['Kalam', ...defaultTheme.fontFamily.sans],
 			},
 			colors: {
 				dark: '#0c1018',

@@ -1,6 +1,7 @@
 import LayoutClient from "@/app/layout-client";
 import clsx from 'clsx';
 import { getFoodImages, ImageProps } from '@/lib/cloudinary';
+import PhotoWithCaption from '@/app/food/PhotoWithCaption';
 
 export default async function Food() {
     const photos: ImageProps[] = await getFoodImages();
@@ -16,7 +17,7 @@ export default async function Food() {
                 <div className="layout relative flex w-full px-4 py-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                         {photos.map((photo, index) => (
-                            <img key={index} src={photo.src} alt="image" className=""/>
+                            <PhotoWithCaption index={index} photo={photo} />
                         ))}
                     </div>
                 </div>

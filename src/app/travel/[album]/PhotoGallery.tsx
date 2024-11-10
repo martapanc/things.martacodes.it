@@ -26,7 +26,7 @@ const PhotoGallery = ({ images, album }: PhotoGalleryProps) => {
                                 onClick={open}
                                 onKeyDown={event => {
                                     if (event.key === 'Enter') {
-                                        // @ts-ignore
+                                        // @ts-expect-error Expects a MouseEvent
                                         open();
                                     }
                                 }}

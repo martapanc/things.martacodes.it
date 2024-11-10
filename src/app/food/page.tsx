@@ -17,7 +17,7 @@ export default async function Food() {
                 <div className="layout relative flex w-full px-4 py-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                         {photos.map((photo, index) => (
-                            <PhotoWithCaption index={index} photo={photo} />
+                            <PhotoWithCaption key={index} photo={photo} />
                         ))}
                     </div>
                 </div>

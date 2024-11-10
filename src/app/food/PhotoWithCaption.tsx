@@ -1,14 +1,13 @@
 import { ImageProps } from '@/lib/cloudinary';
 
 export interface PhotoWithCaptionProps {
-    index: number;
     photo: ImageProps;
 }
 
-const PhotoWithCaption = ({ index, photo }: PhotoWithCaptionProps) => {
+const PhotoWithCaption = ({ photo }: PhotoWithCaptionProps) => {
     return (
         <div className="relative group">
-            <img key={index} src={photo.src} alt="image" />
+            <img src={photo.src} alt="image" />
             <div
                 className="absolute h-fit min-h-12 w-full text-white bg-zinc-900/75 bottom-3 px-4 opacity-0 group-hover:shadow-md group-hover:opacity-100 transition-opacity duration-200 flex items-center font-handwritten-2 text-lg justify-center">
                 {photo.alt}

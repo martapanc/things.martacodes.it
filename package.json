@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint src --fix && yarn format",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@anatoliygatt/dark-mode-toggle": "^1.0.1",
@@ -73,6 +74,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^15.11.0",
+    "husky": "^9.1.6",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",

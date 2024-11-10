@@ -1,0 +1,6 @@
+public/
+
+.env.example
+.env
+
+tina/

@@ -25,19 +25,34 @@ type CloudinaryResource = {
     secure_url: string;
 };
 
-export async function getImagesByFolder(folder: string) {
+export async function getTravelImages(albumId: string) {
+    return await getImagesByFolder(`Travel/${albumId}`);
+}
+
+export async function getFoodImages() {
+    return await getImagesByFolder('Food');
+}
+
+async function getImagesByFolder(folder: string) {
     const response = await cloudinary.api.resources({
         type: 'upload',
-        prefix: `Travel/${folder}`,
+        prefix: folder,
+        max_results: 200
     });
 
-    const transformedUrls = response.resources.map((resource: CloudinaryResource) =>
-        cloudinary.url(resource.public_id, {
-            transformation: [
-                { width: 1536, height: 1024, crop: 'fill' }
-            ],
-            secure: true
+    const transformedUrls = response.resources
+        .sort((a: CloudinaryResource, b: CloudinaryResource) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return dateB.getTime() - dateA.getTime();
         })
+        .map((resource: CloudinaryResource) =>
+            cloudinary.url(resource.public_id, {
+                transformation: [
+                    { width: 1536, height: 1024, crop: 'fill' }
+                ],
+                secure: true
+            })
     );
 
     return transformedUrls.map((src: string) => ({ src }));

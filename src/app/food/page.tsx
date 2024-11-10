@@ -1,14 +1,26 @@
 import LayoutClient from "@/app/layout-client";
+import clsx from 'clsx';
+import { getFoodImages, ImageProps } from '@/lib/cloudinary';
 
-export default function Blog() {
+export default async function Food() {
+    const photos: ImageProps[] = await getFoodImages();
+
     return (
         <LayoutClient headerText="Marta Cooks">
-            <div
-                className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-                <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
-                    <h1>Adventures in the kitchen</h1>
-                </main>
+            <div className="mb-6">
+                <h1>Adventures in the kitchen</h1>
             </div>
+
+            <section
+                className={clsx('dark:bg-dark bg-white rounded-xl drop-shadow-lg w-auto')}>
+                <div className="layout relative flex w-full px-4 py-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
+                        {photos.map((photo, index) => (
+                            <img key={index} src={photo.src} alt="image" className=""/>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </LayoutClient>
     );
 }

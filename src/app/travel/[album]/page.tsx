@@ -1,6 +1,6 @@
 import { Album, albums } from '@/app/travel/albums';
 import LayoutClient from '@/app/layout-client';
-import { getImagesByFolder, ImageProps } from '@/lib/cloudinary';
+import { getTravelImages, ImageProps } from '@/lib/cloudinary';
 import PhotoGallery from '@/app/travel/[album]/PhotoGallery';
 
 export async function generateStaticParams() {
@@ -14,7 +14,7 @@ export default async function AlbumPage({ params }: {
 
     const album: Album = albums.filter(albumItem => albumItem.id === albumId)[0];
 
-    const photos: ImageProps[] = await getImagesByFolder(albumId);
+    const photos: ImageProps[] = await getTravelImages(albumId);
 
     return (
         <LayoutClient headerText="Marta Travels">

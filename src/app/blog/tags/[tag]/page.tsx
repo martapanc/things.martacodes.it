@@ -8,29 +8,34 @@ export async function generateStaticParams() {
     const allPosts = getAllPosts();
     const tags = new Set<string>();
 
-    allPosts.forEach(post => {
-        post.tags?.forEach(tag => tags.add(tag));
+    allPosts.forEach((post) => {
+        post.tags?.forEach((tag) => tags.add(tag));
     });
 
-    return Array.from(tags).map(tag => ({ tag }));
+    return Array.from(tags).map((tag) => ({ tag }));
 }
 
-export default async function TagPage({ params }: {
-    params: Promise<{ tag: string }>
+export default async function TagPage({
+    params,
+}: {
+    params: Promise<{ tag: string }>;
 }) {
     const { tag } = await params;
 
     const allPosts = getAllPosts();
     const posts = allPosts
-        .filter(post => post !== null)
-        .filter(post => post.tags?.includes(tag));
+        .filter((post) => post !== null)
+        .filter((post) => post.tags?.includes(tag));
 
     if (posts.length === 0) {
         notFound();
     }
 
     const breadcrumbs = {
-        past: [{ path: '/blog', label: 'Blog' }, { path: '/blog/tags', label: 'Tags' }],
+        past: [
+            { path: '/blog', label: 'Blog' },
+            { path: '/blog/tags', label: 'Tags' },
+        ],
         current: allTags[tag],
     };
 

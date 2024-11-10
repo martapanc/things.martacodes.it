@@ -15,10 +15,16 @@ export default async function Categories() {
         <BlogLayoutWrapper breadcrumbs={breadcrumbs}>
             <h1>Categories</h1>
 
-            <div className="flex flex-col gap-1.5 w-60">
-                {Object.keys(categories).sort().map((category) => (
-                    <CategoryRow key={category} category={category} count={categories[category]} />
-                ))}
+            <div className='flex w-60 flex-col gap-1.5'>
+                {Object.keys(categories)
+                    .sort()
+                    .map((category) => (
+                        <CategoryRow
+                            key={category}
+                            category={category}
+                            count={categories[category]}
+                        />
+                    ))}
             </div>
         </BlogLayoutWrapper>
     );

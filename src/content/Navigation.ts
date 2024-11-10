@@ -1,5 +1,14 @@
-import {IconType} from "react-icons";
-import {SiGithub, SiGoodreads, SiInstagram, SiLinkedin, SiMedium, SiSteam, SiThreads, SiYoutube} from "react-icons/si";
+import { IconType } from 'react-icons';
+import {
+    SiGithub,
+    SiGoodreads,
+    SiInstagram,
+    SiLinkedin,
+    SiMedium,
+    SiSteam,
+    SiThreads,
+    SiYoutube,
+} from 'react-icons/si';
 
 type NavbarItem = {
     href: string;
@@ -18,7 +27,7 @@ export const footerItems: NavbarItem[] = [
     {
         href: 'https://martacodes.it',
         label: 'MartaCodes.it',
-        name: 'My Portfolio'
+        name: 'My Portfolio',
     },
     {
         href: 'https://links.martacodes.it/',
@@ -34,7 +43,7 @@ export const footerItems: NavbarItem[] = [
         href: 'https://analytics.eu.umami.is/share/Dw94G9vRDiMT9YXN/MartaCodes.it',
         label: 'Analytics',
         name: 'Umami - Analytics',
-    }
+    },
 ];
 
 type SocialLink = {

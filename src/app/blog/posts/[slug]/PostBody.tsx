@@ -8,30 +8,29 @@ import remarkGfm from 'remark-gfm';
 import remarkHeadingId from 'remark-heading-id';
 import remarkToc from 'remark-toc';
 
-
 export function PostBody({ children }: { children: string }) {
-  return (
-    <MDXRemote
-      source={children}
-      options={{
-        mdxOptions: {
-          remarkPlugins: [
-            remarkGfm,
-            remarkFrontmatter,
-            remarkA11yEmoji,
-            [
-              remarkToc,
-              {
-                tight: true,
-                maxDepth: 5,
-                // heading: 'structure'
-              },
-            ],
-            remarkHeadingId,
-          ],
-          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-        },
-      }}
-    />
-  );
+    return (
+        <MDXRemote
+            source={children}
+            options={{
+                mdxOptions: {
+                    remarkPlugins: [
+                        remarkGfm,
+                        remarkFrontmatter,
+                        remarkA11yEmoji,
+                        [
+                            remarkToc,
+                            {
+                                tight: true,
+                                maxDepth: 5,
+                                // heading: 'structure'
+                            },
+                        ],
+                        remarkHeadingId,
+                    ],
+                    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                },
+            }}
+        />
+    );
 }

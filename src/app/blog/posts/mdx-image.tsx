@@ -1,38 +1,39 @@
 import NextImage from 'next/image';
 
 export function MDXImage({
-  src,
-  alt,
-}: React.DetailedHTMLProps<
-  React.ImgHTMLAttributes<HTMLImageElement>,
-  HTMLImageElement
-> & {
-  src: string;
-  alt: string;
-}) {
-  let widthFromSrc, heightFromSrc;
-  const url = new URL(src, 'https://maxleiter.com');
-  const widthParam = url.searchParams.get('w') || url.searchParams.get('width');
-  const heightParam =
-    url.searchParams.get('h') || url.searchParams.get('height');
-  if (widthParam) {
-    widthFromSrc = parseInt(widthParam);
-  }
-  if (heightParam) {
-    heightFromSrc = parseInt(heightParam);
-  }
-
-  const imageProps = {
     src,
     alt,
-    // tweak these to your liking
-    height: heightFromSrc || 450,
-    width: widthFromSrc || 550,
-  };
+}: React.DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+> & {
+    src: string;
+    alt: string;
+}) {
+    let widthFromSrc, heightFromSrc;
+    const url = new URL(src, 'https://maxleiter.com');
+    const widthParam =
+        url.searchParams.get('w') || url.searchParams.get('width');
+    const heightParam =
+        url.searchParams.get('h') || url.searchParams.get('height');
+    if (widthParam) {
+        widthFromSrc = parseInt(widthParam);
+    }
+    if (heightParam) {
+        heightFromSrc = parseInt(heightParam);
+    }
 
-  return (
-    <div className='flex justify-center w-full md:w-3/4'>
-      <NextImage {...imageProps} />
-    </div>
-  );
+    const imageProps = {
+        src,
+        alt,
+        // tweak these to your liking
+        height: heightFromSrc || 450,
+        width: widthFromSrc || 550,
+    };
+
+    return (
+        <div className='flex w-full justify-center md:w-3/4'>
+            <NextImage {...imageProps} />
+        </div>
+    );
 }

@@ -21,12 +21,15 @@ const TagList = ({ tags, className }: TagListProps) => {
                 const backgroundColor = `hsl(${hue}, ${colorSettings})`;
 
                 return (
-                    <Link key={tag} href={`/blog/tags/${tag}`}
-                          className={clsx(
-                              'px-2 py-1 rounded-md border-dark/40 dark:border-dark/60 border-2 w-fit hover:brightness-110 dark:hover:brightness-125',
-                              className
-                          )}
-                          style={{ backgroundColor }}>
+                    <Link
+                        key={tag}
+                        href={`/blog/tags/${tag}`}
+                        className={clsx(
+                            'w-fit rounded-md border-2 border-dark/40 px-2 py-1 hover:brightness-110 dark:border-dark/60 dark:hover:brightness-125',
+                            className
+                        )}
+                        style={{ backgroundColor }}
+                    >
                         {allTags[tag]}
                     </Link>
                 );

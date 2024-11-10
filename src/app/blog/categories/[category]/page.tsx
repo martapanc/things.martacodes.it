@@ -8,15 +8,17 @@ export async function generateStaticParams() {
     const allPosts = getAllPosts();
     const categories = new Set<string>();
 
-    allPosts.forEach(post => {
+    allPosts.forEach((post) => {
         categories.add(post.category);
     });
 
-    return Array.from(categories).map(category => ({ category }));
+    return Array.from(categories).map((category) => ({ category }));
 }
 
-export default async function CategoryPage({ params }: {
-    params: Promise<{ category: string }>
+export default async function CategoryPage({
+    params,
+}: {
+    params: Promise<{ category: string }>;
 }) {
     const { category } = await params;
 

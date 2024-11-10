@@ -7,11 +7,16 @@ import getAllPosts, {
     listTags,
 } from '@/lib/blog-posts';
 import Sidebar from '@/app/blog/Sidebar';
-import Breadcrumbs, { BreadcrumbsProps } from '@/components/molecules/Breadcrumbs';
+import Breadcrumbs, {
+    BreadcrumbsProps,
+} from '@/components/molecules/Breadcrumbs';
 
-export default async function BlogLayout({ children, params }: {
+export default async function BlogLayout({
+    children,
+    params,
+}: {
     children: ReactNode;
-    params?: Promise<{ slug: string }>
+    params?: Promise<{ slug: string }>;
 }) {
     const posts = getAllPosts();
     const categories = listCategoriesWithCounts(posts);
@@ -23,18 +28,17 @@ export default async function BlogLayout({ children, params }: {
     }
 
     const post = getPost(slug);
-    const toc = (post && post.toc) ? getToc(post.body, post.toc) : undefined;
+    const toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
 
     return (
-        <div
-            className="grid gap-4 grid-cols-1 lg:grid-cols-[auto_17.5rem] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]">
-            <section className="dark:bg-dark bg-white rounded-xl drop-shadow-sm w-auto">
-                <div className="layout relative flex flex-col py-6 gap-5">
+        <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[auto_17.5rem] lg:grid-rows-[auto]'>
+            <section className='w-auto rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
+                <div className='layout relative flex flex-col gap-5 py-6'>
                     {children}
                 </div>
             </section>
 
-            <Sidebar categories={categories} tags={tags} toc={toc}/>
+            <Sidebar categories={categories} tags={tags} toc={toc} />
         </div>
     );
 }
@@ -45,15 +49,15 @@ interface BlogLayoutWrapperProps {
     params?: Promise<{ slug: string }>;
 }
 
-export function BlogLayoutWrapper({ children, breadcrumbs, params }: BlogLayoutWrapperProps) {
+export function BlogLayoutWrapper({
+    children,
+    breadcrumbs,
+    params,
+}: BlogLayoutWrapperProps) {
     return (
-        <LayoutClient headerText="Marta Writes">
-            {breadcrumbs &&
-                <Breadcrumbs {...breadcrumbs} />
-            }
-            <BlogLayout params={params}>
-                {children}
-            </BlogLayout>
+        <LayoutClient headerText='Marta Writes'>
+            {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
+            <BlogLayout params={params}>{children}</BlogLayout>
         </LayoutClient>
     );
 }

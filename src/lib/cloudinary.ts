@@ -38,17 +38,21 @@ export async function getTravelImages(albumId: string) {
 }
 
 export async function getFoodImages() {
-    return await getImagesByFolder(
-        'Food',
-        { width: 768, height: 512, crop: "fill" }
-    );
+    return await getImagesByFolder('Food', {
+        width: 768,
+        height: 512,
+        crop: 'fill',
+    });
 }
 
-async function getImagesByFolder(folder: string, transformation?: Transformation) {
+async function getImagesByFolder(
+    folder: string,
+    transformation?: Transformation
+) {
     const response = await cloudinary.api.resources({
         type: 'upload',
         prefix: folder,
-        max_results: 200
+        max_results: 200,
     });
 
     const transformedUrls = response.resources
@@ -60,16 +64,20 @@ async function getImagesByFolder(folder: string, transformation?: Transformation
         .map((resource: CloudinaryResource) =>
             cloudinary.url(resource.public_id, {
                 transformation: [
-                    transformation ?? { width: 1536, height: 1024, crop: 'fill' }
+                    transformation ?? {
+                        width: 1536,
+                        height: 1024,
+                        crop: 'fill',
+                    },
                 ],
-                secure: true
+                secure: true,
             })
-    );
+        );
 
     return transformedUrls.map((src: string) => {
         const fileName = extractFilename(src);
         const alt = photos.filter((photo) => photo.src === fileName)[0].alt;
-        return { src, alt }
+        return { src, alt };
     });
 }
 

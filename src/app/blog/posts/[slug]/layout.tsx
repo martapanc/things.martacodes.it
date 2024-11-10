@@ -13,10 +13,11 @@ export async function generateStaticParams() {
     return posts.map((post) => ({ slug: post?.slug }));
 }
 
-export const generateMetadata = async ({ params }: {
-    params: Promise<{ slug: string }>
+export const generateMetadata = async ({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
 }): Promise<Metadata> => {
-
     const { slug } = await params;
     const post = getAllPosts().find((p) => p?.slug === slug);
     return {
@@ -47,39 +48,44 @@ async function getData(slug: string) {
     };
 }
 
-export default async function PostLayout({ children, params }: {
+export default async function PostLayout({
+    children,
+    params,
+}: {
     children: ReactNode;
-    params: Promise<{ slug: string }>
+    params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
-    const { title, category, description, date, image } =
-        await getData(slug);
+    const { title, category, description, date, image } = await getData(slug);
 
     const breadcrumbs = {
         past: [
             { path: '/blog', label: 'Blog' },
-            { path: `/blog/categories/${category ?? 'uncategorized'}`, label: allCategories[category] ?? 'Uncategorized' },
+            {
+                path: `/blog/categories/${category ?? 'uncategorized'}`,
+                label: allCategories[category] ?? 'Uncategorized',
+            },
         ],
         current: title,
     };
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs} params={params}>
-            <div className="flex flex-col items-end">
-                <span className="italic">{formatDate(date)}</span>
+            <div className='flex flex-col items-end'>
+                <span className='italic'>{formatDate(date)}</span>
             </div>
             <article>
-                <h1 className="my-4">{title}</h1>
+                <h1 className='my-4'>{title}</h1>
 
-                <div className="flex justify-center mb-4">
+                <div className='mb-4 flex justify-center'>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                        alt="Post preview image"
+                        alt='Post preview image'
                         src={image}
-                        className="rounded-xl w-[40%]"
+                        className='w-[40%] rounded-xl'
                     />
                 </div>
-                <div className="my-6 font-semibold text-xl">{description}</div>
+                <div className='my-6 text-xl font-semibold'>{description}</div>
 
                 {children}
             </article>

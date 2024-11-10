@@ -14,7 +14,7 @@ const postDirectory = join(process.cwd(), 'src/content/posts');
 export function getPostSlugs() {
     const filePaths = fs.readdirSync(postDirectory);
 
-    return filePaths.map(filePath => filePath.replace('.mdx', ''));
+    return filePaths.map((filePath) => filePath.replace('.mdx', ''));
 }
 
 export const getAllPosts = (): Post[] => {
@@ -22,15 +22,15 @@ export const getAllPosts = (): Post[] => {
 
     return slugs
         .map((slug) => getPost(slug))
-        .filter(post => post !== null)
-        .filter(post => post.published)
+        .filter((post) => post !== null)
+        .filter((post) => post.published)
         .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 };
 
 export const listCategoriesWithCounts = (posts: Post[]) => {
     const categoryMap: Record<string, number> = {};
 
-    posts.forEach(post => {
+    posts.forEach((post) => {
         const category = post.category;
         if (categoryMap[category]) {
             categoryMap[category]++;
@@ -43,11 +43,12 @@ export const listCategoriesWithCounts = (posts: Post[]) => {
 };
 
 export const listTags = (posts: Post[]) => {
-    const tags = new Set<string>(posts
-        .flatMap(post => post.tags));
+    const tags = new Set<string>(posts.flatMap((post) => post.tags));
 
-    return Array.from(tags).filter((tag) => !!tag).sort();
-}
+    return Array.from(tags)
+        .filter((tag) => !!tag)
+        .sort();
+};
 
 export function getPost(slug?: string): Post | null {
     if (!slug) {
@@ -78,7 +79,10 @@ export interface TocItem {
     id: string;
 }
 
-export function getToc(postContent: string, autoToc: boolean = true): TocItem[] {
+export function getToc(
+    postContent: string,
+    autoToc: boolean = true
+): TocItem[] {
     if (autoToc) {
         return extractToc(postContent);
     } else {
@@ -101,8 +105,7 @@ export function extractToc(postContent: string): TocItem[] {
             const id = value.toLowerCase().replace(/\s+/g, '-');
 
             toc.push({ depth, value, id });
-        })
-
+        });
     } catch (error) {
         console.error(error);
     }
@@ -133,7 +136,10 @@ function extractCustomTocSection(content: string): TocItem[] {
                     const firstChild = listItem.children[0];
 
                     // Check if firstChild is a Paragraph and contains a link
-                    if (firstChild?.type === 'paragraph' && firstChild.children?.[0]?.type === 'link') {
+                    if (
+                        firstChild?.type === 'paragraph' &&
+                        firstChild.children?.[0]?.type === 'link'
+                    ) {
                         const linkNode = firstChild.children[0] as Link;
                         const textNode = linkNode.children[0] as Text;
 

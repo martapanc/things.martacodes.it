@@ -1,3 +1,10 @@
+export interface Album {
+    id: string;
+    flag: string;
+    title: string;
+    preview: string;
+}
+
 export const albums = [
     {
         id: 'isle-of-skye',

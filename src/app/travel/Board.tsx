@@ -10,7 +10,7 @@ const Board = () => {
         <section
             className={clsx(
                 'w-auto rounded-xl drop-shadow-lg dark:bg-dark',
-                theme !== 'dark' && 'bg-cork-gradient'
+                theme !== 'dark' && 'bg-photo-gradient'
             )}
         >
             <div className='layout relative flex flex-col gap-5 px-2 py-6'>

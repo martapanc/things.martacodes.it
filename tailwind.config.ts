@@ -21,8 +21,9 @@ const config: Config = {
                 cork: '#ffcc8f',
             },
             backgroundImage: (theme) => ({
-                'cork-gradient':
-                    'linear-gradient(to bottom right, #f8cf6a, #2178dd)',
+                'photo-gradient': 'linear-gradient(to bottom right, #f8cf6a, #2178dd)',
+                'food-gradient': 'linear-gradient(to bottom right,rgba(106, 157, 62, 0.5), rgba(249, 103, 94, 0.6))',
+                'food-gradient-dark': 'linear-gradient(to bottom right,rgba((73,108,43, 0.5), rgba(179, 74, 68, 0.6))'
             }),
         },
     },

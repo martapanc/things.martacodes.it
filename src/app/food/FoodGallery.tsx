@@ -27,7 +27,7 @@ const FoodGallery = ({ photos }: FoodGalleryProps) => {
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
 export default FoodGallery;

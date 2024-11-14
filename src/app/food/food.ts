@@ -1,5 +1,9 @@
 export const photos = [
     {
+        src: 'Violet_cauliflower_p2p73i',
+        alt: 'A violet cauliflower baked with cheese cream'
+    },
+    {
         src: 'tartine_l4kbat',
         alt: 'Bread tartes with peppers, onion, rocket & feta',
     },

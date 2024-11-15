@@ -35,7 +35,7 @@ type CloudinaryResource = {
             alt?: string;
             caption?: string;
         };
-    }
+    };
 };
 
 export async function getTravelImages(albumId: string) {
@@ -58,7 +58,7 @@ async function getImagesByFolder(
         type: 'upload',
         prefix: folder,
         max_results: 200,
-        context: true
+        context: true,
     });
 
     return response.resources
@@ -83,7 +83,7 @@ async function getImagesByFolder(
 
             return {
                 src,
-                alt
-            }
+                alt,
+            };
         });
 }

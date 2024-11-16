@@ -5,6 +5,8 @@ import Breadcrumbs, {
 } from '@/components/molecules/Breadcrumbs';
 // import getAllUpdates from '@/lib/updates';
 
+import './styles.css';
+
 export default async function UpdatesLayout({
     children,
     params,

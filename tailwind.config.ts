@@ -12,6 +12,7 @@ const config: Config = {
         extend: {
             fontFamily: {
                 primary: ['Roboto Thin', ...defaultTheme.fontFamily.sans],
+                updates: ['Georgia', ...defaultTheme.fontFamily.sans],
                 handwritten: ['Caveat', ...defaultTheme.fontFamily.sans],
                 'handwritten-2': ['Kalam', ...defaultTheme.fontFamily.sans],
             },

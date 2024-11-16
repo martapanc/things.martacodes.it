@@ -8,8 +8,10 @@ tags:
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731696238/Updates/Drusi_Lino_skzs73.webp
 ---
 
-Today the Feline Registry (I didn't know that was a thing) of my town gave us the news that Drusy and Lino are officially our "children" 🥰
+Big news: the Feline Registry (that's a thing) officially recognized Drusy and Lino as our "children" today!
 
-The two of them keep having their weird "You're my best friend, play with me! 😽 / Marta gave you one extra croquette, I'm gonna murder you! 😾" relationship, but it looks like they're starting to tolerate each other's presence, which is the important thing…
+Their weird "You're my best friend, play with me! 😽 / Marta gave you one extra croquette, I'm gonna murder you! 😾" dynamic continues, but they're starting to tolerate each other's presence, which is the important thing…
 
-Yes, Drusy's personality as a bully (apparently it was the same at the colony… boys will be boys 🙄) has emerged and he keeps looking at Lino in a scowl, occasionally smacking him for example when he steals his kennel, but at the same time Lino who is way shyer and submissive is learning to fight back and be more assertive… basically they're being cats, lol 😁
+Yes, Drusy's bossy personality (apparently it was the same at the colony… boys will be boys 🙄) has emerged and he keeps looking at Lino in a scowl, smacking him when he steals his kennel — but shy, submissive Lino is learning to fight back and assert himself.
+
+Basically, they’re being cats, lol. 😁

@@ -8,13 +8,8 @@ tags:
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731696397/Updates/Drusi_rs8d4a.webp
 ---
 
-I've wanted to adopt a cat for quite some time, but I always had to put it off because either I was living in a rented
-flat that did not allow the presence of furry friends, or I was always travelling, or both.
+I've wanted to adopt a cat for ages but kept putting it off — either I was in a flat that didn’t allow pets, or travelling too much, or both. Finally, I’m in a stable place, so... welcome home, Drusy! 🐈‍⬛
 
-Finally, I reached a living and economic condition suitable for becoming a cat mummy, therefore... welcome home, Drusy! 🐈‍⬛
+Drusy is an adorable 8-year-old former colony cat cared for by a local volunteer group. After recovering from a dental infection, they decided he deserved a safe, loving home.
 
-Drusy is an adorable 8-year-old cat who has lived in a colony and until now has been looked after by a local volunteer association.
-
-He recently underwent an operation on his teeth due to an infection, and despite his full recovery the volunteers thought it would be best for him to end up in a caring and secure home, after several years of living outdoors.
-
-I am both nervous, since caring for another living being is no small responsibility (I guess a little bit like a baby?), and excited about spending the next few years with such a cuddly, adorable little creature 🐱, so I'm looking forward to getting to know him and showing him all the love I'm capable of ❤️
+I’m nervous (caring for a living being is no joke!) but so excited to spend years with this cuddly little guy. ❤️

@@ -97,6 +97,59 @@ export default defineConfig({
                     // router: ({ document }) => `/blog/posts/${document._sys.filename}`,
                 },
             },
+            {
+                name: 'update',
+                label: 'Updates',
+                path: 'src/content/updates',
+                format: 'md',
+                fields: [
+                    {
+                        type: 'string',
+                        name: 'title',
+                        label: 'Title',
+                        isTitle: true,
+                        required: true,
+                    },
+                    {
+                        type: 'string',
+                        name: 'slug',
+                        label: 'Slug',
+                        required: true,
+                    },
+                    {
+                        type: 'datetime',
+                        name: 'date',
+                        label: 'Date',
+                        required: true,
+                    },
+                    {
+                        type: 'boolean',
+                        name: 'published',
+                        label: 'Published',
+                        required: true,
+                    },
+                    {
+                        type: 'string',
+                        name: 'tags',
+                        label: 'Tags',
+                        list: true,
+                    },
+                    {
+                        type: 'image',
+                        name: 'image',
+                        label: 'Image',
+                    },
+                    {
+                        type: 'rich-text',
+                        name: 'body',
+                        label: 'Body',
+                        isBody: true,
+                    },
+                ],
+                ui: {
+                    // router: ({ document }) => `/blog/posts/${document._sys.filename}`,
+                },
+            },
         ],
     },
 });

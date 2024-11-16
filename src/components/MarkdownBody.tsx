@@ -8,7 +8,7 @@ import remarkGfm from 'remark-gfm';
 import remarkHeadingId from 'remark-heading-id';
 import remarkToc from 'remark-toc';
 
-export function PostBody({ children }: { children: string }) {
+export function MarkdownBody({ children }: { children: string }) {
     return (
         <MDXRemote
             source={children}

@@ -1,13 +1,15 @@
-import LayoutClient from '@/app/layout-client';
+import { UpdatesLayoutWrapper } from '@/app/updates/updates-layout';
+import getAllUpdates from '@/lib/updates';
+import { UpdateList } from '@/app/updates/UpdateList';
 
-export default function Blog() {
+export default function Updates() {
+    const updates = getAllUpdates();
+
     return (
-        <LayoutClient headerText='Marta has a Life'>
-            <div className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-                <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
-                    <h1>Updates</h1>
-                </main>
-            </div>
-        </LayoutClient>
+        <UpdatesLayoutWrapper>
+            <h1>Updates</h1>
+
+            <UpdateList updates={updates} />
+        </UpdatesLayoutWrapper>
     );
 }

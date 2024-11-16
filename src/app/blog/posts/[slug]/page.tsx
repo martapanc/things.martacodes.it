@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import getAllPosts, { getPost } from '@/lib/blog-posts';
-import { PostBody } from '@/app/blog/posts/[slug]/PostBody';
+import { MarkdownBody } from '@/components/MarkdownBody';
 
 export async function generateStaticParams() {
     const posts = getAllPosts();
@@ -18,5 +18,5 @@ export default async function PostPage({
 
     if (!post) return notFound();
 
-    return <PostBody>{post.body}</PostBody>;
+    return <MarkdownBody>{post.body}</MarkdownBody>;
 }

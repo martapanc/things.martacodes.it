@@ -7,7 +7,6 @@ tags:
     - travel
     - house
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731858356/Updates/Basel_y6qf3u.webp
-
 ---
 
 We finally scheduled masonry work to install the kitchen, and since we have to leave the flat for a couple of weeks, we thought of organising a touring holiday between France (where my partner's relatives live) and Switzerland - all by train.

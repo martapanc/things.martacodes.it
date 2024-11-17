@@ -6,7 +6,6 @@ published: true
 tags:
     - travel
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731857851/Updates/Marta-ATL_fsoegz.webp
-
 ---
 
 After the amazing offsite in Austin, I certainly deserve to have a little holiday!

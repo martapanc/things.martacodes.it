@@ -2,7 +2,7 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path, { join } from 'path';
 
-import { Post } from '@/types/Post';
+import { Post, PostPreview } from '@/types/Post';
 import moment from 'moment/moment';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -17,17 +17,38 @@ export function getPostSlugs() {
     return filePaths.map((filePath) => filePath.replace('.mdx', ''));
 }
 
-export const getAllPosts = (): Post[] => {
+export const getAllPostPreviews = (): PostPreview[] => {
+    return getAllPosts(false);
+}
+
+export const getAllPosts = (includeBody: boolean = true): Post[] | PostPreview[] => {
     const slugs = getPostSlugs();
 
-    return slugs
+    const posts = slugs
         .map((slug) => getPost(slug))
         .filter((post) => post !== null)
         .filter((post) => post.published)
+        .map((post) => {
+            const { wordCount, readingTime } = calcWordsAndReadingTime(post.body);
+            return {
+                ...post,
+                wordCount,
+                readingTime
+            }
+        })
         .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+
+    return posts.map(post => {
+        if (includeBody) {
+            return post as Post;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { body, toc, ...postPreview } = post
+        return postPreview as PostPreview;
+    });
 };
 
-export const listCategoriesWithCounts = (posts: Post[]) => {
+export const listCategoriesWithCounts = (posts: PostPreview[]) => {
     const categoryMap: Record<string, number> = {};
 
     posts.forEach((post) => {
@@ -42,7 +63,7 @@ export const listCategoriesWithCounts = (posts: Post[]) => {
     return categoryMap;
 };
 
-export const listTags = (posts: Post[]) => {
+export const listTags = (posts: PostPreview[]) => {
     const tags = new Set<string>(posts.flatMap((post) => post.tags));
 
     return Array.from(tags)
@@ -163,10 +184,10 @@ export function formatDate(date: string) {
 }
 
 export function calcWordsAndReadingTime(content: string) {
-    const words = content.trim().split(/\s+/).length;
-    const readingTime = Math.ceil(words / 200);
+    const wordCount = content.trim().split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200);
 
-    return { words, readingTime: `${readingTime} min.` };
+    return { wordCount, readingTime: `${readingTime} min.` };
 }
 
 export default getAllPosts;

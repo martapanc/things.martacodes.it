@@ -1,4 +1,4 @@
-import getAllPosts from '@/lib/blog-posts';
+import getAllPosts from '@/app/api/posts/blog-posts';
 import { allTags } from '@/types/Post';
 import { PostList } from '@/app/blog/posts/PostList';
 import { notFound } from 'next/navigation';

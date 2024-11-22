@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
-import { allCategories, Post, allTags } from '@/types/Post';
+import { allCategories, PostPreview, allTags } from '@/types/Post';
 import moment from 'moment/moment';
-import { calcWordsAndReadingTime } from '@/lib/blog-posts';
 import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
 import { MdOutlineTimer } from 'react-icons/md';
 import { FaHashtag } from 'react-icons/fa6';
@@ -11,15 +10,13 @@ import { BsTextLeft } from 'react-icons/bs';
 import BgIcon from '@/components/atoms/BgIcon';
 
 type PostPreviewProps = {
-    post: Post;
+    post: PostPreview;
 };
 
-export default function PostPreview({ post }: PostPreviewProps) {
+export default function PostPreviewDisplay({ post }: PostPreviewProps) {
     const formattedDate = post.date
         ? moment(post.date, 'YYYY MMM D').format('Do MMMM, YYYY')
         : null;
-
-    const { words, readingTime } = calcWordsAndReadingTime(post.body);
 
     return (
         <div className='duration-400 lg:h-68 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'>
@@ -65,11 +62,11 @@ export default function PostPreview({ post }: PostPreviewProps) {
                         <div className='flex gap-6'>
                             <span className='flex gap-1.5'>
                                 <BgIcon icon={<BsTextLeft />} />
-                                {words} words
+                                {post.wordCount} words
                             </span>
                             <span className='flex gap-1.5'>
                                 <BgIcon icon={<MdOutlineTimer />} />
-                                {readingTime}
+                                {post.readingTime}
                             </span>
                         </div>
                         {post.tags && post.tags.length > 0 && (

@@ -1,4 +1,4 @@
-import getAllPosts, { listTags } from '@/lib/blog-posts';
+import getAllPosts, { listTags } from '@/app/api/posts/blog-posts';
 import TagList from '@/components/molecules/TagList';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 

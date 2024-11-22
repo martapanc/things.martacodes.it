@@ -1,4 +1,4 @@
-import { TocItem } from '@/lib/blog-posts';
+import { TocItem } from '@/app/api/posts/blog-posts';
 import Link from 'next/link';
 
 export function TableOfContents({ toc }: { toc: TocItem[] }) {

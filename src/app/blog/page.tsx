@@ -1,5 +1,5 @@
 import { PostList } from '@/app/blog/posts/PostList';
-import getAllPosts from '@/lib/blog-posts';
+import getAllPosts from '@/app/api/posts/blog-posts';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 
 export default async function Blog() {

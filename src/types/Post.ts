@@ -4,11 +4,10 @@ export type Base = {
     href?: string;
 };
 
-export type Post = Base & {
+export type PostPreview = Base & {
     slug: string | undefined;
     date: string;
     tags: string[];
-    body: string;
     lastModified?: number;
     views?: number;
     isThirdParty?: boolean;
@@ -16,8 +15,14 @@ export type Post = Base & {
     type: 'post';
     image: string;
     category: string;
-    toc: boolean;
+    wordCount?: number;
+    readingTime?: string;
 };
+
+export type Post = PostPreview & {
+    body: string;
+    toc: boolean;
+}
 
 export const allCategories: { [key: string]: string } = {
     ai: 'AI',

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 import '@/styles/blog.css';
 
-import getAllPosts, { formatDate } from '@/lib/blog-posts';
+import getAllPosts, { formatDate } from '@/app/api/posts/blog-posts';
 import { ReactNode } from 'react';
 import { allCategories } from '@/types/Post';
 import { notFound } from 'next/navigation';

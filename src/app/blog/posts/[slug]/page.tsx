@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import getAllPosts, { getPost } from '@/lib/blog-posts';
+import getAllPosts, { getPost } from '@/app/api/posts/blog-posts';
 import { MarkdownBody } from '@/components/MarkdownBody';
 
 export async function generateStaticParams() {

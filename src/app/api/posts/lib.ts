@@ -52,10 +52,12 @@ export const getAllPosts = (
     });
 };
 
-export const listCategoriesWithCounts = (posts: PostPreview[]) => {
+export const listCategoriesWithCounts = (posts?: PostPreview[]) => {
     const categoryMap: Record<string, number> = {};
 
-    posts.forEach((post) => {
+    const allPosts = posts ?? getAllPostPreviews();
+
+    allPosts.forEach((post) => {
         const category = post.category;
         if (categoryMap[category]) {
             categoryMap[category]++;
@@ -67,8 +69,10 @@ export const listCategoriesWithCounts = (posts: PostPreview[]) => {
     return categoryMap;
 };
 
-export const listTags = (posts: PostPreview[]) => {
-    const tags = new Set<string>(posts.flatMap((post) => post.tags));
+export const listTags = (posts?: PostPreview[]) => {
+    const allPosts = posts ?? getAllPostPreviews();
+
+    const tags = new Set<string>(allPosts.flatMap((post) => post.tags));
 
     return Array.from(tags)
         .filter((tag) => !!tag)

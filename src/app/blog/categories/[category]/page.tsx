@@ -1,18 +1,13 @@
-import getAllPosts from '@/app/api/posts/lib';
 import { PostList } from '@/app/blog/posts/PostList';
-import { allCategories } from '@/types/Post';
+import { allCategories, Category, PostPreview } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
+import { fetchJson } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const allPosts = getAllPosts();
-    const categories = new Set<string>();
+    const categories = await fetchJson<Category[]>('/posts/categories');
 
-    allPosts.forEach((post) => {
-        categories.add(post.category);
-    });
-
-    return Array.from(categories).map((category) => ({ category }));
+    return categories.map((category) => ({ category }));
 }
 
 export default async function CategoryPage({
@@ -22,7 +17,7 @@ export default async function CategoryPage({
 }) {
     const { category } = await params;
 
-    const allPosts = getAllPosts();
+    const allPosts = await fetchJson<PostPreview[]>('/posts');
     const posts = allPosts.filter((post) => post && post.category === category);
 
     if (posts.length === 0) {

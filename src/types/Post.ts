@@ -24,6 +24,9 @@ export type Post = PostPreview & {
     toc: boolean;
 };
 
+export type Category = string;
+export type CategoryCount = Record<string, number>;
+
 export const allCategories: { [key: string]: string } = {
     ai: 'AI',
     'software-development': 'Software Development',

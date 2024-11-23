@@ -1,10 +1,12 @@
-import getAllPosts, { listCategoriesWithCounts } from '@/app/api/posts/lib';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { CategoryRow } from '@/components/molecules/CategoryRow';
+import { fetchJson } from '@/app/api/fetch';
+import { CategoryCount } from '@/types/Post';
 
 export default async function Categories() {
-    const posts = getAllPosts();
-    const categories = listCategoriesWithCounts(posts);
+    const categories = await fetchJson<CategoryCount>(
+        '/posts/categories/counts'
+    );
 
     const breadcrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],
@@ -18,7 +20,7 @@ export default async function Categories() {
             <div className='flex w-60 flex-col gap-1.5'>
                 {Object.keys(categories)
                     .sort()
-                    .map((category) => (
+                    .map((category: string) => (
                         <CategoryRow
                             key={category}
                             category={category}

@@ -22,7 +22,7 @@ export type PostPreview = Base & {
 export type Post = PostPreview & {
     body: string;
     toc: boolean;
-}
+};
 
 export const allCategories: { [key: string]: string } = {
     ai: 'AI',

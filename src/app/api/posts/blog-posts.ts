@@ -19,9 +19,11 @@ export function getPostSlugs() {
 
 export const getAllPostPreviews = (): PostPreview[] => {
     return getAllPosts(false);
-}
+};
 
-export const getAllPosts = (includeBody: boolean = true): Post[] | PostPreview[] => {
+export const getAllPosts = (
+    includeBody: boolean = true
+): Post[] | PostPreview[] => {
     const slugs = getPostSlugs();
 
     const posts = slugs
@@ -29,21 +31,23 @@ export const getAllPosts = (includeBody: boolean = true): Post[] | PostPreview[]
         .filter((post) => post !== null)
         .filter((post) => post.published)
         .map((post) => {
-            const { wordCount, readingTime } = calcWordsAndReadingTime(post.body);
+            const { wordCount, readingTime } = calcWordsAndReadingTime(
+                post.body
+            );
             return {
                 ...post,
                 wordCount,
-                readingTime
-            }
+                readingTime,
+            };
         })
         .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 
-    return posts.map(post => {
+    return posts.map((post) => {
         if (includeBody) {
             return post as Post;
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { body, toc, ...postPreview } = post
+        const { body, toc, ...postPreview } = post;
         return postPreview as PostPreview;
     });
 };

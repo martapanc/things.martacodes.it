@@ -2,15 +2,18 @@ import { Metadata } from 'next';
 
 import '@/styles/blog.css';
 
-import getAllPosts, { formatDate } from '@/app/api/posts/blog-posts';
+import getAllPosts, { formatDate } from '@/app/api/posts/lib';
 import { ReactNode } from 'react';
 import { allCategories } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
+import config from '@/config';
 
 export async function generateStaticParams() {
-    const posts = getAllPosts();
-    return posts.map((post) => ({ slug: post?.slug }));
+    const response = await fetch(`${config.baseUrl}/api/posts/slugs`);
+
+    const slugs: string[] = await response.json();
+    return slugs;
 }
 
 export const generateMetadata = async ({

@@ -1,11 +1,15 @@
 import { notFound } from 'next/navigation';
 
-import getAllPosts, { getPost } from '@/app/api/posts/blog-posts';
+import { getPost } from '@/app/api/posts/lib';
 import { MarkdownBody } from '@/components/MarkdownBody';
+import config from '@/config';
 
 export async function generateStaticParams() {
-    const posts = getAllPosts();
-    return posts.map((post) => post && { slug: post.slug });
+    const response = await fetch(`${config.baseUrl}/api/posts/slugs`);
+
+    const slugs: string[] = await response.json();
+
+    return slugs;
 }
 
 export default async function PostPage({

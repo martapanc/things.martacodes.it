@@ -1,6 +1,4 @@
-import getAllPosts, {
-    listCategoriesWithCounts,
-} from '@/app/api/posts/blog-posts';
+import getAllPosts, { listCategoriesWithCounts } from '@/app/api/posts/lib';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { CategoryRow } from '@/components/molecules/CategoryRow';
 

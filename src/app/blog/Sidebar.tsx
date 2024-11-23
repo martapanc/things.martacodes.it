@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import TagList from '@/components/molecules/TagList';
-import { TocItem } from '@/app/api/posts/blog-posts';
+import { TocItem } from '@/app/api/posts/lib';
 import { TableOfContents } from '@/app/blog/posts/[slug]/TableOfContents';
 import { CategoryRow } from '@/components/molecules/CategoryRow';
 

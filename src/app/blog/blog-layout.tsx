@@ -5,7 +5,7 @@ import getAllPosts, {
     getToc,
     listCategoriesWithCounts,
     listTags,
-} from '@/app/api/posts/blog-posts';
+} from '@/app/api/posts/lib';
 import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, {
     BreadcrumbsProps,

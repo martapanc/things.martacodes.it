@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import getAllPosts from '@/app/api/posts/lib';
+import { getPostSlugs } from '@/app/api/posts/lib';
 
 export async function GET() {
     try {
-        const posts = getAllPosts();
-        return NextResponse.json(posts, {
+        const slugs = getPostSlugs();
+        return NextResponse.json(slugs, {
             headers: { 'Cache-Control': 'public, max-age=3600' },
         });
     } catch (error) {

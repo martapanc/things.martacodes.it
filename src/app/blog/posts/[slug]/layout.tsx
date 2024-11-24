@@ -4,16 +4,15 @@ import '@/styles/blog.css';
 
 import getAllPosts, { formatDate } from '@/app/api/posts/lib';
 import { ReactNode } from 'react';
-import { allCategories } from '@/types/Post';
+import { allCategories, PostPreview, Slug } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
-import config from '@/config';
+import { fetchJson } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const response = await fetch(`${config.baseUrl}/api/posts/slugs`);
+    const slugs = await fetchJson<Slug[]>('/posts/slugs')
 
-    const slugs: string[] = await response.json();
-    return slugs;
+    return slugs.map(slug => ({ slug }));
 }
 
 export const generateMetadata = async ({
@@ -33,7 +32,7 @@ export const generateMetadata = async ({
 };
 
 async function getData(slug: string) {
-    const posts = getAllPosts();
+    const posts = await fetchJson<PostPreview[]>('/posts');
     const postIndex = posts.findIndex((p) => p?.slug === slug);
 
     if (postIndex === -1) {

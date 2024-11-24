@@ -24,6 +24,8 @@ export type Post = PostPreview & {
     toc: boolean;
 };
 
+export type Slug = string;
+export type Tag = string;
 export type Category = string;
 export type CategoryCount = Record<string, number>;
 

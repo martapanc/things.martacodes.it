@@ -1,18 +1,15 @@
-import getAllPosts from '@/app/api/posts/lib';
-import { allTags } from '@/types/Post';
+import { allTags, PostPreview, Tag } from '@/types/Post';
 import { PostList } from '@/app/blog/posts/PostList';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
+import { fetchJson } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const allPosts = getAllPosts();
-    const tags = new Set<string>();
+    const tags = await fetchJson<Tag[]>(
+        '/posts/tags'
+    );
 
-    allPosts.forEach((post) => {
-        post.tags?.forEach((tag) => tags.add(tag));
-    });
-
-    return Array.from(tags).map((tag) => ({ tag }));
+    return tags.map((tag) => ({ tag }));
 }
 
 export default async function TagPage({
@@ -22,7 +19,7 @@ export default async function TagPage({
 }) {
     const { tag } = await params;
 
-    const allPosts = getAllPosts();
+    const allPosts = await fetchJson<PostPreview[]>('/posts');
     const posts = allPosts
         .filter((post) => post !== null)
         .filter((post) => post.tags?.includes(tag));

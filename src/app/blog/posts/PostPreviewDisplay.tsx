@@ -1,23 +1,19 @@
 import Link from 'next/link';
 
 import { allCategories, PostPreview, allTags } from '@/types/Post';
-import moment from 'moment/moment';
 import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
 import { MdOutlineTimer } from 'react-icons/md';
 import { FaHashtag } from 'react-icons/fa6';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
 import { BsTextLeft } from 'react-icons/bs';
 import BgIcon from '@/components/atoms/BgIcon';
+import { formatDate } from '@/app/api/posts/lib';
 
 type PostPreviewProps = {
     post: PostPreview;
 };
 
 export default function PostPreviewDisplay({ post }: PostPreviewProps) {
-    const formattedDate = post.date
-        ? moment(post.date, 'YYYY MMM D').format('Do MMMM, YYYY')
-        : null;
-
     return (
         <div className='duration-400 lg:h-68 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'>
             <div className='flex h-full flex-col gap-5 lg:flex-row'>
@@ -45,7 +41,7 @@ export default function PostPreviewDisplay({ post }: PostPreviewProps) {
                             </span>
                             <span className='flex justify-end gap-1 italic'>
                                 <BgIcon icon={<FaRegCalendarAlt />} />
-                                {formattedDate}
+                                {formatDate(post.date)}
                             </span>
                         </div>
                         <Link href={`/blog/posts/${post.slug}`}>

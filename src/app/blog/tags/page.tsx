@@ -1,10 +1,10 @@
-import getAllPosts, { listTags } from '@/app/api/posts/lib';
 import TagList from '@/components/molecules/TagList';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
+import { fetchJson } from '@/app/api/fetch';
+import { Tag } from '@/types/Post';
 
 export default async function Tags() {
-    const posts = getAllPosts();
-    const tags = listTags(posts);
+    const tags = await fetchJson<Tag[]>('/posts/tags');
 
     const breadcrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],

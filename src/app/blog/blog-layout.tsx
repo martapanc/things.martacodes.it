@@ -1,15 +1,14 @@
 import { ReactNode } from 'react';
 import LayoutClient from '@/app/layout-client';
-import getAllPosts, {
-    getPost,
+import {
     getToc,
-    listCategoriesWithCounts,
-    listTags,
 } from '@/app/api/posts/lib';
 import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, {
     BreadcrumbsProps,
 } from '@/components/molecules/Breadcrumbs';
+import { fetchJson } from '../api/fetch';
+import { CategoryCount, Post, Tag } from '@/types/Post';
 
 export default async function BlogLayout({
     children,
@@ -18,17 +17,19 @@ export default async function BlogLayout({
     children: ReactNode;
     params?: Promise<{ slug: string }>;
 }) {
-    const posts = getAllPosts();
-    const categories = listCategoriesWithCounts(posts);
-    const tags = listTags(posts);
+    const categories = await fetchJson<CategoryCount>('/posts/categories/counts');
+    const tags = await fetchJson<Tag[]>('/posts/tags');
 
     let slug;
     if (params) {
         slug = (await params).slug;
     }
 
-    const post = getPost(slug);
-    const toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
+    let toc;
+    if (slug) {
+        const post = await fetchJson<Post>(`/posts/${slug}`);
+        toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
+    }
 
     return (
         <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[auto_17.5rem] lg:grid-rows-[auto]'>

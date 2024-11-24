@@ -1,8 +1,6 @@
-import { Metadata } from 'next';
-
 import '@/styles/blog.css';
 
-import getAllPosts, { formatDate } from '@/app/api/posts/lib';
+import { formatDate } from '@/app/api/posts/lib';
 import { ReactNode } from 'react';
 import { allCategories, PostPreview, Slug } from '@/types/Post';
 import { notFound } from 'next/navigation';
@@ -10,26 +8,10 @@ import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchJson } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const slugs = await fetchJson<Slug[]>('/posts/slugs')
+    const slugs = await fetchJson<Slug[]>('/posts/slugs');
 
-    return slugs.map(slug => ({ slug }));
+    return slugs.map((slug) => ({ slug }));
 }
-
-export const generateMetadata = async ({
-    params,
-}: {
-    params: Promise<{ slug: string }>;
-}): Promise<Metadata> => {
-    const { slug } = await params;
-    const post = getAllPosts().find((p) => p?.slug === slug);
-    return {
-        title: post?.title,
-        description: post?.description,
-        alternates: {
-            canonical: `https://maxleiter.com/blog/${slug}`,
-        },
-    };
-};
 
 async function getData(slug: string) {
     const posts = await fetchJson<PostPreview[]>('/posts');

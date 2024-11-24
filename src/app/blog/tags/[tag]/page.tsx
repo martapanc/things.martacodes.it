@@ -5,9 +5,7 @@ import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchJson } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const tags = await fetchJson<Tag[]>(
-        '/posts/tags'
-    );
+    const tags = await fetchJson<Tag[]>('/posts/tags');
 
     return tags.map((tag) => ({ tag }));
 }

@@ -1,8 +1,6 @@
 import { ReactNode } from 'react';
 import LayoutClient from '@/app/layout-client';
-import {
-    getToc,
-} from '@/app/api/posts/lib';
+import { getToc } from '@/app/api/posts/lib';
 import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, {
     BreadcrumbsProps,
@@ -17,7 +15,9 @@ export default async function BlogLayout({
     children: ReactNode;
     params?: Promise<{ slug: string }>;
 }) {
-    const categories = await fetchJson<CategoryCount>('/posts/categories/counts');
+    const categories = await fetchJson<CategoryCount>(
+        '/posts/categories/counts'
+    );
     const tags = await fetchJson<Tag[]>('/posts/tags');
 
     let slug;

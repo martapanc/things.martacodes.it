@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 }
 
 async function getData(slug: string) {
-    const post: Post = await fetchApi('Post', { params: { slug }});
+    const post: Post = await fetchApi('Post', { params: { slug } });
 
     if (!post) {
         notFound();

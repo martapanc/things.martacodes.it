@@ -1,3 +1,7 @@
 lsof -ti:3002 | xargs kill -9 || true
+
 yarn run lint:fix
+npx prettier . --write
+git add .
+
 yarn build:next

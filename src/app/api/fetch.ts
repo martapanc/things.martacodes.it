@@ -33,8 +33,10 @@ export async function fetchApi<T extends keyof ApiRoutesType>(
     return fetchJson(url);
 }
 
-
-function replacePathParams(path: string, params: Record<string, string | number>): string {
+function replacePathParams(
+    path: string,
+    params: Record<string, string | number>
+): string {
     return path.replace(/{(\w+)}/g, (_, key) => {
         if (!(key in params)) {
             throw new Error(`Missing parameter: ${key}`);

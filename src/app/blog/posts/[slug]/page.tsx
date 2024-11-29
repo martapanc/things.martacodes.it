@@ -8,7 +8,7 @@ import { fetchApi } from '@/api/fetch';
 export async function generateStaticParams() {
     const slugs: Slug[] = await fetchApi('Slugs');
 
-    return slugs.map(slug => ({ slug }));
+    return slugs.map((slug) => ({ slug }));
 }
 
 export default async function PostPage({

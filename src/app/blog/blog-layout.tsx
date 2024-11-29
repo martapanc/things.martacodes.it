@@ -25,7 +25,7 @@ export default async function BlogLayout({
 
     let toc;
     if (slug) {
-        const post: Post = await fetchApi('Post', { params: { slug }});
+        const post: Post = await fetchApi('Post', { params: { slug } });
         toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
     }
 

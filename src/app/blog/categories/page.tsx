@@ -1,12 +1,10 @@
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { CategoryRow } from '@/components/molecules/CategoryRow';
-import { fetchJson } from '@/app/api/fetch';
+import { fetchApi } from '@/app/api/fetch';
 import { CategoryCount } from '@/types/Post';
 
 export default async function Categories() {
-    const categories = await fetchJson<CategoryCount>(
-        '/posts/categories/counts'
-    );
+    const categories: CategoryCount = await fetchApi('CategoryCounts');
 
     const breadcrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],

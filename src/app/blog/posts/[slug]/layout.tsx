@@ -2,32 +2,26 @@ import '@/styles/blog.css';
 
 import { formatDate } from '@/app/api/posts/lib';
 import { ReactNode } from 'react';
-import { allCategories, PostPreview, Slug } from '@/types/Post';
+import { allCategories, Post, Slug } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
-import { fetchJson } from '@/app/api/fetch';
+import { fetchApi } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const slugs = await fetchJson<Slug[]>('/posts/slugs');
+    const slugs: Slug[] = await fetchApi('Slugs');
 
     return slugs.map((slug) => ({ slug }));
 }
 
 async function getData(slug: string) {
-    const posts = await fetchJson<PostPreview[]>('/posts');
-    const postIndex = posts.findIndex((p) => p?.slug === slug);
+    const post: Post = await fetchApi('Post', { params: { slug }});
 
-    if (postIndex === -1) {
+    if (!post) {
         notFound();
     }
-
-    const post = posts[postIndex];
-
     const { ...rest } = post;
 
     return {
-        previous: posts[postIndex + 1] || null,
-        next: posts[postIndex - 1] || null,
         ...rest,
     };
 }
@@ -40,6 +34,7 @@ export default async function PostLayout({
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
+
     const { title, category, description, date, image } = await getData(slug);
 
     const breadcrumbs = {

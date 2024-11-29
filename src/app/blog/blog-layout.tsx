@@ -5,7 +5,7 @@ import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, {
     BreadcrumbsProps,
 } from '@/components/molecules/Breadcrumbs';
-import { fetchJson } from '../api/fetch';
+import { fetchApi } from '@/api/fetch';
 import { CategoryCount, Post, Tag } from '@/types/Post';
 
 export default async function BlogLayout({
@@ -15,10 +15,8 @@ export default async function BlogLayout({
     children: ReactNode;
     params?: Promise<{ slug: string }>;
 }) {
-    const categories = await fetchJson<CategoryCount>(
-        '/posts/categories/counts'
-    );
-    const tags = await fetchJson<Tag[]>('/posts/tags');
+    const categories: CategoryCount = await fetchApi('CategoryCounts');
+    const tags: Tag[] = await fetchApi('Tags');
 
     let slug;
     if (params) {
@@ -27,7 +25,7 @@ export default async function BlogLayout({
 
     let toc;
     if (slug) {
-        const post = await fetchJson<Post>(`/posts/${slug}`);
+        const post: Post = await fetchApi('Post', { params: { slug }});
         toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
     }
 

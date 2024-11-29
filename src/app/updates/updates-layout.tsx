@@ -3,7 +3,6 @@ import LayoutClient from '@/app/layout-client';
 import Breadcrumbs, {
     BreadcrumbsProps,
 } from '@/components/molecules/Breadcrumbs';
-// import getAllUpdates from '@/lib/updates';
 
 import './styles.css';
 
@@ -14,16 +13,11 @@ export default async function UpdatesLayout({
     children: ReactNode;
     params?: Promise<{ slug: string }>;
 }) {
-    // const updates = getAllUpdates();
-    // const tags = listTags(updates);
-
     let slug;
     if (params) {
         slug = (await params).slug;
         console.log({ slug });
     }
-
-    // const update = getUpdate(slug);
 
     return (
         <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[auto_17.5rem] lg:grid-rows-[auto]'>

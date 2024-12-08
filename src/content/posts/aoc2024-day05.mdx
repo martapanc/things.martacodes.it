@@ -1,0 +1,58 @@
+---
+title: "Order in the Queue: Page Rules to the Rescue"
+description: Advent of Code 2024: Day 5
+slug: aoc-2024-day-5
+date: 2024-12-05T12:00:00.000Z
+published: true
+category: Advent of Code
+tags:
+- aoc
+- 2024
+- day-5
+image: /blog/helloworld.png
+---
+
+Finally, a bit of a trickier task today 💪
+
+We have a list of page ordering rules like
+
+```
+47|53
+97|13
+97|61
+```
+
+and list of page numbers to print.
+
+```
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+```
+
+I have an incurable idiosyncrasy for printers and print queues, but fortunately in this case it's purely a mental / coding effort - no need to deal with actual printers failing at their job 😝
+
+For part 1, all we need to do for each set of page numbers is to verify whether, based on the rules, the pages are in the correct order. I solved this with low effort by simply considering only the rules containing the page numbers for the list under consideration (obviously, no need to check against rule `1|2` if the printing queue is `[3, 4, 5]`).
+
+```
+let isQueueValid = true;
+
+// Consider only the rules affecting the current queue
+const rulesToCheck = rules.filter(rule => queue.includes(rule.a) && queue.includes(rule.b));
+
+for (const ruleToCheck of rulesToCheck) {
+    const aIndex = queue.indexOf(ruleToCheck.a); // Get the indices of the numbers in the list corresponding to the rule
+    const bIndex = queue.indexOf(ruleToCheck.b);
+
+	// If the first number of the rule comes after the second number, then the queue is not ordered correctly
+    if (aIndex > bIndex) {
+        isQueueValid = false;
+        break;
+    }
+}
+```
+
+Part 2 was, as I anticipated, a bit more challenging: now we have to considered all incorrectly-ordered queues and sort them according to the various rules.
+It took my a bit of digging and remembering Data Structures & Algorithms classes from university, but in the end I thought it would be best to treat this as a **topological sorting** problem: from a directed graph built from the list of rules (each number is a node, and each pair is a directed edge between the two nodes), we can then run the graph to get the correct orders of the numbers.
+
+I recommend referring to [Wikipedia](https://en.wikipedia.org/wiki/Topological_sorting) for the detailed explanation and the excellent tutorial on [GeeksForGeeks](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)

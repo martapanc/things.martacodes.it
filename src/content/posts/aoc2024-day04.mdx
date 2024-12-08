@@ -1,0 +1,162 @@
+---
+title: "Criss-Crossing XMAS Clue"
+description: Advent of Code 2024: Day 4
+slug: aoc-2024-day-4
+date: 2024-12-04T12:00:00.000Z
+published: true
+category: Advent of Code
+tags:
+- aoc
+- 2024
+- day-4
+image: /blog/helloworld.png
+---
+
+Ah, word searches! I've been solving them for as long as I can remember, and I pride myself on being pretty good at them 😎
+Was I tempted to avoid writing any code and just solve today's puzzle manually? Sure I was! After finding the solution, which in my case was 2524 `XMAS` instances hidden in the input, though, I'm glad I didn't commit to it 😁
+
+Part 1 was as easily understandable as it sounds: we need to find all instances of the word `XMAS` in the grid - horizontally, vertically or diagonally, both forwards and backwards.
+
+After processing the input to map each coordinate to the corresponding character, as I usually do, I decided to structure my solution as follows:
+
+- find all `X` character in the grid;
+- continue in each direction to gather the three remaining characters, and verify if, once concatenated, they form the word `XMAS`.
+
+This translated into the following code:
+
+```
+grid.forEach((value, cell) => {
+    if (value === 'X') {
+        const all = getAllCandidates(Coord.deserialize(cell), grid);
+
+        const localXmasCount: number = all.filter(s => s === 'XMAS').length;
+        xmasCount += localXmasCount;
+    }
+});
+```
+
+The `getNeighbors` function is simply doing some additions on the Cartesian plane:
+
+```
+function getNeighborCoords(source: Coord, includeDiagonals: boolean = false) {
+    const neighbors = [
+        new Coord(source.x, source.y - 1), // N
+        new Coord(source.x, source.y + 1), // S
+        new Coord(source.x + 1, source.y), // E
+        new Coord(source.x - 1, source.y), // W
+    ];
+    if (includeDiagonals) {
+        neighbors.push(...getDiagonalCoords(source));
+    }
+
+    return neighbors;
+}
+
+function getDiagonalCoords(source: Coord) {
+    const coords = []; // Clockwise
+    coords.push(new Coord(source.x + 1, source.y - 1)); // NE
+    coords.push(new Coord(source.x + 1, source.y + 1)); // SE
+    coords.push(new Coord(source.x - 1, source.y + 1)); // SW
+    coords.push(new Coord(source.x - 1, source.y - 1)); // NW
+
+    return coords;
+}
+```
+
+`getAllCandidates` on the other hand returns the coordinates of the three cells surrounding our `X` in each direction.
+
+Might look complicated but it's really not: each `candidateDelta` considers `X` as the (0,0) point and derives the lists of 3 coordinates in each direction.
+For example `XMAS` written horizontally left to right would have X=(0,0), M=(1,0), A=(2,0), S=(3,0); if it was right to left, the coordinates would be X=(0,0), M=(-1,0), A=(-2,0), S=(-3,0), and so on.
+
+```
+function getAllCandidates(cell: Coord, grid: Grid) {
+    const candidateDeltas = [
+        ['{0,0}', '{1,0}', '{2,0}', '{3,0}'],
+        ['{0,0}', '{-1,0}', '{-2,0}', '{-3,0}'],
+        ['{0,0}', '{0,1}', '{0,2}', '{0,3}'],
+        ['{0,0}', '{0,-1}', '{0,-2}', '{0,-3}'],
+        ['{0,0}', '{1,1}', '{2,2}', '{3,3}'],
+        ['{0,0}', '{-1,-1}', '{-2,-2}', '{-3,-3}'],
+        ['{0,0}', '{1,-1}', '{2,-2}', '{3,-3}'],
+        ['{0,0}', '{-1,1}', '{-2,2}', '{-3,3}'],
+    ];
+
+    const candidates: string[] = [];
+    candidateDeltas.forEach(deltas => {
+        const coords: Coord[] = deltas.map(delta => {
+            return new Coord(cell.x + delta.x, cell.y + delta.y);
+        })
+
+        const values = coords
+            .filter(c => grid.has(c))
+            .map(c => grid.get(c)); // Filter the coordinates within the grid
+
+		candidates.push(values.join(''));
+    });
+
+    return candidates;
+}
+```
+
+In part 2 we learn that we misunderstood the original instructions: it's not a XMAS puzzle - it's a X-MAS puzzle 😁
+
+The goal is to find all the two `MAS` arranged as an `X`, basically like this:
+
+```
+M.S
+.A.
+M.S
+```
+
+Apart from a stupid bug that made me waste some time, I actually found this part easier than the previous one, if anything for the number of steps involved: I simply had to find all `A` in the grid and check if their diagonal neighbors are some variant of `MMSS`, meaning that they form an X combined with the central A.
+
+```
+grid.forEach((value, cell) => {
+    if (value === 'A') {
+        const neighbors = getDiagonalNeighbors(Coord.deserialize(cell), grid);
+        const str = neighbors.join('');
+        if (str === "MMSS" || str === "SSMM" || str === 'SMMS' || str === 'MSSM') {
+            xmasCount++;
+        }
+    }
+});
+```
+
+It's important that the `M`s and `S`s are consecutive pairs: in the example above, starting from the top-left `M`, we get `MSSM`; if we started from the top-right `S`, it would be instead `SSMM` - essentially we want to exclude `SMSM` and `MSMS`, which would represent a "wrong" type of X-MAS:
+
+```
+M.S
+.A.
+S.M
+```
+
+Obviously `MAM` and `SAS` are not quite what we want 🤔
+
+Of course in order to detect the correct instances of `X-MAS` my way, the neighbors list needs to be ordered: clockwise or counter-clockwise doesn't really matter, and neither does the edge we start from - but the list needs to follow any of these orders. Otherwise, if I had, say:
+
+```
+coords.push(new Coord(source.x - 1, source.y - 1)); // NW
+coords.push(new Coord(source.x + 1, source.y - 1)); // NE
+coords.push(new Coord(source.x + 1, source.y + 1)); // SE
+coords.push(new Coord(source.x - 1, source.y + 1)); // SW
+```
+
+so an order like
+
+```
+1 2
+3 4
+```
+
+then a case like
+
+```
+M.S
+.A.
+S.M
+```
+
+would still be concatenated as `MSSM` and counted as a valid `X-MAS`, while it's clearly not 🤦‍♀️
+
+Lesson learned: after 9 years I can safely say that wrong assumptions are the source of 90% of the bugs I face while doing the AoC challenged.
+For now, still, that's two more shiny stars in the bag! 🌠

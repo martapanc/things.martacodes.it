@@ -1,0 +1,76 @@
+---
+title: "Debugging Santa's Memory Meltdown"
+description: Advent of Code 2024: Day 3
+slug: aoc-2024-day-3
+date: 2024-12-03T12:00:00.000Z
+published: true
+category: Advent of Code
+tags:
+- aoc
+- 2024
+- day-3
+image: /blog/helloworld.png
+---
+
+Simple but fun puzzle today!
+
+The input is a string with a bunch of `mul(N,M)` blocks in it:
+
+```
+x**mul(2,4)**%&mul[3,7]!@^do_not_**mul(5,5)**+mul(32,64]then(**mul(11,8)****mul(8,5)**)
+```
+
+The goal is to
+
+- find the valid ones, that is blocks containing invalid characters and with numbers between 1 and 3 digits,
+- execute the multiplication,
+- sum the results.
+
+My solution involved a simple regex function finding all valid `mul(N,M)` instances:
+
+```
+function getMulExpressions(input: string) {
+    return input.match(/mul\([0-9]{1,3},[0-9]{1,3}\)/g);
+}
+```
+
+Then a loop to parse the numbers and multiply them:
+
+```
+lines.forEach(line => {
+    const matches = getMulExpressions(line);
+
+    matches?.forEach(match => {
+        const parsedMatch = match.replace("mul(", "").replace(")", "");
+        const nums: number[] = parsedMatch.split(",").map(str => Number.parseInt(str));
+        result += (nums[0] * nums[1]);
+    })
+});
+```
+
+Part 2 is similar, except we also need to find `do()` and `don't()` blocks: any `mul(N,M)` after a `do()` needs including; any after a `don't()` needs to be skipped.
+
+```
+const matches = input.match(/don't\(\)|do\(\)|mul\([0-9]{1,3},[0-9]{1,3}\)/g);
+
+let enable = true;
+const enabledExpressions: string[] = [];
+
+matches?.forEach(match => {
+    if (match === "don't()") {
+        enable = false;
+        return;
+    } else if (match === "do()") {
+        enable = true;
+        return;
+    } else {
+        if (enable) {
+            enabledExpressions.push(match);
+        }
+    }
+})
+```
+
+I allowed myself to "cheat" a tiny bit for part 2, since the original input consists of multiple lines, and I was worried that there was going to be some `don't()` towards the end of a line that would need to carry over the following line. In order to avoid "remembering" the status across lines, I decided to remove the line breaks so that I could process the whole input at ones, without the need to worry about the `don't()`s carrying over.
+
+Yes, I'm a despicable person because of that - but a despicable person with 6 total stars nonetheless u.u

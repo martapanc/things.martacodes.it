@@ -1,0 +1,102 @@
+---
+title: "Day 2: Reactor Reports and the Rudolph Rescue Mission!"
+description: Advent of Code 2024: Day 2
+slug: aoc-2024-day-2
+date: 2024-12-02T12:00:00.000Z
+published: true
+category: Advent of Code
+tags:
+- aoc
+- 2024
+- day-2
+image: /blog/helloworld.png
+---
+
+```
+7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9
+```
+
+No worries, that's not a representation of `The Matrix` (I mean, it is a matrix, but not _that one_ 😛) - it's just the sample input for today's challenge.
+
+Each row is a list of **levels** which we need to classify as `safe` or `unsafe`. A safe level has the following requirements:
+
+- The levels are either *all increasing* or *all decreasing*.
+- Any two adjacent levels differ by *at least one* and *at most three*.
+
+So for example:
+
+- `7 6 4 2 1`: *Safe* because the levels are all decreasing by 1 or 2.
+- `1 2 7 8 9`: *Unsafe* because `2 7` is an increase of 5.
+- `1 3 2 4 5`: *Unsafe* because `1 3` is increasing but `3 2` is decreasing.
+
+In order to evaluate whether the levels are all increasing/decreasing and whether the "jumps" are within the range, I thought about calculating the difference between each two numbers in the list:
+
+```
+export function getLevelDeltas(level: number[]) {
+    const delta = [];
+    for (let i = 0; i < level.length - 1; i++) {
+        delta[i] = level[i] - level[i + 1];
+    }
+
+    return delta;
+}
+```
+
+For example, in the first row `7 6 4 2 1` we would calculate `[(7-6), (6-4), (4-2), (2-1)]` = `[1, 2, 2, 1]`
+
+If the resulting array is _all positive_ or _all negative_ we know that it's respectively fully decreasing or increasing.
+Instead, if we had `1 3 2 4` the result would be `[-2, 1, -2]`, which is a mix of positive and negative numbers.
+
+Regarding the range of "jump", having the differences we just need to check that all numbers are 0 < N ≤ 3.
+
+Here's my function:
+
+```
+function isLevelSafe(level: number[]): boolean {
+    let isSafe = true;
+    const deltas = getLevelDeltas(level);
+
+    // All non-negative or all non-positive
+    if (deltas.every(delta => delta >= 0) || deltas.every(delta => delta <= 0)) {
+        const absDelta = deltas.map(delta => Math.abs(delta));
+
+        if (absDelta.some(delta => delta < 1 || delta > 3)) {
+            isSafe = false;
+        }
+    } else {
+        isSafe = false;
+    }
+
+    return isSafe;
+}
+```
+
+Part 2 adds a twist - specifically, we're allowed to remove one level from the list: if it becomes safe, we can count it as well.
+
+I decided to extend the original function like this:
+
+```
+if (isLevelSafe(level)) {
+    safeLevelCount++;
+} else if (applyTolerance) {
+    let isSafeWithTolerance = false;
+    for (let i = 0; i < level.length; i++) {
+        const newLevel = [...level];
+        newLevel.splice(i, 1); // Remove one item at a time and re-check for safety
+        if (isLevelSafe(newLevel)) {
+            isSafeWithTolerance = true;
+            break;
+        }
+    }
+    if (isSafeWithTolerance) {
+        safeLevelCount++;
+    }
+}
+```
+
+That's it! Two more stars for me! 🤩

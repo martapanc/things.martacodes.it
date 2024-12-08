@@ -1,0 +1,161 @@
+---
+title: "Guard Patrol Chronicles: Breaking the Loop"
+description: Advent of Code 2024: Day 6
+slug: aoc-2024-day-6
+date: 2024-12-06T12:00:00.000Z
+published: true
+category: Advent of Code
+tags:
+- aoc
+- 2024
+- day-6
+image: /blog/helloworld.png
+---
+
+I keep being amazed by Eric Wastl's skills of coming up with puzzles involving 2d grids and always managing to make them interesting and hardly ever repetitive 😀
+
+This time, part 1 is a rather classical 'start from a `^` point and keep straight until you bump into a `#` obstacle, then rotate 90 degrees towards the right, and continue until you fall beyond the grid's edge.
+
+```
+....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#...
+```
+
+Parsing the input with my established data structure (a map with an {x,y} coordinate as key and the corresponding character as the value), I just had to write a bunch of helper types and functions, specifically enums for cardinals and rotation directions:
+
+```
+enum Cardinal { NORTH, EAST, SOUTH, WEST }
+
+enum Direction { LEFT, RIGHT } // only RIGHT is needed for this challenge
+```
+
+and functions to move straight depending on the source position and facing direction, and to right-rotate (I also did the left version, because after the past years I suspect I will need it sooner or later...):
+
+```
+function move(source: Coord, direction: Cardinal) {
+    switch (direction) {
+        case Cardinal.NORTH:
+            return new Coord(source.x, source.y - 1);
+        case Cardinal.EAST:
+            return new Coord(source.x + 1, source.y);
+        case Cardinal.SOUTH:
+            return new Coord(source.x, source.y + 1);
+        case Cardinal.WEST:
+            return new Coord(source.x - 1, source.y);
+        default:
+            throw new Error('No such cardinal');
+    }
+}
+
+function rotate(source: Cardinal, rotationSense: Direction): Cardinal {
+    switch (rotationSense) {
+        case Direction.RIGHT:
+            return (source + 1) % 4 as Cardinal;
+        case Direction.LEFT:
+            return (source - 1 + 4) % 4 as Cardinal;
+    }
+}
+```
+
+Note that in my grid definition the X and Y axis point towards East and South (as opposed to North) respectively, simply because parsing the text input line by line fits this model more naturally. It's just a matter of remembering that, if the pointer is moving South, then the Y values are increasing instead of decreasing.
+
+The goal for part 1 is to find the number of distinct positions on the grid that the pointer (our Guard Gallivant) occupies, so the logic behind my solution is basically to let the guard move and rotate on the grid until it bumps into an edge, keeping track of the various coordinates along the way.
+
+```
+let currentPos = new Coord(initialPos.x, initialPos.y);
+let direction = Cardinal.NORTH;
+
+let distinctPositions = new Set();
+distinctPositions.push(currentPos);let newPosCoord = move(currentPos, direction);
+
+while (grid.get(newPosCoord)) { // Move until the grid ends, i.e. the value is undefined
+    if (grid.get(newPosCoord) === '#') {
+        direction = rotate(direction, Direction.RIGHT); // Rotate when finding an obstacle
+    } else if (grid.get(newPosCoord) === '.') {
+        distinctPositions.push(newPosCoord); // Add new coordinate to the set
+        currentPos = newPosCoord; // Step forward
+    }
+    newPosCoord = move(currentPos, direction); // Compute the next step based on the current position and direction
+}
+```
+
+Of course, this logic assumes that at some point the guard steps beyond the grid indeed and does not end up walking the same path, resulting in a loop. While writing I had this in my head along with the thought "surely Eric's inputs are done well and there is no chance of ending up in a loop, no need to worry about that 😌"
+Well, this was true for part 1 - but guess what the task for part 2 is 😛
+
+Essentially, now the goal is to introduce a new obstacle somewhere along the guard's path and cause them to get stuck in a loop!
+
+In the example, you can see one of six options - placing a new `O` obstacle to the left of the initial position results in a loop:
+
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+....|..#|.
+....|...|.
+.#.O^---+.
+........#.
+#.........
+......#...
+```
+
+Me being me and lacking the mental skills and patience to figure out a more efficient solution, I decided to try them all: not _all_ the coordinates in the grid - we already know the path without loops that the guard takes from part 1, so we might as well place an obstacle only somewhere on that path, which we know they're going to hit at some point.
+This will not make the solution efficient, but at least it should narrow down the number of iterations: the full input is a 130x130 grid, so excluding the existing obstacles it's approximately 16000 cells; my path from part 1 counted only ~5000 unique cells, so not too bad.
+
+After placing a new obstacle on the grid, I could fundamentally run the move&rotate function on the new grid.
+
+How to know if the guard is stuck in a loop? I just needed to tweak the original loop a bit.
+First of all the `distinctPositions` set became a `Map<Coordinate, Direction>`: we keep adding the steps walked to the map including the direction, and after a while if the new candidate position matches both the coordinate and the direction, it means we walked through that cell - we're retracing our steps. Why is the direction needed as well? Because stepping on a previously visited cell doesn't imply a loop, since we could be walking on it first, say, from East to West then from North to South.
+
+```
++--+
+|  |
++--X--...
+   |
+   ⌄
+```
+
+Instead, if we're back on the same cell walking towards the same direction, then, well, we're probably in a loop.
+
+That being said, we can add a few checks to the original `while`:
+
+```
+let foundLoop = false;
+
+while (grid.get(newPosCoord) && !foundLoop) {
+    if (distinctPositions.has(newPosCoord) && distinctPositions.get(newPosCoord) === direction) {
+        foundLoop = true;
+        break;
+    }
+    ... // Same as before
+    newPosCoord = move(currentPos, direction);
+}
+```
+
+Then in the main function:
+
+```
+const { distinctPositions } = calcDistinctPositions(grid, initialPos); // Part 1 function to find the distinct coordinates
+distinctPositions.delete(initialPos); // Remove initial position, as we don't want an obstacle there
+
+Array.from(distinctPositions.keys()).forEach(coord => {
+     const newGrid = new Map(grid);
+     newGrid.set(coord, "#"); // Create a new grid with one new obstacle along the path
+
+     const { foundLoop } = calcDistinctPositions(newGrid, initialPos); // If a loop is found, increase the counter
+
+     if (foundLoop) {
+         loopCount++;
+     }
+});
+```
+
+This works like a charmed - admittedly a bit slow (~ 8 seconds on my machine) due to the large number of iterations, but it got me the 2nd star no problem 🤩

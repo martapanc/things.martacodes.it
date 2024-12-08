@@ -1,15 +1,13 @@
 ---
 title: 'Advent of Code 2024: Day 1'
 description: Kickstarting Advent of Code 2024 with Day 1! 🛠️ Helping the elves solve puzzles as we embark on the road to 500 stars. ✨🎄
-slug: aoc-2024-day-1
+slug: aoc-2024-day01
 date: 2024-12-01T12:00:00.000Z
 published: true
-category: Advent of Code
+category: advent-of-code
 tags:
-    - aoc
-    - 2024
-    - day-1
-image: /blog/helloworld.png
+    - aoc2024
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
 ---
 
 And off we go with a new year of Advent of code! 🥳 🎄
@@ -49,7 +47,8 @@ My solution for the first task is also pretty simple:
 function calcDistanceChecksum(leftList: number[], rightList: number[]): number {
     let distanceChecksum = 0;
     leftList.forEach((num, index) => {
-        distanceChecksum += Math.abs(num - rightList[index]); // Not convinced that the absolute value is actually needed
+        // Not convinced that the absolute value is actually needed
+        distanceChecksum += Math.abs(num - rightList[index]);
     });
 
     return distanceChecksum;

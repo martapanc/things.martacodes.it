@@ -12,7 +12,7 @@ image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733679884/Blog/2024-d
 
 I keep being amazed by Eric Wastl's skills of coming up with puzzles involving 2d grids and always managing to make them interesting and hardly ever repetitive 😀
 
-This time, part 1 is a rather classical 'start from a `^` point and keep straight until you bump into a `#` obstacle, then rotate 90 degrees towards the right, and continue until you fall beyond the grid's edge.
+This time, part 1 is a rather classical "start from a `^` point and keep straight until you bump into a `#` obstacle, then rotate 90 degrees towards the right, and continue until you fall beyond the grid's edge" kind of task.
 
 ```
 ....#.....
@@ -27,7 +27,7 @@ This time, part 1 is a rather classical 'start from a `^` point and keep straigh
 ......#...
 ```
 
-Parsing the input with my established data structure (a map with an {x,y} coordinate as key and the corresponding character as the value), I just had to write a bunch of helper types and functions, specifically enums for cardinals and rotation directions:
+Parsing the input with my established data structure (a map with an \{x,y\} coordinate as key and the corresponding character as the value), I just had to write a bunch of helper types and functions, specifically enums for cardinals and rotation directions:
 
 ```
 enum Cardinal { NORTH, EAST, SOUTH, WEST }
@@ -141,14 +141,18 @@ while (grid.get(newPosCoord) && !foundLoop) {
 Then in the main function:
 
 ```
-const { distinctPositions } = calcDistinctPositions(grid, initialPos); // Part 1 function to find the distinct coordinates
-distinctPositions.delete(initialPos); // Remove initial position, as we don't want an obstacle there
+// Part 1 function to find the distinct coordinates
+const { distinctPositions } = calcDistinctPositions(grid, initialPos);
+
+// Remove initial position, as we don't want an obstacle there
+distinctPositions.delete(initialPos);
 
 Array.from(distinctPositions.keys()).forEach(coord => {
      const newGrid = new Map(grid);
      newGrid.set(coord, "#"); // Create a new grid with one new obstacle along the path
 
-     const { foundLoop } = calcDistinctPositions(newGrid, initialPos); // If a loop is found, increase the counter
+     // If a loop is found, increase the counter
+     const { foundLoop } = calcDistinctPositions(newGrid, initialPos);
 
      if (foundLoop) {
          loopCount++;

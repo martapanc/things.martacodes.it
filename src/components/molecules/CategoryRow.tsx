@@ -15,7 +15,7 @@ export const CategoryRow = ({
             className='flex justify-between rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-900/50'
         >
             <span className='px-1.5'>{allCategories[category]}</span>
-            <span className='rounded-md bg-indigo-600/20 px-2 font-semibold text-indigo-900 dark:text-indigo-100'>
+            <span className='flex min-w-6 justify-center rounded-md bg-indigo-600/20 px-0.5 font-semibold text-indigo-900 dark:text-indigo-100'>
                 {count}
             </span>
         </Link>

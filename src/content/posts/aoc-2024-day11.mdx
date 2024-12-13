@@ -10,6 +10,44 @@ tags:
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733946245/Blog/2024-day-11_ezuir9.webp
 ---
 
+I feel like today was the classic example of an AoC challenge that divides the participants into two distinct groups: those who are clever and manage to create an efficient solution for part 1, which then gets them the second star for free - and those who are _not_ and have to scramble just to get part 2 done without melting their computer.
+
+Spoiler: 10 years in, and I'm still 100% in the latter group 🫠
+
+I couldn't possibly explain part 1 better than the original specs, so here you go:
+
+> Every time you blink, the stones each *simultaneously* change according to the *first applicable rule* in this list:
+
+- If the stone is engraved with the number `0`, it is replaced by a stone engraved with the number `1`.
+- If the stone is engraved with a number that has an *even* number of digits, it is replaced by *two stones*. The left half of the digits are engraved on the new left stone, and the right half of the digits are engraved on the new right stone. (The new numbers don't keep extra leading zeroes: `1000` would become stones `10` and `0`.)
+- If none of the other rules apply, the stone is replaced by a new stone; the old stone's number *multiplied by 2024* is engraved on the new stone.
+
+I'm not going to bore you with my extremely inefficient function (keeping track of all the stones in a single list) that solves part 1, and proceed directly with part 2: the only difference is the number of iterations, that is 25 (which needless to say runs perfectly well, despite the total number of stones getting very high very quickly) and then 75.
+
+The idea is that we don't need to track the behavior of _every single stone_ individually with each blink. By focusing only on the distinct stone numbers and their counts, we can apply the rules collectively for all stones of the same type, saving significant time and space in the process.
+A way to do achieve this is by using a map and updating the counts whenever we find a stone number we already saw:
+
 ```
-// TODO
+function blink(stoneCounts: Map<string, number>): Map<string, number> {
+    const newStoneCounts: Map<string, number> = new Map();
+
+    stoneCounts.forEach((count, stone) => {
+        if (stone === '0') {
+            newStoneCounts.set('1', (newStoneCounts.get('1') || 0) + count);
+        } else if (stone.length % 2 === 0) {
+            const half = stone.length / 2;
+            const first = Number.parseInt(stone.slice(0, half)) + '';
+            const second = Number.parseInt(stone.slice(half)) + '';
+            newStoneCounts.set(first, (newStoneCounts.get(first) || 0) + count);
+            newStoneCounts.set(second, (newStoneCounts.get(second) || 0) + count);
+        } else {
+            const multiplied = (Number.parseInt(stone) * 2024) + '';
+            newStoneCounts.set(multiplied, (newStoneCounts.get(multiplied) || 0) + count);
+        }
+    });
+
+    return newStoneCounts;
+}
 ```
+
+So yeah - all in all easy, once you understand how to optimise it ✌️

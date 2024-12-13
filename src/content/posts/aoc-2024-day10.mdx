@@ -10,6 +10,115 @@ tags:
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733946245/Blog/2024-day-10_kbtw5s.webp
 ---
 
+Today's task was in retrospect pretty standard; yet, I'm still re-reading the description as I'm writing this, because the difference between part 1 and 2 was fundamental but somehow surprisingly hard to decode (the meme found on the r/aoc subreddit I picked for this post's preview is very on point).
+
+We have a grid with numbers from 0 to 9, representing a topographic map:
+
 ```
-// TODO
+0123
+1234
+8765
+9876
 ```
+
+As can be guessed, we need to find possible ways to go from 0 to 9 one step at a time, so no movements that are larger than 1 (such as between 0 and 2).
+Specifically, part 1 is about finding **trailheads** - meaning the start of a hinking trail - and their scores, that is how many 9s can be reached starting from a 0.
+
+For example a map like this has **one** trailhead with score 2, because starting from the one 0 we can reach two 9s:
+
+```
+...0...
+...1...
+...2...
+6543456
+7.....7
+8.....8
+9.....9
+```
+
+The goal is to find all possible trailheads and their scores, adding everything to a total that is our puzzle answer.
+
+In order to find the score for a trailhead, I opted for a breadth-first search algorithm: we start from a trailhead (`startCoord`), explore neighboring coordinates one step at a time, and tracks which coordinates can be reached by following height-incrementing paths. For each neighbor, if its height is one greater than the current position, it is added to the queue and marked as visited. If the neighbor’s height is 9, it’s added to the `reachableNines` set. The function returns the size of this set, representing how many 9s can be reached from the starting point.
+
+```
+function bfsTrailhead(startCoord: Coord): number {
+    const queue: Coord[] = [startCoord];
+    const visited = new Set<string>;
+    const reachableNines = new Set<string>;
+
+    visited.add(startCoord.serialize());
+
+    while (queue.length > 0) {
+        const current = queue.shift()!;
+        const currHeight = Number.parseInt(grid.get(current.serialize())!);
+
+        for (const neighbor of getNeighborCoords(current)) {
+            const neighborKey = neighbor.serialize();
+            if (!grid.has(neighborKey) || visited.has(neighborKey)) {
+                continue;
+            }
+
+            const neighborHeight = Number.parseInt(grid.get(neighborKey)!);
+            if (neighborHeight === currHeight + 1) {
+                visited.add(neighborKey);
+                queue.push(neighbor);
+
+                if (neighborHeight === 9) {
+                    reachableNines.add(neighborKey);
+                }
+            }
+        }
+    }
+
+    return reachableNines.size;
+}
+```
+
+The main function is of course a loop through all the cells of the map having a 0, that is the start of a trailhead: the `bfsTrailhead` function computes the score, which is then added to the count:
+
+```
+let totalScore = 0;
+for (const [coord, value] of grid) {
+    if (value === '0') {
+        totalScore += bfsTrailhead(coord);
+    }
+}
+return totalScore;
+```
+
+Fairly straightforward so far. Part 2, on the other hand… still not a difficult task, but it still took me some time to understand.
+
+The goal now is to find a trailhead's **rating**: given a trailhead with all its possible peaks, its rating is how many distinct trails can be taken to the summit. Feels like we're solving part 1 again? Maybe, but no, this is a completely different story 😛
+
+After some thinking, I thought a useful way to solve this was a depth-first search - the recursive way this time, because why not:
+
+- At the very beginning we check if current height is 9: if yes return 1, as this is a valid path to `9`, so the idea is that this increments the score.
+- Initialize `paths = 0` to track valid paths.
+- For each neighbor, check if it's in the grid and its height is one greater than the current height.
+- If conditions are met, we recursively call `dfsTrailhead` for the neighbor, and add the result to `paths`.
+- After exploring all neighbors, return the total valid paths to `9`.
+
+```
+function dfsTrailhead(coord: Coord, currentHeight: number): number {
+    if (currentHeight === 9) {
+        return 1;
+    }
+
+    let paths = 0;
+    for (const neighbor of getNeighborCoords(coord)) {
+        const neighborKey = neighbor.serialize()!;
+        if (!grid.has(neighborKey)) {
+            continue;
+        }
+
+        const neighborHeight = Number.parseInt(grid.get(neighborKey)!);
+        if (neighborHeight === currentHeight + 1) {
+            paths += dfsTrailhead(neighbor, neighborHeight);
+        }
+    }
+
+    return paths;
+}
+```
+
+So yeah, difficult at first glance but feasible.

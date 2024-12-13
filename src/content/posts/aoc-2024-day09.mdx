@@ -10,6 +10,185 @@ tags:
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733946245/Blog/2024-day-9_s6djwd.webp
 ---
 
+I'm fairly sure I spent way more time than necessary on today's task, and the resulting file feels quite long, but it was so much fun that I regret nothing :D
+
+It's time to run some overdue **fragmentation** on our Historian's computer, except the disk map looks like this:
+
 ```
-// TODO
+2333133121414131402
 ```
+
+The way it works is, numbers on odd indices represent files, and number on even indices are blocks of free space; therefore, the example above can be expanded like this:
+
+```
+00...111...2...333.44.5555.6666.777.888899
+```
+
+2 files, 3 spaces, 3 files, 3 spaces, 1, file, 3 spaces… and so on.
+Starting from the right-most block of files, we need to move one unit at a time to occupy the free spaces starting from the left.
+
+Here's a simpler example (expanded from `12345`) in order to save space, with all the passages:
+
+```
+0..111....22222
+02.111....2222.
+022111....222..
+0221112...22...
+02211122..2....
+022111222......
+```
+
+The answer to the puzzle is, once the fragmentation has been completed, the sum of the block's index multiplied by the value of the block's id. In case it's not clear, the puzzle input does not contain such ids, as it is instead just the "compact" version of the diskmap (i.e. the string of numbers in the very first example above): our task is first to expand such map, fragment the disk while keeping track of the block ids, which are simply a progression of the file blocks starting from 0, and compute the checksum at the end based on the blocks' new positions.
+
+Not scared by the problem's specs yet? Neither was I - let's dig into my code :)
+
+First things first, my function to expand the disk map: for each number, I created a `block` with either the _progressive id_ or a `.` as key and the _length_ of the block as value, then pushed it to a list.
+
+For the disk map `12345`, this would have resulted in a list like `[{0: 1}, {'.': 2}, {1: 3}, {'.': 4}, {2: 5}]`.
+
+```
+
+type Block = { [key: number | string]: number };
+
+export function expandDiskMap(line: string) {
+    const list: Block[] = [];
+
+    let blockIdx = 0;
+    line.split('').forEach((item, index) => {
+        const count = Number.parseInt(item);
+
+        if (index % 2 == 0) {
+            list.push({[blockIdx]: count});
+            blockIdx++;
+        } else {
+            if (count !== 0)
+                list.push({'.': count});
+        }
+    });
+
+    return list;
+}
+```
+
+Now, onto the function to compute the fragmentation:
+
+- While there are blocks in `expandedDisk` containing a `.` (indicating an empty slot), continue processing.
+
+- Find the index of the first block with a `.` and retrieve it, extracting the length of the empty slot (`emptyLength`).
+
+- Get the last block in `expandedDisk` and extract its identifier (`blockId`) and length (`blockLength`).
+
+- If the last block's ID matches the empty block's ID, remove the last block and continue to the next iteration.
+
+- If the first empty block is also the last block in the list, exit the loop.
+
+- **Compare block lengths and adjust:**
+
+    1. **Last block is larger:**
+
+        - Replace the empty block with a new block of the last block's ID and size equal to `emptyLength`.
+        - Reduce the last block's size by `emptyLength`.
+
+    2. **Last block is smaller:**
+
+        - Replace the empty block with a block of the last block's ID and size equal to `blockLength`.
+        - Insert a new smaller empty block with the remaining size (`emptyLength - blockLength`) after the current empty block.
+        - Remove the last block.
+
+    3. **Equal block lengths:**
+
+        - Replace the empty block with a new block of the last block's ID and size equal to `blockLength`.
+        - Remove the last block.
+
+- Continue processing until no blocks with `.` remain.
+
+```
+while (expandedDisk.some((block) => '.' in block)) {
+    const firstEmptyIndex = expandedDisk.findIndex((item) => '.' in item);
+    let firstEmptyBlock = expandedDisk[firstEmptyIndex];
+    const [dot, emptyLength] = Object.entries(firstEmptyBlock)[0];
+
+    const lastBlockIndex = expandedDisk.length - 1;
+    let lastBlock = expandedDisk[lastBlockIndex];
+    const [blockId, blockLength] = Object.entries(lastBlock)[0];
+
+    if (blockId === dot) {
+        expandedDisk.pop();
+        continue;
+    }
+
+    if (firstEmptyIndex === lastBlockIndex) {
+        break;
+    }
+
+    if (blockLength > emptyLength) {
+        firstEmptyBlock = { [blockId]: emptyLength };
+        expandedDisk[firstEmptyIndex] = firstEmptyBlock;
+
+        lastBlock = { [blockId]: blockLength - emptyLength }
+        expandedDisk[lastBlockIndex] = lastBlock;
+    } else if (blockLength < emptyLength) {
+        firstEmptyBlock = { [blockId]: blockLength };
+        expandedDisk[firstEmptyIndex] = firstEmptyBlock;
+
+        const remainingEmptyBlock = {[dot]: emptyLength - blockLength };
+        expandedDisk.splice(firstEmptyIndex + 1, 0, remainingEmptyBlock);
+
+        expandedDisk.pop();
+    } else {
+        firstEmptyBlock = { [blockId]: blockLength };
+        expandedDisk[firstEmptyIndex] = firstEmptyBlock;
+
+        expandedDisk.pop();
+    }
+}
+```
+
+If this already looks complicated, wait until you read about part 2, which as usual has a twist…
+
+```
+00...111...2...333.44.5555.6666.777.888899
+0099.111...2...333.44.5555.6666.777.8888..
+0099.1117772...333.44.5555.6666.....8888..
+0099.111777244.333....5555.6666.....8888..
+00992111777.44.333....5555.6666.....8888..
+```
+
+Now the goal has changed a bit:
+
+- starting from the file block with the highest id, find the left-most empty block that could accommodate it
+- if it exists, move it
+- if it doesn't keep the block in its original position
+
+I'm not going to copy the full function here because I'm not overly proud of it (although it's still available on https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day09/day09.ts), but here's the steps:
+
+- Identify the highest block index and retrieve the corresponding block.
+
+- While `blockId` is greater than 0:
+
+    - Retrieve the block's length (`blockLength`).
+    - Locate the first empty block (`.`) that is large enough to accommodate `blockLength`
+
+        - If no such block exists or the empty block is located after `blockIndex`, decrement `blockId` and continue.
+
+        - Otherwise, retrieve and process the empty block.
+
+    - If the `blockLength` is smaller than or equal to the empty block:
+
+    - **Block Length < Empty Length:**
+
+        - Replace the empty block with a block of `blockId` and size `blockLength`.
+        - Insert a smaller empty block with the remaining size (`emptyLength - blockLength`).
+        - Replace the original block with an empty block of size `blockLength`.
+        - Update the current block index as needed.
+
+    - **Block Length === Empty Length:**
+
+        - Replace the empty block with a block of `blockId` and size `blockLength`.
+        - Replace the original block with an empty block of the same size.
+
+    - If the moving process left two or more adjacent empty blocks, merge them into a single block before continuing
+
+    - Decrement `blockId` and repeat the loop until `blockId` reaches 0.
+
+Whew, that was exhausting, but I made it once again 🤩

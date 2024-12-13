@@ -56,12 +56,12 @@ export default async function PostLayout({
             <article>
                 <h1 className='my-4'>{title}</h1>
 
-                <div className='mb-4 flex justify-center'>
+                <div className='mb-4 flex max-h-[36rem] justify-center'>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         alt='Post preview image'
                         src={image}
-                        className='w-[40%] rounded-xl'
+                        className='w-full rounded-xl object-cover object-center md:w-[50%]'
                     />
                 </div>
                 <div className='my-6 text-xl font-semibold'>{description}</div>

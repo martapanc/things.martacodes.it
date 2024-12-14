@@ -16,11 +16,11 @@ Spoiler: 10 years in, and I'm still 100% in the latter group 🫠
 
 I couldn't possibly explain part 1 better than the original specs, so here you go:
 
-> Every time you blink, the stones each *simultaneously* change according to the *first applicable rule* in this list:
+> Every time you blink, the stones each _simultaneously_ change according to the _first applicable rule_ in this list:
 
-- If the stone is engraved with the number `0`, it is replaced by a stone engraved with the number `1`.
-- If the stone is engraved with a number that has an *even* number of digits, it is replaced by *two stones*. The left half of the digits are engraved on the new left stone, and the right half of the digits are engraved on the new right stone. (The new numbers don't keep extra leading zeroes: `1000` would become stones `10` and `0`.)
-- If none of the other rules apply, the stone is replaced by a new stone; the old stone's number *multiplied by 2024* is engraved on the new stone.
+- If the stone is engraved with the number `0`, it is replaced by a stone engraved with the number `1`.
+- If the stone is engraved with a number that has an _even_ number of digits, it is replaced by _two stones_. The left half of the digits are engraved on the new left stone, and the right half of the digits are engraved on the new right stone. (The new numbers don't keep extra leading zeroes: `1000` would become stones `10` and `0`.)
+- If none of the other rules apply, the stone is replaced by a new stone; the old stone's number _multiplied by 2024_ is engraved on the new stone.
 
 I'm not going to bore you with my extremely inefficient function (keeping track of all the stones in a single list) that solves part 1, and proceed directly with part 2: the only difference is the number of iterations, that is 25 (which needless to say runs perfectly well, despite the total number of stones getting very high very quickly) and then 75.
 

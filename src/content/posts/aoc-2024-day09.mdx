@@ -86,19 +86,19 @@ Now, onto the function to compute the fragmentation:
 
     1. **Last block is larger:**
 
-        - Replace the empty block with a new block of the last block's ID and size equal to `emptyLength`.
-        - Reduce the last block's size by `emptyLength`.
+- Replace the empty block with a new block of the last block's ID and size equal to `emptyLength`.
+- Reduce the last block's size by `emptyLength`.
 
-    2. **Last block is smaller:**
+2. **Last block is smaller:**
 
-        - Replace the empty block with a block of the last block's ID and size equal to `blockLength`.
-        - Insert a new smaller empty block with the remaining size (`emptyLength - blockLength`) after the current empty block.
-        - Remove the last block.
+- Replace the empty block with a block of the last block's ID and size equal to `blockLength`.
+- Insert a new smaller empty block with the remaining size (`emptyLength - blockLength`) after the current empty block.
+- Remove the last block.
 
-    3. **Equal block lengths:**
+3. **Equal block lengths:**
 
-        - Replace the empty block with a new block of the last block's ID and size equal to `blockLength`.
-        - Remove the last block.
+- Replace the empty block with a new block of the last block's ID and size equal to `blockLength`.
+- Remove the last block.
 
 - Continue processing until no blocks with `.` remain.
 
@@ -169,23 +169,23 @@ I'm not going to copy the full function here because I'm not overly proud of it 
     - Retrieve the block's length (`blockLength`).
     - Locate the first empty block (`.`) that is large enough to accommodate `blockLength`
 
-        - If no such block exists or the empty block is located after `blockIndex`, decrement `blockId` and continue.
+    - If no such block exists or the empty block is located after `blockIndex`, decrement `blockId` and continue.
 
-        - Otherwise, retrieve and process the empty block.
+    - Otherwise, retrieve and process the empty block.
 
     - If the `blockLength` is smaller than or equal to the empty block:
 
-    - **Block Length < Empty Length:**
+    **Block Length < Empty Length:**
 
-        - Replace the empty block with a block of `blockId` and size `blockLength`.
-        - Insert a smaller empty block with the remaining size (`emptyLength - blockLength`).
-        - Replace the original block with an empty block of size `blockLength`.
-        - Update the current block index as needed.
+    - Replace the empty block with a block of `blockId` and size `blockLength`.
+    - Insert a smaller empty block with the remaining size (`emptyLength - blockLength`).
+    - Replace the original block with an empty block of size `blockLength`.
+    - Update the current block index as needed.
 
-    - **Block Length === Empty Length:**
+    **Block Length === Empty Length:**
 
-        - Replace the empty block with a block of `blockId` and size `blockLength`.
-        - Replace the original block with an empty block of the same size.
+    - Replace the empty block with a block of `blockId` and size `blockLength`.
+    - Replace the original block with an empty block of the same size.
 
     - If the moving process left two or more adjacent empty blocks, merge them into a single block before continuing
 

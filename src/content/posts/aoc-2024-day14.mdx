@@ -1,0 +1,128 @@
+---
+title: 'Robots & Christmas Trees'
+description: 'Advent of Code 2024: Day 14'
+slug: aoc-2024-day14
+date: 2024-12-14T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image: https://res.cloudinary.com/dwrurydlt/image/upload/v1734112736/Blog/2024-day-13-the-claw_cojezb.webp
+---
+
+Another fun challenge for us - especially part 2, lol.
+
+So, we're in a bathroom at the Easter Bunny's HQ (because why not) and we are witnessing a bunch of robots proceeding on straight lines on the tile floor.
+Representations of a robot are like the following:
+
+```
+p=0,4 v=3,-3
+p=6,3 v=-1,-3
+p=10,3 v=-1,2
+p=2,0 v=2,-1
+p=0,0 v=1,3
+```
+
+The `P` coordinates are the initial position; the `V` values indicate the movements on the X and Y axes for each step the robot takes.
+
+For example, the first robot on `0,4` moves to `3,1` after one step. After 2 it ends up not on `6,-2` - because we're on a 11x7 grid with positive values only - but on `6,5`: when reaching the north edge, the robot wraps around the grid and comes back on the other side.
+
+The goal is to
+
+- find the robots' positions after 100 seconds
+- divide the grid into four quadrants
+- count the robots for each quadrants and multiply the counts - this is our **safety factor** and the answer to our puzzle.
+
+Speaking of the quadrants, the catch is that we're excluding the middle lines, horizontally and vertically - so the example robots appear in this configuration after 100 iterations:
+
+```
+..... 2..1.
+..... .....
+1.... .....
+
+..... .....
+...12 .....
+.1... 1....
+```
+
+Note that the `2`s represent cells with two robots together, since
+
+> robots are good at navigating over/under each other (due to a combination of springs, extendable legs, and quadcopters).
+
+The more you learn, I guess 🤓
+
+Onto my solution, the main function I wrote is to compute the a robot's final position after 100 steps, based on its initial coordinates and velocity. This is fairly simple if we exploit some maths and we are careful with the wrapping rule:
+
+```
+export function moveRobot(robot: Robot, seconds: number, hiX: number, hiY: number) {
+    const { x: posX, y: posY } = robot.position;
+    const { x: vX, y: vY } = robot.velocity;
+
+    // (value % max) => remainder.
+    // Adding max ensures the value becomes positive if it was negative.
+    // Taking % max again ensures the result stays within the range [0, max - 1].
+    const wrap = (value: number, max: number) => ((value % max) + max) % max;
+
+    return new Coord(wrap(posX + vX * seconds, hiX), wrap(posY + vY * seconds, hiY));
+}
+```
+
+After this, here's a function to compute all robots' positions:
+
+```
+function moveAllRobots(robots: Robot[], hiX?: number, hiY?: number, seconds = 100) {
+    const newRobotsPositions: Robot[] = [];
+
+    robots.forEach(robot => {
+        const finalPosition = moveRobot(robot, seconds, hiX!, hiY!);
+        newRobotsPositions.push({position: finalPosition, velocity: robot.velocity});
+    });
+    return newRobotsPositions;
+}
+```
+
+And finally, the computation of the safety factor, splitting the robots into the four quadrants:
+
+```
+function calcSafetyFactor(robots: Robot[], hiX?: number, hiY?: number) {
+    const midX = Math.round(hiX! / 2) - 1;
+    const midY = Math.round(hiY! / 2) - 1;
+
+    const quadrantCounts = { q1: 0, q2: 0, q3: 0, q4: 0 };
+
+    moveAllRobots(robots, hiX, hiY).forEach(robot => {
+        const { x, y } = robot.position;
+
+        if (x < midX && y < midY) {
+            quadrantCounts.q1++;
+        } else if (x > midX && y < midY) {
+            quadrantCounts.q2++;
+        } else if (x < midX && y > midY) {
+            quadrantCounts.q3++;
+        } else if (x > midX && y > midY) {
+            quadrantCounts.q4++;
+        }
+    });
+
+    return Object.values(quadrantCounts).reduce((product, count) => product * count, 1);
+}
+```
+
+I submitted my answer thinking ‘I bet in part 2 the iterations will not be 100 but 100 million trillion gazillion - sure as hell I'll have to come up with some wizardry to get by in a decent time’… except that would be way too predictable, wouldn't it? 😉
+
+Instead, in part 2 we had to let the robots roam freely in the bathroom, until they form nothing less than a Christmas tree 🎄
+
+So far I haven't mentioned that the real input covers a 101x103 grid, so the robots would take more than 10000 steps to cover all positions.
+
+Initially, I thought there was no way out of printing all the dispositions second after second and checking one by one to find the Christmas tree… then I had an intuition regarding the alleged shape of such tree: whatever the inclination of the branches, whether it's empty or filled, basically whatever shape this tree has, there should at least be _some straight lines_, correct?
+
+Well, I was right! It was enough to keep moving the robots until I found an horizontal line of consecutive `#` - and that was it!
+
+```
+if (line.includes("##############################")) {
+    console.log(`Christmas tree found after ${seconds} seconds!`);
+    break;
+}
+```
+
+Yes, I do feel a bit dirty for coming up with such a trick… but hey, it worked! 😁

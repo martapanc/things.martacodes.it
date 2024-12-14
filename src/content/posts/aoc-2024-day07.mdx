@@ -11,6 +11,7 @@ image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733679884/Blog/2024-d
 ---
 
 Today's challenge was good fun!
+
 The goal was to find combinations of operators (+ and \* for part 1, then part 2 introduced concatenation) that would result in the left side of the equation matching the right side.
 
 For example, for an input like
@@ -20,7 +21,7 @@ For example, for an input like
 ```
 
 by multiplying the two numbers we obtain the result.
-Clearly, the average input is not as intuitive as this. For instance, `292: 11 6 16 20` can only be solved in one way: 11 + 6 _ 16 + 20.
+Clearly, the average input is not as intuitive as this. For instance, `292: 11 6 16 20` can only be solved in one way: 11 + 6 \* 16 + 20.
 Also the catch (which actually made my life considerably easier) is that the operations are always evaluated from left to right, and not according to precedence rules. Essentially the example above would be solved like `[(11 + 6) _ 16] + 20`.
 
 As usual, it's quite possible that maths geniuses have already found a much more efficient strategy - but I'm no genius, so I went for a classical "try 'em all" approach: compute the total using all possible combinations of operators, and check if the result matches the left side of the equation. Pretty basic and brute-force-y, but hey - it's the Advent of Code: as long as you get the correct answer and don't melt your computer in the process, all approaches are valid :P
@@ -67,7 +68,7 @@ for (const combo of generateBinaryStrings(numbers.length - 1)) {
 }
 ```
 
-Part 2 introduces a third operator, `||`: essentially `12 || 345` would become `12345`.
+Part 2 introduces a third operator, `||`: essentially `12 || 345` would become `12345`.
 
 Fortunately, my `generatedBinaryStrings` comes in handy, since now it's just a matter of creating the combination strings in base 3 instead of 2, which was as easy as:
 

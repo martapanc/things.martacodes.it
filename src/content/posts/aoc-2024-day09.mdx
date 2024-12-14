@@ -89,13 +89,13 @@ Now, onto the function to compute the fragmentation:
 - Replace the empty block with a new block of the last block's ID and size equal to `emptyLength`.
 - Reduce the last block's size by `emptyLength`.
 
-2. **Last block is smaller:**
+    2. **Last block is smaller:**
 
 - Replace the empty block with a block of the last block's ID and size equal to `blockLength`.
-- Insert a new smaller empty block with the remaining size (`emptyLength - blockLength`) after the current empty block.
+- Insert a new smaller empty block with the remaining size (`emptyLength  * blockLength`) after the current empty block.
 - Remove the last block.
 
-3. **Equal block lengths:**
+    3. **Equal block lengths:**
 
 - Replace the empty block with a new block of the last block's ID and size equal to `blockLength`.
 - Remove the last block.

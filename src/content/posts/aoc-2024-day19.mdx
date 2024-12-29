@@ -1,0 +1,127 @@
+---
+title: 'The Towel Trials'
+description: 'Advent of Code 2024: Day 19'
+slug: aoc-2024-day19
+date: 2024-12-19T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+Today's task may look like a problem of its own, but it turns out it's fundamentally yet another "first find the length of the best path, then find all possible paths with that length" algorithm, to the delight of those who can't take it anymore ;)
+
+Allured by the possibility of free access to the hot springs, we want to help the staff arrange towels by pattern of colored **stripes** (because why not).
+Such stripes can be *white* (`w`), *blue* (`u`), *black* (`b`), *red* (`r`), or *green* (`g`), and the first part of the puzzle input is a list of all available patterns that can be use to assemble a towel:
+
+```
+r, wr, b, g, bwu, rb, gb, br
+
+brwrr
+bggr
+gbbr
+rrbgbr
+ubwu
+bwurrg
+brgr
+bbrgwb
+```
+
+The second part on the other hand is a series of **towels** we need to try and reproduce. Not all of the towels will be possible with the available list of patterns (for example `ubwu` above won't be, since we don't have any `u` pattern to use), but some will be, such as:
+
+- `brwrr` can be made with a `br` towel, then a `wr` towel, and finally an `r` towel.
+- `bggr` can be made with a `b` towel, two `g` towels, and then an `r` towel.
+
+The goal for now is to find how many of the towels in the list are indeed possible. For this purpose, I created an `isDesignValid` function that addresses the question one towel at the time. The key points for this are:
+
+- We check if the given `design` can be fully broken down into valid substrings, where each substring is part of the provided `allPatterns` list.
+
+- Only substrings up to the length of the longest pattern are considered, reducing unnecessary computations.
+
+- A queue is used to explore all possible substring combinations systematically, ensuring all potential solutions are checked.
+
+- Substrings starting at the current position in the `design` are evaluated dynamically, with only valid substrings added to the next exploration states.
+
+- The function stops immediately and returns `true` if a valid breakdown of the full `design` is found.
+
+```
+function isDesignValid(design: string, allPatterns: string[]) {
+    let longestPattern = allPatterns.reduce((maxLength, str) => Math.max(maxLength, str.length), 0);
+
+    const queue: State[] = [{ patternList: [], index: 0}];
+    const visited = new Set<number>();
+
+    while (queue.length > 0) {
+        const { patternList, index } = queue.pop()!;
+
+        if (index === design.length) {
+            return true;
+        }
+
+        if (visited.has(index)) {
+            continue;
+        }
+        visited.add(index);
+
+        const substrings = new Set<string>();
+        for (let i = 1; i <= longestPattern; i++) {
+            const substring = design.slice(index, index + i);
+            if (allPatterns.includes(substring)) {
+                substrings.add(substring);
+            }
+        }
+
+        [...substrings].forEach(substring => {
+            queue.push({ index: index + substring.length, patternList: [...patternList, substring ]})
+        });
+    }
+
+
+    return false;
+}
+```
+
+As I anticipated, part 2 is to find all the possible way each towel can be composed using the available patterns… Basically a design like `rrbgbr` can be made 6 different ways:
+
+- `r`, `r`, `b`, `g`, `b`, `r`
+- `r`, `r`, `b`, `g`, `br`
+- `r`, `r`, `b`, `gb`, `r`
+- `r`, `rb`, `g`, `b`, `r`
+- `r`, `rb`, `g`, `br`
+- `r`, `rb`, `gb`, `r`
+
+Time for some DFS now: we need to count all possible ways to completely break down the `design` string into valid substrings from the `allPatterns` list. Additionally, memoization allows us to efficiently explore all substring combinations while avoiding redundant calculations for overlapping subproblems.
+
+In coding terms, this is what the idea above translated into:
+
+```
+function findAllDesignCombinations(allPatterns: string[], design: string): number {
+    const longestPattern = allPatterns.reduce((maxLength, str) => Math.max(maxLength, str.length), 0);
+    const memo: Map<number, number> = new Map();
+
+    function dfs(index: number): number {
+        if (index === design.length) {
+            return 1; // One valid combination
+        }
+
+        if (memo.has(index)) {
+            return memo.get(index)!;
+        }
+
+        let count = 0;
+
+        for (let i = 1; i <= longestPattern; i++) {
+            const substring = design.slice(index, index + i);
+            if (allPatterns.includes(substring)) {
+                count += dfs(index + i);
+            }
+        }
+
+        memo.set(index, count);
+        return count;
+    }
+
+    return dfs(0);
+}
+```

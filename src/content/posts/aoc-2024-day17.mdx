@@ -1,0 +1,155 @@
+---
+title: 'The 3-bit Problem'
+description: 'Advent of Code 2024: Day 17'
+slug: aoc-2024-day17
+date: 2024-12-17T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image: https://res.cloudinary.com/dwrurydlt/image/upload/v1734112736/Blog/2024-day-13-the-claw_cojezb.webp
+---
+
+What a tricky day this was!
+
+It took me a long time to figure out the strategy to solve part 2, and most likely without the tips found on the [Reddit thread](https://www.reddit.com/r/adventofcode/comments/1hg38ah/2024_day_17_solutions/) I would never have managed it on my own.
+
+But as usual, let's go through part 1 first: the input consists of a set of **registers** with their initial values, and a **program** of comma-separated instructions, each representing a 3-bit digit (so with values of 0 through 7):
+
+```
+Register A: 2024
+Register B: 0
+Register C: 0
+
+Program: 0,3,5,4,3,0
+```
+
+The program itself is an alternation of **opcodes** and **operands**. I'm not going to bore you explaining all the [logic in the task](https://adventofcode.com/2024/day/17) - long story short, each instruction manipulates the registers or produces output based on specific rules (mainly division, bitwise XOR, pointer manipulation, etc.). Given the initial register values and a program, we execute the program and collect the output from `out` instructions (which is _opcode_ # 5). Finally, we join the output values with commas to produce the final result.
+
+Adding everything together, my function looked like this:
+
+```
+function runProgram(computer: Computer) {
+    let regA = computer.regA ?? 0n;
+    let regB = computer.regB ?? 0n;
+    let regC = computer.regC ?? 0n;
+    const program = computer.program.split(",").map(s => BigInt(s));
+
+    let output = "";
+
+    const getCombo = (operand: bigint): bigint => {
+        switch (operand) {
+            case 0n:
+            case 1n:
+            case 2n:
+            case 3n:
+                return operand;
+            case 4n:
+                return regA;
+            case 5n:
+                return regB;
+            case 6n:
+                return regC;
+            case 7n:
+                throw new Error("Invalid operand: 7");
+            default:
+                throw new Error(`Unknown operand: ${operand}`);
+        }
+    };
+
+    let pointer = 0;
+    while (pointer < program.length) {
+        const opCode = program[pointer];
+        const operand = program[pointer + 1];
+
+        switch (opCode) {
+            case 0n:
+                regA = adv(regA, powerOfTwo(getCombo(operand)));
+                break;
+            case 1n:
+                regB = bxl(regB, operand);
+                break;
+            case 2n:
+                regB = bst(getCombo(operand));
+                break;
+            case 3n:
+                if (regA !== 0n) {
+                    pointer = Number(operand);
+                    continue;
+                }
+                break;
+            case 4n:
+                regB = bxc(regB, regC);
+                break;
+            case 5n:
+                output += out(getCombo(operand)) + ","
+                break;
+            case 6n:
+                regB = bdv(regA, powerOfTwo(getCombo(operand)));
+                break;
+            case 7n:
+                regC = cdv(regA, powerOfTwo(getCombo(operand)!));
+                break;
+            default:
+                throw new Error(`unknown opcode ${opCode}`);
+        }
+        pointer += 2;
+    }
+    return output.slice(0, -1); // rm trailing comma
+}
+```
+
+If part 1 was rather easy - suspiciously easy for a Day 17 challenge 🤔 - part 2 was… uhm… tricky to say the least.
+
+The goal was now to find the minimum value to assign to register A so that the program's final output is a copy of the program itself.
+
+As you can imagine, it's probably not the kind of program that can be brute-forced by trying all the possible value until we find the correct one… let's just say my answer was `265652340990875` - a number I won't even try to pronounce. So yeah, gotta be smart about it and find a way to solve this before all my hair turns white.
+
+So, after analysing what our program actually does, as I mentioned with a bit of help from the smart AoC crowd on Reddit, a few things become clear:
+
+- Register `A` is processed in octals, meaning its value is grouped and operated on in chunks of 3 bits.
+- Registers `B` and `C` are temporary and only hold intermediate results for processing `A`. They do not retain their values between octal blocks.
+- The processing of each octal block depends only on the more significant bits of `A`, making it easier to replicate the output program by analyzing it in reverse.
+- A greedy approach will not work, as there are potential dead ends in the search for valid values of `A`. To handle this, a depth-first search approach can be used to explore possibilities and backtrack when encountering a dead end.
+
+Translating this into code, my solution looked like this:
+
+```typescript
+function calcMinRegA(computer: Computer) {
+    const program = computer.program.split(',').map((num) => BigInt(num));
+
+    // Recursive function to find the smallest value of reg A for a given position in the program
+    const findRegA = (value: bigint, current: number): bigint => {
+        // If all outputs have been validated, return the current value
+        if (current < 0) return value;
+
+        // Iterate over the next 8 possible values of regA for the current octal block
+        for (let i = value << 3n; i < (value << 3n) + 8n; i++) {
+            // Simulate the program with the current regA value
+            const output = runProgram({
+                regA: i,
+                regB: 0n,
+                regC: 0n,
+                program: computer.program,
+            })
+                .split(',')
+                .map((s) => BigInt(s));
+
+            // Check if the program output matches the expected value at the current position
+            if (output[0] === program[current]) {
+                // Recursively validate the next position in reverse
+                const finalVal = findRegA(i, current - 1);
+                if (finalVal !== -1n) return finalVal; // Return if a valid value is found
+            }
+        }
+
+        // If no valid value is found for the current octal block, return -1n to backtrack
+        return -1n;
+    };
+
+    // Start the search with `regA = 0n` and begin validation from the last program position
+    return findRegA(0n, program.length - 1);
+}
+```
+
+So here we are, probably the most deserved star so far 💫

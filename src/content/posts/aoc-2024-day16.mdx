@@ -1,0 +1,136 @@
+---
+title: 'Reindeer Olympics'
+description: 'Advent of Code 2024: Day 16'
+slug: aoc-2024-day16
+date: 2024-12-16T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image: https://res.cloudinary.com/dwrurydlt/image/upload/v1734112736/Blog/2024-day-13-the-claw_cojezb.webp
+---
+
+So many puzzles involving 2d grids this year!
+
+Time for an a-maze-ing Reindeer race:
+
+```
+###############
+#.......#....E#
+#.#.###.#.###.#
+#.....#.#...#.#
+#.###.#####.#.#
+#.#.#.......#.#
+#.#.#####.###.#
+#...........#.#
+###.#.#####.#.#
+#...#.....#.#.#
+#.#.#.###.#.#.#
+#.....#...#.#.#
+#.###.#.#.#.#.#
+#S..#.....#...#
+###############
+```
+
+Start from `S` and ending at `E` (duh), the goal here is to optimize on corners, since one movement forward costs 1 point, whereas a rotation costs 1000 points. For example, one of the above maze's best paths has 36 total steps and 7 rotations, reaching a total of 7036 points:
+
+```
+###############
+#.......#....E#
+#.#.###.#.###^#
+#.....#.#...#^#
+#.###.#####.#^#
+#.#.#.......#^#
+#.#.#####.###^#
+#..>>>>>>>>v#^#
+###^#.#####v#^#
+#>>^#.....#v#^#
+#^#.#.###.#v#^#
+#^....#...#v#^#
+#^###.#.#.#v#^#
+#S..#.....#>>^#
+###############
+```
+
+For once in my life I managed to be intelligent about addressing part 1 in a way that made solving part 2 almost immediate, so I'm going to anticipate the task for part 2 as well before talking about the code.
+
+Essentially, part 1 is about finding the length / score of the best path; part 2 goes: given the optimal path length, calculate how many unique cells are covered by any of the best paths.
+
+For example, keeping the same grid as above, there's a total of three paths with a score of 7036, and 45 unique cells covering each of them:
+
+```
+###############
+#.......#....O#
+#.#.###.#.###O#
+#.....#.#...#O#
+#.###.#####.#O#
+#.#.#.......#O#
+#.#.#####.###O#
+#..OOOOOOOOO#O#
+###O#O#####O#O#
+#OOO#O....#O#O#
+#O#O#O###.#O#O#
+#OOOOO#...#O#O#
+#O###.#.#.#O#O#
+#O..#.....#OOO#
+###############
+```
+
+To solve both problems at once, we can rather simply create a Dijkstra-like pathfinding algorithm that keeps track of the paths found (as opposed to just returning the shortest path whenever one is found):
+
+- It uses a priority queue to explore paths with the lowest cost first.
+
+- Movement is allowed in the current direction (low cost) or via turns (higher cost).
+
+- Tracks visited states and avoids revisiting with higher costs.
+
+- Stops when the target is reached and all shortest paths are found.
+
+- Returns the lowest cost and the number of unique positions (seats) in the path.
+
+```
+function traverse(grid: Grid, start: Coord, end: Coord) {
+    const paths = new Set<string>();
+    let lowest = Infinity;
+    const scores = new Map<string, number>();
+    const toVisit = new PriorityQueue<State>((a, b) => a.cost - b.cost);
+
+    toVisit.enqueue({ position: start, direction: Cardinal.EAST, cost: 0, path: [] });
+
+    while (toVisit.size() > 0) {
+        const { position, direction, cost, path } = toVisit.dequeue()!;
+
+        const stateKey = `${position.serialize()}:${direction}`;
+        if (cost > (scores.get(stateKey) ?? Infinity)) continue;
+
+        scores.set(stateKey, cost);
+
+        if (position.equals(end)) {
+            if (cost > lowest) break;
+
+            path.forEach(coord => paths.add(coord.serialize()));
+            lowest = cost;
+        }
+
+        const moves: { dir: Cardinal; moveCost: number }[] = [
+            { dir: direction, moveCost: 1 },
+            { dir: rotate(direction, Direction.RIGHT), moveCost: 1001 },
+            { dir: rotate(direction, Direction.LEFT), moveCost: 1001 },
+        ];
+
+        for (const { dir, moveCost } of moves) {
+            const nextPosition = move(position, dir);
+            if (grid.get(nextPosition.serialize()) !== "#") {
+                toVisit.enqueue({
+                    position: nextPosition,
+                    direction: dir,
+                    cost: moveCost + cost,
+                    path: [...path, position],
+                });
+            }
+        }
+    }
+
+    return { lowestScore: lowest, seats: paths.size + 1 };
+}
+```

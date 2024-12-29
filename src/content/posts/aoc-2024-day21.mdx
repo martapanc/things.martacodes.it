@@ -1,0 +1,148 @@
+---
+title: 'Robotic Relay Race'
+description: 'Advent of Code 2024: Day 21'
+slug: aoc-2024-day21
+date: 2024-12-21T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+Here we go with another seemingly nightmarish challenge that was quite fun in the end.
+
+We need to help unlock a door on a spaceship, but **unfortunately**, the area is depressurized, and a robot has to type the code on a numeric keypad.
+
+```
++---+---+---+
+| 7 | 8 | 9 |
++---+---+---+
+| 4 | 5 | 6 |
++---+---+---+
+| 1 | 2 | 3 |
++---+---+---+
+    | 0 | A |
+    +---+---+
+```
+
+The robot can’t press buttons directly—it has to move a robotic arm using a **directional keypad**, starting at an A button.
+
+```
+    +---+---+
+    | ^ | A |
++---+---+---+
+| < | v | > |
++---+---+---+
+```
+
+But **unfortunately**, the robot's control area is radioactive, so another robot must guide it. That robot's control area is **-40 degrees**, so **unfortunately** a third robot is needed, and eventually, **unfortunately**, we must type the sequence ourselves.
+
+The task is to find the shortest button-press sequence for five codes while avoiding empty space on the keypad (this is very important) - all in the most absurdly convoluted setup possible.
+
+To give you an example of how everything works, imagine you have to give instructions to type `029A` on the numeric keyboard to a robot that can only use a directional pad: starting from `A`, we would have to
+
+- move left `<` to reach `0`
+- press `A` to push the `0` button
+- move up `^` to reach the `2` button
+- press `A` to push it
+- move up twice `^^` and right once `>` to reach `9` (one of 3 possible paths), then press `A`
+- move down three times `vvv` to reach `A`, and finally press `A` to confirm.
+
+Merging everything together we would get `<A\^A\^\^>AvvvA`.
+
+For the second robot, we need to compute the instructions to make it type `<A\^A\^\^>AvvvA` onto the same numeric pad. One such sequence for this is `v<\<A>>^A\<A>AvA<^AA>A\<vAAA>^A`. Finally, the third robot needs to do the same for the latter set of instruction, for example via this other set: `\<vA\<AA>>^AvAA<^A>A\<v\<A>>^AvA^A\<vA>^A\<v\<A>^A>AAvA^A\<v\<A>A>^AAAvA<^A>A`.
+
+---
+
+This task technically doesn't involve 2d grids for once - still, in order to figure the movements out I thought a grid representation would be useful.
+
+```
++---+---+---+
+| 7 | 8 | 9 |    0,0  1,0  2,0
++---+---+---+
+| 4 | 5 | 6 |    0,1  1,1  2,1
++---+---+---+
+| 1 | 2 | 3 |    0,2  1,2  2,2
++---+---+---+
+    | 0 | A |     X   1,3  2,3
+    +---+---+
+```
+
+Yet again, I managed to get the answer for part 1 in a way that would probably require _months_ to compute part 2 - which features no fewer than **25 robots** instead of 2 🫠
+This is why, after figuring out the code for part 2, I opted for scrapping the original part 1 and using the latter instead - it's much more efficient anyway.
+
+First of all, I created a function that uses a breadth-first search to calculate the shortest sequence of moves to navigate from a start button to a target button: it initializes a queue with the starting position and explores all possible directions to find the shortest path. It also avoids revisiting previously explored positions, and handles the fact the keyboard has a gap that the robot's arm shouldn't navigate on.
+
+```
+const getCommand = (input: { [key: string]: Coord }, start: string, end: string) => {
+    const queue = [{ ...input[start], path: '' }];
+    const distances: { [key: string]: number } = {};
+
+    if (start === end) return ['A'];
+
+    let allPaths: string[] = [];
+    while (queue.length) {
+        const curr = queue.shift();
+        if (curr === undefined) break;
+
+        if (curr.x === input[end].x && curr.y === input[end].y) allPaths.push(curr.path + 'A');
+        if (distances[`${curr.x},${curr.y}`] !== undefined && distances[`${curr.x},${curr.y}`] < curr.path.length) continue;
+
+        Object.entries(BFS_DIRECTIONS).forEach(([direction, vector]) => {
+            const pos = { x: curr.x + vector.x, y: curr.y + vector.y };
+
+            if (input.X.x === pos.x && input.X.y === pos.y) return;
+
+            const button = Object.values(input).find(button => button.x === pos.x && button.y === pos.y);
+            if (button !== undefined) {
+                const newPath = curr.path + direction;
+                if (distances[`${pos.x},${pos.y}`] === undefined || distances[`${pos.x},${pos.y}`] >= newPath.length) {
+                    queue.push({ ...pos, path: newPath });
+                    distances[`${pos.x},${pos.y}`] = newPath.length;
+                }
+            }
+        });
+    }
+
+    return allPaths.sort((a, b) => a.length - b.length);
+}
+```
+
+`getCommand` can then be used to compute the movement sequence, by finding the shortest path to type each character. This function in fact calculates the number of key presses required for a given code sequence, considering the number of robots available. It also uses memoization to avoid redundant calculations, and it processes each character in the code string by finding the shortest path between the current button (starting from 'A') and the next button (the target key).
+
+If there’s only one robot (`robot === 0`), it uses the shortest path directly. Otherwise, it recursively calculates the number of key presses needed for the available robots (`robot - 1`).
+
+```
+const getKeyPresses = (input: { [key: string]: Coord }, code: string, robot: number, memo: { [key: string]: number }): number => {
+    const key = `${code},${robot}`;
+    if (memo[key] !== undefined) return memo[key];
+
+    let current = 'A';
+    let length = 0;
+    for (let i = 0; i < code.length; i++) {
+        const moves = getCommand(input, current, code[i]);
+        if (robot === 0) length += moves[0].length;
+        else length += Math.min(...moves.map(move => getKeyPresses(DIRECTIONS, move, robot - 1, memo)));
+        current = code[i];
+    }
+
+    memo[key] = length;
+    return length;
+}
+```
+
+Finally, the function to compute the puzzle's answer, that is the length of the shortest path after the N robot iterations, multiplied by the numeric value of the code being typed (e.g. 29 from the `029A` example):
+
+```
+function calcComplexities(lines: string[], robots: number) {
+    const memo: { [key: string]: number } = {};
+
+    return lines.reduce((sum, code) => {
+        const numerical = parseInt((code.split('').filter(character => character.match(/\d/)).join('')));
+        return sum + numerical * getKeyPresses(KEYPAD, code, robots, memo);
+    }, 0);
+}
+```
+
+So yes, this probably deserves a place in the "Top 3 most difficult tasks of 2024" - but we've nailed it nonetheless 😎

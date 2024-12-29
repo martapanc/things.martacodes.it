@@ -1,0 +1,188 @@
+---
+title: 'Mario Kart: 100 Picoseconds Edition'
+description: 'Advent of Code 2024: Day 20'
+slug: aoc-2024-day20
+date: 2024-12-20T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+Day 20 was… special.
+
+Back with 2d grids (good thing I don't mind working with the Cartesian plane 😅), today we're trying to win a race by cheating - literally.
+
+Say we're on this racetrack:
+
+```
+###############
+#...#...#.....#
+#.#.#.#.#.###.#
+#S#...#.#.#...#
+#######.#.#.###
+#######.#.#...#
+#######.#.###.#
+###..E#...#...#
+###.#######.###
+#...###...#...#
+#.#####.#.###.#
+#.#...#.#.#...#
+#.#.#.#.#.#.###
+#...#...#...###
+###############
+```
+
+The shortest path from Start to Finish is 84 steps, each taking one **Picosecond**. Imagine, however, we have one possibility throughout the race to _go through a wall_ in order to save time.
+
+For example, say we decided to use this power to skip the wall to the right of the End:
+
+```
+###############
+#...#...#.....#
+#.#.#.#.#.###.#
+#S#...#.#.#...#
+#######.#.#.###
+#######.#.#...#
+#######.#.###.#
+###..E_...#...#
+###.#######.###
+#...###...#...#
+#.#####.#.###.#
+#.#...#.#.#...#
+#.#.#.#.#.#.###
+#...#...#...###
+###############
+```
+
+It would take only 20 steps to reach the end, thus saving a total of 64 picoseconds in the process. So yes, basically the goal is to **cheat** and identify wall coordinates that will allow us to save time - specifically, count how many cheats will let us save at least 100 picoseconds with the real input.
+
+Let's begin with the function I used to identify possible cheat moves: below I analyse every `#` cell in the grid and check whether its vertical or horizontal neighbors are part of the walkable path, meaning that they can be crossed through if needed (vice versa, if we had two consecutive `##` horizontally or vertically, we wouldn't be able to cross them - not during part 1):
+
+```
+function findCandidateCheats(grid: Grid) {
+    const candidates: Coord[] = [];
+
+    grid.forEach((tile, key) => {
+        const coord = Coord.deserialize(key);
+        if (tile === '#') {
+            const vNeighbors = getVerticalNeighbors(coord);
+            if (vNeighbors.every(n => grid.get(n.serialize()) === '.')) {
+                candidates.push(coord);
+            }
+            const hNeighbors = getHorizontalNeighbors(coord);
+            if (hNeighbors.every(n => grid.get(n.serialize()) === '.')) {
+                candidates.push(coord);
+            }
+        }
+    });
+
+    return candidates;
+}
+```
+
+After this, I was able to loop through the candidate cheats and, for each of those, calculate the difference between the 'regular' and the 'cheating' paths. Finally, if the difference is above the required threshold, we add it to the valid cheat count ✌️
+
+```
+function countCheatsSavingAtLeast(grid: Grid, minCheats: number) {
+    const cheatMap = new Map<string, number>();
+
+    findCandidateCheats(grid).forEach(cheat => {
+        const newGrid = new Map(grid);
+        newGrid.set(cheat.serialize(), '.');
+
+        const diff = calcLengthDiff(newGrid, cheat);
+        if (diff && diff >= minCheats) {
+            cheatMap.set(cheat.serialize(), diff);
+        }
+    });
+
+    return [...cheatMap.values()].length;
+}
+```
+
+In part 2, however, we are told we can bring the cheating to the next level… we're no longer allowed to jump up to one wall unit, but instead up to 20 😱
+
+For example, enjoy this 6-picosecond cheat that saves us 76 steps:
+
+```
+###############
+#...#...#.....#
+#.#.#.#.#.###.#
+#S#...#.#.#...#
+#1#####.#.#.###
+#2#####.#.#...#
+#3#####.#.###.#
+#456.E#...#...#
+###.#######.###
+#...###...#...#
+#.#####.#.###.#
+#.#...#.#.#...#
+#.#.#.#.#.#.###
+#...#...#...###
+###############
+```
+
+Once again, this took me quite a bit of time and countless visits to the AoC subreddit to put together a winning strategy, but in the end I managed to figure it out.
+
+My first step was to create a map of all shortest paths from the Start to all reachable points (i.e. non-wall cells) in the grid, via BFS:
+
+```
+function bfs(grid: Grid, start: Coord) {
+    const queue: { coord: Coord, steps: number}[] = [];
+    const distances: { [key: string]: number } = {};
+
+    queue.push({ coord: start, steps: 0 });
+    distances[start] = 0;
+
+    while (queue.length > 0) {
+        const current = queue.shift();
+        if (current === undefined) {
+            break;
+        }
+
+        for (const neighbor of getNeighborCoords(current.coord)) {
+            if (grid.get(neighbor.serialize()) === '.') {
+                const newDistance = current.steps + 1;
+                if (distances[neighbor] === undefined || distances[neighbor] > newDistance) {
+                    queue.push({ coord: neighbor, steps: current.steps + 1 });
+                    distances[neighbor] = newDistance;
+                }
+            }
+        }
+    }
+
+    return distances;
+}
+```
+
+Having this, we can proceed to the next step, which is essentially finding pairs of path `.` cells `a` and `b` where
+
+- the Manhattan distance between `a` and `b` is less than or equal to 20
+- the difference in the BFS distances from the End to `a` and from the End to `b`, minus the Manhattan distance between `a` and `b`, is greater than or equal to a minimum threshold (our minimum 100 Picoseconds to save)
+
+```
+const distances = bfs(grid, endPos!);
+
+let cheats = 0;
+const walkable = Object.keys(distances);
+for (let a of walkable) {
+    for (let b of walkable) {
+        if (a === b) continue;
+
+        const start = a;
+        const end = b;
+        const distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
+        if (distance <= 20 && distances[a] - distances[b] - distance >= minCheats) {
+            cheats++
+        }
+    }
+}
+
+return cheats;
+```
+
+This is of course slow to run, as you can imagine based on the nested loop - but it works, so nobody really cares, right? :D
+
+Only 10 stars left! ⭐⭐

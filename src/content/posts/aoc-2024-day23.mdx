@@ -120,7 +120,9 @@ If you never heard of this algorithm, you're in good company. Here's the cleares
 > - R (Current Clique): Nodes included in the current clique.
 > - P (Candidates): Nodes that can be added to the current clique.
 > - X (Excluded): Nodes already considered and excluded from the current clique.
->   At each step:
+>
+> At each step:
+>
 > - If P and X are empty, R is a maximal clique.
 > - A pivot is selected to reduce the search space and optimize performance.
 >   Recursive calls refine these sets to explore possible cliques.

@@ -61,7 +61,7 @@ export default async function PostLayout({
                     <img
                         alt='Post preview image'
                         src={image}
-                        className='w-full rounded-xl object-cover object-center md:w-[50%]'
+                        className='w-full rounded-xl object-cover object-center md:w-1/2'
                     />
                 </div>
                 <div className='my-6 text-xl font-semibold'>{description}</div>

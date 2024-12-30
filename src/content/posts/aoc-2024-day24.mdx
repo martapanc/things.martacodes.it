@@ -127,7 +127,7 @@ During my research I saw that number of people on Reddit leveraged graphics tool
 
 The key here was to understand how adding binary number works in our system. Specifically, each bit of our final `z` number is computed via an **adder** circuit, which I attached below:
 
-![fullAdder.png](../../../../../Downloads/fullAdder.png)
+![fullAdder.png](https://res.cloudinary.com/dwrurydlt/image/upload/v1735580292/Blog/2024-day-24/fullAdder_dpqbp8.webp)
 
 In a very simplified explanation, we start from X and Y and, thanks to some `XOR`, `AND` and `OR` magic, we get Z - and of course the operation takes into account any carry from the previous steps, and finally passes the carry over to the next one.
 
@@ -135,15 +135,15 @@ It follows that, since the sum `Z` is calculated incorrectly by the system, ther
 
 In fact, observing the graph plotted via Graphviz, we can notice a majority of correct adder circuits, like this:
 
-![Screenshot 2024-12-30 at 15.51.41.png](../../../../../Screenshots/Screenshot 2024-12-30 at 15.51.41.png)
+![Correct adder](https://res.cloudinary.com/dwrurydlt/image/upload/v1735580290/Blog/2024-day-24/Screenshot_2024-12-30_at_15.51.41_p8cdsh.webp)
 
 ... and a number of _incorrect_ ones, like this with `z39` being the result of an `AND` instead of a `XOR` 🤔
 
-![Screenshot 2024-12-30 at 15.53.47.png](../../../../../Screenshots/Screenshot 2024-12-30 at 15.53.47.png)
+![Incorrect adder 1](https://res.cloudinary.com/dwrurydlt/image/upload/v1735580288/Blog/2024-day-24/Screenshot_2024-12-30_at_15.53.47_uqzpvl.webp)
 
 I mean, it's fairly easy to tell there's something wrong when spotting a circuit like this (notice `z05` and `frn`):
 
-![Screenshot 2024-12-30 at 16.06.49.png](../../../../../Screenshots/Screenshot 2024-12-30 at 16.06.49.png)
+![Incorrect adder 2](https://res.cloudinary.com/dwrurydlt/image/upload/v1735580288/Blog/2024-day-24/Screenshot_2024-12-30_at_16.06.49_kpnhyx.webp)
 
 I wanted, however, to write a formal algorithm to identify all such problems, instead of checking the graph circuit by circuit and taking notes of the various errors (knowing myself, I knew I was going to make stupid mistakes and waste a lot of time for nothing).
 

@@ -1,0 +1,150 @@
+---
+title: 'This is Bananas'
+description: 'Advent of Code 2024: Day 22'
+slug: aoc-2024-day22
+date: 2024-12-22T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+Imagine being stuck in the jungle with a monkey who’s stolen the Historians' device, and the only way to get it back is to trade it for a mountain of bananas! 🙈
+
+The Monkey Exchange Market is our only hope - but to get the bananas, we need to understand how the market works: each buyer's price is based on a secret number that changes in a complicated pseudorandom sequence. The mission is to simulate this process, predict the buyers’ prices, and sell enough hiding spots to gather the bananas needed to reclaim the device!
+
+To be honest, the logic to calculate the pseudorandom sequence is not hugely interesting, so I'm going to skip the [detailed explanation](https://adventofcode.com/2024/day/22) in this article.
+This is the code that applies such logic - all you need to know is that the `mix` function consists of a **bitwise XOR** operation, and `prune` means limiting the size of numbers via **modulo**.
+
+```
+export function calcSecretNumber(input: number) {
+    let result = prune(mix(input, input * 64));
+    result = prune(mix(result, Math.floor(result / 32)));
+    result = prune(mix(result, result * 2048));
+
+    return result;
+}
+```
+
+For part 1 we then have to calculate the 2000th secret number for each buyer in the list, which this function is for:
+
+```
+function calcNthSecretNumber(input: number, n: number) {
+    let i = 0;
+    let nextSecretNumber = input;
+
+    while (i < n) {
+        nextSecretNumber = calcSecretNumber(nextSecretNumber);
+        i++;
+    }
+
+    return nextSecretNumber;
+}
+```
+
+Moving to part 2, we learn that the secret numbers don't actually represent the price for the bananas - only their ones digit does. So, if a buyer starts with a secret number of `123`, that buyer's first few *prices* would be:
+
+```
+3 (from 123)
+0 (from 15887950)
+6 (from 16495136)
+5 (etc.)
+```
+
+There's a catch, however: monkeys don't seem to understand the value of the prices but only the **changes** in prices. For example, the `123` buyer's first 10 secret numbers, prices, and associated changes would be:
+
+```
+     123: 3
+15887950: 0 (-3)
+16495136: 6 (6)
+  527345: 5 (-1)
+  704524: 4 (-1)
+ 1553684: 4 (0)
+12683156: 6 (2)
+11100544: 4 (-2)
+12249484: 4 (0)
+ 7753432: 2 (-2)
+```
+
+Additionally, a monkey only sells the bananas right after the moment a specific **sequence of four consecutive changes** is observed. For example, picking `-1,-1,0,2` would make the monkey sell 6 bananas.
+
+So, we want to buy as many bananas as possible, thus the one sequence we select should be the one that grants us the most bananas across all buyers, within the first 2000 price changes.
+
+If the explanation sounds tricky, the implementation was as well 😛
+
+Took me a while to figure out an effective strategy, but finally here's what I did:
+
+- For each number in the list of initial secret numbers, the function generates a sequence of 2000 secret numbers using `calcSecretNumber` and tracks the difference in the last digit between consecutive numbers;
+
+- It then records unique sequences of 4 consecutive differences in the `ranges` object.
+
+- Finally, it stores the last digits associated with each unique sequence of differences.
+
+```
+const ranges: { [key: string]: number[] } = {};
+initial.forEach(num => {
+    let secretNumber = num;
+    const visited = new Set<string>();
+    const differences: number[] = [];
+
+    for (let i = 0; i < 2000; i++) {
+        const nextSecretNumber = calcSecretNumber(secretNumber);
+        differences.push(Number((nextSecretNumber % 10) - (secretNumber % 10)));
+        secretNumber = nextSecretNumber;
+
+        if (differences.length === 4) {
+            const key = differences.join(',');
+            if (!visited.has(key)) {
+                if (ranges[key] === undefined) ranges[key] = [];
+                ranges[key].push(Number((nextSecretNumber % 10)));
+                visited.add(key);
+            }
+            differences.shift();
+        }
+    }
+});
+```
+
+The outcome at the end of this is a map of all possible sequences of 4 consecutive differences, each mapped to a list the prices resulting from such sequence (so we can have multiple prices if the same sequence occurs in the list of secret numbers of multiple buyers).
+
+```
+...
+-3, -2,  3, -3: [2] 	// One buyer includes the sequence, resulting in a price of 2
+-2,  2, -3,  3: [5, 7]  // Two buyers include the sequence, resulting in prices of 5 and 7 respectively
+ 2, -3,  3,  3: [8, 6]  ...
+-3,  3,  3,  0: [8]
+...
+```
+
+Next step is to sum all prices for each sequence, obtaining the total number of bananas that each would grant us considering all buyers:
+
+```
+const sums = [];
+for (const range of Object.values(ranges)) {
+    let sum = 0;
+    for (const num of range) {
+        sum += num;
+    }
+    sums.push(sum);
+}
+```
+
+Finally, we just need to find the highest number of bananas that we could get, and this is our answer to the puzzle:
+
+```
+let maxBananas = 0;
+for (const sum of sums) {
+    if (sum > maxBananas) {
+        maxBananas = sum;
+    }
+}
+
+return maxBananas;
+```
+
+(As I am sure this information is relevant to everyone, I managed to get 1568 bananas 🍌🍌🍌)
+
+All things considered, this puzzle turned out to be simpler than it seemed when reading the description - the key in my case was to split it into smaller problems that can be addressed more easily.
+
+Now I'm off to enjoy my two shiny bananas - pardon me, stars 🤩

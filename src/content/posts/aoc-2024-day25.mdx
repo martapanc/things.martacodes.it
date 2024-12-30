@@ -1,0 +1,118 @@
+---
+title: "It's 500! ⭐"
+description: 'Advent of Code 2024: Day 25'
+slug: aoc-2024-day25
+date: 2024-12-25T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+Merry Christmas, everyone! 🎄🎅 🎁
+
+On the last day of this fantastic adventure, we have to match keys and locks in order to access the Chief Historian's office.
+
+Our input consists of grids (big comeback on the last day 😛) like these:
+
+```
+#####
+.####
+.####
+.####
+.#.#.
+.#...
+.....
+
+.....
+#....
+#....
+#...#
+#.#.#
+#.###
+#####
+```
+
+The difference is that **locks** have their top row filled with `#`; **keys** have the bottom row filled.
+
+Essentially, the goal is to find unique lock/key pairs that fit together without overlapping in any column.
+
+The puzzle's description already gives us the key hint (pun unintended) to solve this: for each lock and key we can calculate the pin heights, that is the number of `#` in each column excluding the top (if it's a lock) or bottom (if it's a key) row.
+
+For example, this lock has heights `0,5,3,4,3`:
+
+```
+#####
+.####
+.####
+.####
+.#.#.
+.#...
+.....
+```
+
+And this key has heights `5,0,2,1,3`:
+
+```
+.....
+#....
+#....
+#...#
+#.#.#
+#.###
+#####
+```
+
+This is of course the reasoning behind my main function here:
+
+```
+function calcHeightPerPin(key: Map<string, string>) {
+    const array: number[] = [];
+    for (let x = 0; x < 5; x++) {
+        const height = [...key.entries()].filter(([cell, val]) => cell.x === x && val === '#').length - 1;
+        array.push(height);
+    }
+    return array;
+}
+```
+
+After this, we can simply loop through all grids split between locks and keys, compare each pin height and see if the sum is ≤ 5 (as there can be gaps between a lock's and a key's pins, it doesn't have to be a perfect match):
+
+```
+function findFittingLocksAndKeys(keyGrids: Grid[], lockGrids: Grid[]) {
+    let count = 0;
+    const keys: number[][] = [];
+    const locks: number[][] = [];
+
+    for (const grid of keyGrids) {
+        keys.push(calcHeightPerPin(grid));
+    }
+
+    for (const grid of lockGrids) {
+        locks.push(calcHeightPerPin(grid));
+    }
+
+    for (const key of keys) {
+        for (const lock of locks) {
+            let fits = true;
+            for (let i = 0; i < 5; i++) {
+                if (key[i] + lock[i] > 5) {
+                    fits = false;
+                    break;
+                }
+            }
+            if (fits)
+                count++;
+        }
+    }
+
+    return count;
+}
+```
+
+And this is it! As per tradition, we can obtain the 50th star for free as long as we have the previous 49 in store - so clearly no Part 2 puzzle in this article! :D
+
+I hope you enjoyed this journey as much as I did: I'm especially pleased because, having completed all the previous years as well, I now belong to the 500-stars exclusive club! 🤩
+
+That said, I'm off to enjoy this Christmas Day… see you next year! 🌠

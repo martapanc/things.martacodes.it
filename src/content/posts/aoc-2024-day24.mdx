@@ -1,0 +1,217 @@
+---
+title: 'Adder Circuits in the Jungle'
+description: 'Advent of Code 2024: Day 24'
+slug: aoc-2024-day24
+date: 2024-12-24T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2024
+image:
+---
+
+We're almost at the end of the journey for this year, and as per tradition, the closer you get to 25 the more the complexity of the puzzles increases.
+
+Of course, this day was no exception, and at this point it is reasonable to say that "Day 24: Crossed Wires" was the most difficult challenge of all to solve.
+
+The input for today's puzzle is composed as follows:
+
+- a list of wires named `x00` through `xN` and `y00` through `yN`
+- a list of logic operations featuring either `AND`, `OR` or `XOR`
+
+```
+x00: 1
+x01: 1
+x02: 1
+y00: 0
+y01: 1
+y02: 0
+
+x00 AND y00 -> z00
+x01 XOR y01 -> z01
+x02 OR y02 -> z02
+```
+
+The larger example we're given and the real input include not only logical gates with `x` and `y`, but also others such as
+
+```
+ntg XOR fgs -> mjb
+y02 OR x01 -> tnw
+gnj AND wpb -> z02
+```
+
+First things first, we need to solve all the logic gates and eventually obtain the values for the wires named `z00` through `zN`. In fact, the `z` wires form a binary number, obtained combining the bits from `zN` to `z00` (which is the least significant bit):
+
+```
+z00: 0
+z01: 0
+z02: 0
+z03: 1
+z04: 0
+z05: 1
+z06: 1
+z07: 1
+z08: 1
+z09: 1
+z10: 1
+z11: 0
+z12: 0
+
+=> 0011111101000
+```
+
+The answer is the decimal equivalent (`2024` in the example above) of the binary number formed by the `z` bits.
+
+In order to keep things simple, I decided to split the logic in two.
+
+Basically, first I solved all logical gates containing `x` and `y` wires on the left-hand side: solving a gate means finding the value of a wire, which I then added to the `solvedGates` map. Afterwards, I kept using the known wires to solve more and more gates, until the list of `unsolvedGates` was empty.
+
+```
+function findOutput(wires: Map<string, number>, gates: Map<string, Gate>) {
+    const solvedGates = new Map<string, number>();
+    const unsolvedGates = new Map(gates);
+
+    for (const [key, gate] of gates) {
+        const { wire1, wire2 } = gate;
+        if ((wire1.startsWith("x") || wire1.startsWith("y")) && (wire2.startsWith("x") || wire2.startsWith("y"))) {
+            unsolvedGates.delete(key);
+            solvedGates.set(key, calc(gate, wires));
+        }
+    }
+
+    while (unsolvedGates.size > 0) {
+        for (const [key, gate] of unsolvedGates) {
+            if (solvedGates.has(gate.wire1) && solvedGates.has(gate.wire2)) {
+                unsolvedGates.delete(key);
+                solvedGates.set(key, calc(gate, solvedGates));
+            }
+        }
+    }
+
+    return findNumberFromWires('z', solvedGates);
+}
+```
+
+The `findNumberFromWires` function is also straightforward: we just need to find all wires starting with `z` from the list of solved gates, then sorting it by decreasing number, join them to a single binary number, and finally convert it to decimal:
+
+```
+function findNumberFromWires(id: string, wires: Map<string, number>) {
+    const zWires = new Map<number, number>();
+    for (const [key, value] of wires) {
+        if (key.startsWith(id)) {
+            const index = Number.parseInt(key.replace(id, ""));
+            zWires.set(index, value);
+        }
+    }
+
+    const result = Array.from(zWires)
+        .sort((a, b) => b[0] - a[0])
+        .map(([_, value]) => value)
+        .join("");
+
+    return Number.parseInt(result, 2);
+}
+```
+
+Seeing how trivial the first part was all in all, I was genuinely worried at the thought of what part 2 would entail... and expectations were not disappointed :)
+
+It turns out that the whole set of gate is a system to compute the **sum of two binary numbers**: essentially, the `x00...xN` wires represent a binary number; `y00...yN` are another binary number; `z00...zN` is the result of adding them, so `x + y = z`.
+
+Now, the `z` binary number that was the answer for part 1 _is not_ the sum of `x` and `y` according to our input. This is because our system of gates has a number of wires that have been **swapped** - **4 pairs** to be exact. Our goal is to identify all such wires, so 8 wires in total, which sorted and combined as a comma-separated string will provide the answer to Part 2.
+
+Feeling the panic yet? 😵‍💫
+
+Well, I definitely felt it at the start; in fact it took me longer than I like to admit to wrap my head around the task and figure a strategy out.
+
+During my research I saw that number of people on Reddit leveraged graphics tools like [Graphviz](https://graphviz.org/), which I decided to use as well, and which definitely helped visualised this huge tangle of connected wires - quite literally.
+
+The key here was to understand how adding binary number works in our system. Specifically, each bit of our final `z` number is computed via an **adder** circuit, which I attached below:
+
+![fullAdder.png](../../../../../Downloads/fullAdder.png)
+
+In a very simplified explanation, we start from X and Y and, thanks to some `XOR`, `AND` and `OR` magic, we get Z - and of course the operation takes into account any carry from the previous steps, and finally passes the carry over to the next one.
+
+It follows that, since the sum `Z` is calculated incorrectly by the system, there are errors somewhere in the logic chain.
+
+In fact, observing the graph plotted via Graphviz, we can notice a majority of correct adder circuits, like this:
+
+![Screenshot 2024-12-30 at 15.51.41.png](../../../../../Screenshots/Screenshot 2024-12-30 at 15.51.41.png)
+
+... and a number of _incorrect_ ones, like this with `z39` being the result of an `AND` instead of a `XOR` 🤔
+
+![Screenshot 2024-12-30 at 15.53.47.png](../../../../../Screenshots/Screenshot 2024-12-30 at 15.53.47.png)
+
+I mean, it's fairly easy to tell there's something wrong when spotting a circuit like this (notice `z05` and `frn`):
+
+![Screenshot 2024-12-30 at 16.06.49.png](../../../../../Screenshots/Screenshot 2024-12-30 at 16.06.49.png)
+
+I wanted, however, to write a formal algorithm to identify all such problems, instead of checking the graph circuit by circuit and taking notes of the various errors (knowing myself, I knew I was going to make stupid mistakes and waste a lot of time for nothing).
+
+So, after a few attempts, here's the function I managed to put together that identifies all the swapped wires:
+
+```
+function findWiresToSwap(_: Map<string, number>, gates: Map<string, Gate>) {
+    const BIT_LENGTH = 45;
+    const incorrect: string[] = [];
+
+    const findGate = (wire1: string, wire2: string, op: string) =>
+        [...gates.entries()].find(([_, g]) =>
+            ((g.wire1 === wire1 && g.wire2 === wire2) || (g.wire1 === wire2 && g.wire2 === wire1)) && g.op === op
+        );
+
+    // Helper function to find a gate by wire connection
+    const findNextGate = (wire: string) =>
+        [...gates.entries()].find(([_, g]) => g.wire1 === wire || g.wire2 === wire);
+
+    for (let i = 0; i < BIT_LENGTH; i++) {
+        const id = i.toString().padStart(2, '0');
+        const wire1 = `x${id}`;
+        const wire2 = `y${id}`;
+
+        const xorGate = findGate(wire1, wire2, 'XOR');
+        const andGate = findGate(wire1, wire2, 'AND');
+        const zGateEntry = [...gates.entries()].find(([key]) => key === `z${id}`);
+
+        if (!xorGate || !andGate || !zGateEntry) continue;
+
+        const [xorKey] = xorGate;
+        const [andKey] = andGate;
+        const [zKey, zGate] = zGateEntry;
+
+        // All z nodes must be connected to a XOR
+        if (zGate.op !== 'XOR') {
+            incorrect.push(zKey);
+        }
+
+        // All AND gates must go to an OR (excluding the first case, which starts the carry flag)
+        const or = [...gates.entries()].find(([_, g]) => g.wire1 === andKey || g.wire2 === andKey);
+        if (or !== undefined) {
+            const [_, orGate] = or;
+            if (orGate.op !== 'OR' && i > 0) {
+                incorrect.push(andKey);
+            }
+        }
+
+        // The first XOR must go to XOR or AND
+        const next = findNextGate(xorKey);
+        if (next !== undefined) {
+            const [_, nextGate] = next;
+            if (nextGate.op === 'OR') {
+                incorrect.push(xorKey);
+            }
+        }
+    }
+
+    // All XOR nodes must be connected to an x, y, or z node
+    const wrongGates = [...gates.entries()].filter(([key, g]) =>
+        !g.wire1[0].match(/[xy]/g) && !g.wire2[0].match(/[xy]/g) &&
+        !key[0].match(/z/g) && g.op === 'XOR'
+    ).map(([key, _]) => key);
+
+    incorrect.push(...wrongGates);
+
+    return incorrect.sort().join(",");
+}
+```
+
+Whew, after so much effort, it's `parseInt(10, 2)` more stars for us ;)

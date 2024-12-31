@@ -60,7 +60,7 @@ article hr {
 
 /* Syntax highlighting */
 article pre {
-    @apply mb-4 text-[15px] leading-6;
+    @apply mb-4 text-xs leading-6 md:text-[15px];
 }
 
 article pre code {

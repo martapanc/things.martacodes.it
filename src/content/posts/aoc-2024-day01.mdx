@@ -16,7 +16,7 @@ After a several years using Java and (mostly) Kotlin, along with some Python, I'
 
 The first day is easy, as usual. The input consists of two lists like this:
 
-```
+```bash
 3   4
 4   3
 2   5
@@ -30,7 +30,7 @@ After we established the pairs, we need to compute the difference, and sum every
 
 For example, if we sort the test input above and we calculate the differences:
 
-```
+```bash
 1	3		=> 2
 2	3		=> 1
 3	3		=> 0
@@ -43,7 +43,7 @@ resulting in a total of 11.
 
 My solution for the first task is also pretty simple:
 
-```
+```ts
 function calcDistanceChecksum(leftList: number[], rightList: number[]): number {
     let distanceChecksum = 0;
     leftList.forEach((num, index) => {
@@ -59,20 +59,22 @@ Part 2 goes like this: for each number on the left list, we need to find how man
 
 Using again the same example:
 
-- 3 occurs three times on the right => 9
-- 4 occurs once => 4
-- 2 does not occur => 0
-- 1 does not occur => 0
+- `3` occurs three times on the right → `9`
+- `4` occurs once → `4`
+- `2` does not occur → `0`
+- `1` does not occur → `0`
 
 Finally we count the score of 3 three times, since it appears multiple times in the left list, bringing to a total score of 31.
 
 Again, the function is fairly straightforward:
 
-```
+```ts
 function calcSimilarityScore(leftList: number[], rightList: number[]): number {
     let totalSimilarityScore = 0;
     leftList.forEach((num) => {
-        const occurrences = rightList.filter(rightNum => rightNum === num).length;
+        const occurrences = rightList.filter(
+            (rightNum) => rightNum === num
+        ).length;
         totalSimilarityScore += num * occurrences;
     });
 

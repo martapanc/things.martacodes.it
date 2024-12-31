@@ -7,6 +7,12 @@ import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import remarkHeadingId from 'remark-heading-id';
 import remarkToc from 'remark-toc';
+import rehypeHighlight from 'rehype-highlight';
+
+import langBash from 'highlight.js/lib/languages/bash';
+import langTs from 'highlight.js/lib/languages/typescript';
+
+import 'highlight.js/scss/tokyo-night-dark.scss';
 
 export function MarkdownBody({ children }: { children: string }) {
     return (
@@ -28,7 +34,14 @@ export function MarkdownBody({ children }: { children: string }) {
                         ],
                         remarkHeadingId,
                     ],
-                    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                    rehypePlugins: [
+                        rehypeSlug,
+                        rehypeAutolinkHeadings,
+                        [
+                            rehypeHighlight,
+                            { languages: { bash: langBash, ts: langTs } },
+                        ],
+                    ],
                 },
             }}
         />

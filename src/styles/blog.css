@@ -2,6 +2,10 @@ article p {
     margin-bottom: 1rem;
 }
 
+article ul {
+    @apply mb-4;
+}
+
 article ul > li {
     margin-left: 1rem;
     list-style-position: inside;
@@ -52,4 +56,22 @@ article h4 {
 
 article hr {
     margin-top: 1.5rem;
+}
+
+/* Syntax highlighting */
+article pre {
+    @apply mb-4;
+    /*white-space: pre; !* Prevent wrapping of lines *!*/
+    /*overflow-x: auto; !* Enable horizontal scrolling for long content *!*/
+    /*max-width: 100%; !* Constrain to the parent container's width *!*/
+    /*box-sizing: border-box; !* Include padding/border in width calculations *!*/
+    /*padding: 1rem; !* Optional: better spacing inside the block *!*/
+}
+
+article code {
+    @apply /*display: block; !* Ensure consistent layout *!*/ /*max-width: 100%; !* Constrain to parent *!*/ container block rounded-md;
+}
+
+section {
+    overflow: hidden;
 }

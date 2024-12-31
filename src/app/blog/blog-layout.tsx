@@ -30,8 +30,8 @@ export default async function BlogLayout({
     }
 
     return (
-        <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[auto_17.5rem] lg:grid-rows-[auto]'>
-            <section className='w-auto rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
+        <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[1fr_17.5rem] lg:grid-rows-[auto]'>
+            <section className='w-full rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
                 <div className='layout relative flex flex-col gap-5 py-6'>
                     {children}
                 </div>

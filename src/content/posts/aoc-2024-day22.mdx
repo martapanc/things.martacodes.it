@@ -17,7 +17,7 @@ The Monkey Exchange Market is our only hope - but to get the bananas, we need to
 To be honest, the logic to calculate the pseudorandom sequence is not hugely interesting, so I'm going to skip the [detailed explanation](https://adventofcode.com/2024/day/22) in this article.
 This is the code that applies such logic - all you need to know is that the `mix` function consists of a **bitwise XOR** operation, and `prune` means limiting the size of numbers via **modulo**.
 
-```
+```ts
 export function calcSecretNumber(input: number) {
     let result = prune(mix(input, input * 64));
     result = prune(mix(result, Math.floor(result / 32)));
@@ -29,7 +29,7 @@ export function calcSecretNumber(input: number) {
 
 For part 1 we then have to calculate the 2000th secret number for each buyer in the list, which this function is for:
 
-```
+```ts
 function calcNthSecretNumber(input: number, n: number) {
     let i = 0;
     let nextSecretNumber = input;
@@ -43,9 +43,11 @@ function calcNthSecretNumber(input: number, n: number) {
 }
 ```
 
+---
+
 Moving to part 2, we learn that the secret numbers don't actually represent the price for the bananas - only their ones digit does. So, if a buyer starts with a secret number of `123`, that buyer's first few *prices* would be:
 
-```
+```bash
 3 (from 123)
 0 (from 15887950)
 6 (from 16495136)
@@ -54,7 +56,7 @@ Moving to part 2, we learn that the secret numbers don't actually represent the 
 
 There's a catch, however: monkeys don't seem to understand the value of the prices but only the **changes** in prices. For example, the `123` buyer's first 10 secret numbers, prices, and associated changes would be:
 
-```
+```bash
      123: 3
 15887950: 0 (-3)
 16495136: 6 (6)
@@ -75,15 +77,15 @@ If the explanation sounds tricky, the implementation was as well 😛
 
 Took me a while to figure out an effective strategy, but finally here's what I did:
 
-- For each number in the list of initial secret numbers, the function generates a sequence of 2000 secret numbers using `calcSecretNumber` and tracks the difference in the last digit between consecutive numbers;
+\- For each number in the list of initial secret numbers, the function generates a sequence of 2000 secret numbers using `calcSecretNumber` and tracks the difference in the last digit between consecutive numbers;
 
-- It then records unique sequences of 4 consecutive differences in the `ranges` object.
+\- It then records unique sequences of 4 consecutive differences in the `ranges` object.
 
-- Finally, it stores the last digits associated with each unique sequence of differences.
+\- Finally, it stores the last digits associated with each unique sequence of differences.
 
-```
+```ts
 const ranges: { [key: string]: number[] } = {};
-initial.forEach(num => {
+initial.forEach((num) => {
     let secretNumber = num;
     const visited = new Set<string>();
     const differences: number[] = [];
@@ -97,7 +99,7 @@ initial.forEach(num => {
             const key = differences.join(',');
             if (!visited.has(key)) {
                 if (ranges[key] === undefined) ranges[key] = [];
-                ranges[key].push(Number((nextSecretNumber % 10)));
+                ranges[key].push(Number(nextSecretNumber % 10));
                 visited.add(key);
             }
             differences.shift();
@@ -108,7 +110,7 @@ initial.forEach(num => {
 
 The outcome at the end of this is a map of all possible sequences of 4 consecutive differences, each mapped to a list the prices resulting from such sequence (so we can have multiple prices if the same sequence occurs in the list of secret numbers of multiple buyers).
 
-```
+```bash
 ...
 -3, -2,  3, -3: [2] 	// One buyer includes the sequence, resulting in a price of 2
 -2,  2, -3,  3: [5, 7]  // Two buyers include the sequence, resulting in prices of 5 and 7 respectively
@@ -119,7 +121,7 @@ The outcome at the end of this is a map of all possible sequences of 4 consecuti
 
 Next step is to sum all prices for each sequence, obtaining the total number of bananas that each would grant us considering all buyers:
 
-```
+```ts
 const sums = [];
 for (const range of Object.values(ranges)) {
     let sum = 0;
@@ -132,7 +134,7 @@ for (const range of Object.values(ranges)) {
 
 Finally, we just need to find the highest number of bananas that we could get, and this is our answer to the puzzle:
 
-```
+```ts
 let maxBananas = 0;
 for (const sum of sums) {
     if (sum > maxBananas) {
@@ -148,3 +150,12 @@ return maxBananas;
 All things considered, this puzzle turned out to be simpler than it seemed when reading the description - the key in my case was to split it into smaller problems that can be addressed more easily.
 
 Now I'm off to enjoy my two shiny bananas - pardon me, stars 🤩
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day22/day22.ts" target="_blank">Day22 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

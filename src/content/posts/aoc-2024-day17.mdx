@@ -16,7 +16,7 @@ It took me a long time to figure out the strategy to solve part 2, and most like
 
 But as usual, let's go through part 1 first: the input consists of a set of **registers** with their initial values, and a **program** of comma-separated instructions, each representing a 3-bit digit (so with values of 0 through 7):
 
-```
+```bash
 Register A: 2024
 Register B: 0
 Register C: 0
@@ -28,14 +28,14 @@ The program itself is an alternation of **opcodes** and **operands**. I'm not go
 
 Adding everything together, my function looked like this:
 
-```
+```ts
 function runProgram(computer: Computer) {
     let regA = computer.regA ?? 0n;
     let regB = computer.regB ?? 0n;
     let regC = computer.regC ?? 0n;
-    const program = computer.program.split(",").map(s => BigInt(s));
+    const program = computer.program.split(',').map((s) => BigInt(s));
 
-    let output = "";
+    let output = '';
 
     const getCombo = (operand: bigint): bigint => {
         switch (operand) {
@@ -51,7 +51,7 @@ function runProgram(computer: Computer) {
             case 6n:
                 return regC;
             case 7n:
-                throw new Error("Invalid operand: 7");
+                throw new Error('Invalid operand: 7');
             default:
                 throw new Error(`Unknown operand: ${operand}`);
         }
@@ -82,7 +82,7 @@ function runProgram(computer: Computer) {
                 regB = bxc(regB, regC);
                 break;
             case 5n:
-                output += out(getCombo(operand)) + ","
+                output += out(getCombo(operand)) + ',';
                 break;
             case 6n:
                 regB = bdv(regA, powerOfTwo(getCombo(operand)));
@@ -107,14 +107,17 @@ As you can imagine, it's probably not the kind of program that can be brute-forc
 
 So, after analysing what our program actually does, as I mentioned with a bit of help from the smart AoC crowd on Reddit, a few things become clear:
 
-- Register `A` is processed in octals, meaning its value is grouped and operated on in chunks of 3 bits.
-- Registers `B` and `C` are temporary and only hold intermediate results for processing `A`. They do not retain their values between octal blocks.
-- The processing of each octal block depends only on the more significant bits of `A`, making it easier to replicate the output program by analyzing it in reverse.
-- A greedy approach will not work, as there are potential dead ends in the search for valid values of `A`. To handle this, a depth-first search approach can be used to explore possibilities and backtrack when encountering a dead end.
+\- Register `A` is processed in octals, meaning its value is grouped and operated on in chunks of 3 bits.
+
+\- Registers `B` and `C` are temporary and only hold intermediate results for processing `A`. They do not retain their values between octal blocks.
+
+\- The processing of each octal block depends only on the more significant bits of `A`, making it easier to replicate the output program by analyzing it in reverse.
+
+\- A greedy approach will not work, as there are potential dead ends in the search for valid values of `A`. To handle this, a depth-first search approach can be used to explore possibilities and backtrack when encountering a dead end.
 
 Translating this into code, my solution looked like this:
 
-```typescript
+```ts
 function calcMinRegA(computer: Computer) {
     const program = computer.program.split(',').map((num) => BigInt(num));
 
@@ -153,3 +156,12 @@ function calcMinRegA(computer: Computer) {
 ```
 
 So here we are, probably the most deserved star so far 💫
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day17/day17.ts" target="_blank">Day17 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

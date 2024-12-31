@@ -19,7 +19,7 @@ This is especially true for days like this where solving the problem doesn’t r
 
 Today's input consists of a list of connections between computers - essentially a network map:
 
-```
+```bash
 kh-tc
 de-co
 qp-kh
@@ -36,24 +36,22 @@ ta-ka
 
 The goal for now is to find sets of **three inter-connected computers** (i.e. where each computer is connected to the other two). For instance, in the portion of input above we can observe a couple:
 
-```
+```bash
 co,ka,ta
 de,ka,ta
 ```
 
-In particular, the answer is to find a subset of such triplets - specifically, all triplets having at least one computer whose name starts with **t** - but let's worry about this in due time.
+In particular, the answer is to find a subset of such triplets - specifically, all triplets having at least one computer whose name starts with `t` - but let's worry about this in due time.
 
 So, my first function to solve part 1 is to create an **adjacency list**: for every pair of computers, I want to stores all computers connected to each member of the pair
 
-```
+```ts
 function getAdjacencyList(lines: string[]) {
     const adjacencyList: { [key: string]: Set<string> } = {};
     for (const connection of lines) {
-        const [a, b] = connection.split("-");
-        if (!adjacencyList[a])
-            adjacencyList[a] = new Set();
-        if (!adjacencyList[b])
-            adjacencyList[b] = new Set();
+        const [a, b] = connection.split('-');
+        if (!adjacencyList[a]) adjacencyList[a] = new Set();
+        if (!adjacencyList[b]) adjacencyList[b] = new Set();
 
         adjacencyList[a].add(b);
         adjacencyList[b].add(a);
@@ -64,7 +62,7 @@ function getAdjacencyList(lines: string[]) {
 
 After running this, we get a list where each item is linked to a list of all connected nodes from our input. For example:
 
-```
+```bash
 kh: [tc, qp, ub, ta]
 tc: [kh, wh, td, co]
 ...
@@ -72,7 +70,7 @@ tc: [kh, wh, td, co]
 
 From our adjacency list, we can proceed to identifying a "triangle" (fundamentally a cycle of three connected nodes) of computers: for each node, the function checks pairs of its neighbors to see if they are also connected, i.e. forming a triangle. It then stores each found triangle as a sorted, comma-separated string in a Set, to ensure we don't consider the same triangle twice.
 
-```
+```ts
 const triangles: Set<string> = new Set();
 for (const [node, neighbors] of Object.entries(adjacencyList)) {
     const neighborsArray = Array.from(neighbors);
@@ -83,7 +81,7 @@ for (const [node, neighbors] of Object.entries(adjacencyList)) {
             const neighborB = neighborsArray[j];
 
             if (adjacencyList[neighborA].has(neighborB)) {
-                const triangle = [node, neighborA, neighborB].sort().join(",");
+                const triangle = [node, neighborA, neighborB].sort().join(',');
                 triangles.add(triangle);
             }
         }
@@ -93,17 +91,19 @@ for (const [node, neighbors] of Object.entries(adjacencyList)) {
 
 The last bit is to count all triangles having at least one computer name starting with T, which can be done easily:
 
-```
+```ts
 let trianglesStartingWithT = 0;
 [...triangles].forEach((triangle: string) => {
-    const split = triangle.split(",")
-    if (split.some(s => s.startsWith("t"))) {
+    const split = triangle.split(',');
+    if (split.some((s) => s.startsWith('t'))) {
         trianglesStartingWithT++;
     }
-})
+});
 
 return trianglesStartingWithT;
 ```
+
+---
 
 Understandably, to solve part 2 we need to find the **largest set of computers that are all connected** to each other. Sounds trivial, doesn't it? 😛
 
@@ -129,7 +129,7 @@ If you never heard of this algorithm, you're in good company. Here's the cleares
 
 After figuring out how to translate this beauty into runnable code, I came up with this:
 
-```
+```ts
 const findLargestParties = (adjacencyList: { [key: string]: Set<string> }) => {
     const parties: string[][] = [];
 
@@ -146,21 +146,21 @@ const findLargestParties = (adjacencyList: { [key: string]: Set<string> }) => {
             bronKerbosch(
                 new Set([...r, node]),
                 new Set([...p].filter((n) => adjacencyList[node].has(n))),
-                new Set([...x].filter((n) => adjacencyList[node].has(n))),
+                new Set([...x].filter((n) => adjacencyList[node].has(n)))
             );
             p.delete(node);
             x.add(node);
         }
-    }
+    };
 
     bronKerbosch(new Set(), new Set(Object.keys(adjacencyList)), new Set());
     return parties;
-}
+};
 ```
 
 Running this on our adjacency list (computed for part 1), the result is an array of arrays, each containing the cliques of interconnected computers.
 
-```
+```ts
 [
  [de, cg],
  [de, ka, co, ta],
@@ -172,10 +172,22 @@ Running this on our adjacency list (computed for part 1), the result is an array
 
 Finding the largest list in the group is then easy - I simply used `reduce` for the purpose:
 
-```
+```ts
 const findLargestParty = (parties: string[][]) => {
-    return parties.reduce((max, party) => (party.length > max.length ? party : max), []);
-}
+    return parties.reduce(
+        (max, party) => (party.length > max.length ? party : max),
+        []
+    );
+};
 ```
 
 _Et voila_, the computers have been sorted, a new algorithm has been learned, and two brand new, precious stars are now in my bag 🤩
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day23/day23.ts" target="_blank">Day23 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

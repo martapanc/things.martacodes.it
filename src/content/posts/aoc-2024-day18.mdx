@@ -16,7 +16,7 @@ On day 2 I said that the task's input felt like a representation of the Matrix -
 
 We start with a list of pairs that we're told represent an `X,Y` coordinate:
 
-```
+```bash
 5,4
 4,2
 4,5
@@ -33,7 +33,7 @@ We start with a list of pairs that we're told represent an `X,Y` coordinate:
 
 Starting from the top, each coordinate is the position of a **byte** that falls into the memory space, making it corrupted - so for example after the first 12 falling bytes we have a grid like this:
 
-```
+```ts
 ...#...
 ..#..#.
 ....#..
@@ -45,7 +45,7 @@ Starting from the top, each coordinate is the position of a **byte** that falls 
 
 The task for part 1 is to simulate the fall of the first kilobyte, that is the first 1024 bytes, onto the memory space. Then we need to find the best path from the top-left corner to the bottom-right corner avoiding all the bytes.
 
-```
+```ts
 SO.#OOO
 .O#OO#O
 .OOO#OO
@@ -59,12 +59,12 @@ Nothing too complicated for now.
 
 We simply need to read the first 1024 lines of the input and parse the coordinates to determine where the `#` "obstacles" are placed.
 
-```
-const grid: Grid = new Map<string, string>;
+```ts
+const grid: Grid = new Map<string, string>();
 for (let y = 0; y < side; y++) {
     for (let x = 0; x < side; x++) {
         const coord = `${x},${y}`;
-        if (lines.slice(0, firstCount).some(l => l === coord)) {
+        if (lines.slice(0, firstCount).some((l) => l === coord)) {
             grid.set(`{${coord}}`, '#');
         } else {
             grid.set(`{${coord}}`, '.');
@@ -75,7 +75,7 @@ for (let y = 0; y < side; y++) {
 
 We can then figure the best path out via a classical exploration algorithm using BFS:
 
-```
+```ts
 function findPath(grid: Grid, end: Coord, side: number, firstCount: number) {
     let currentPos = new Coord(0, 0);
 
@@ -106,22 +106,30 @@ function findPath(grid: Grid, end: Coord, side: number, firstCount: number) {
 }
 ```
 
+---
+
 Moving to part 2, it is a matter of using the remaining part of the input - of course, when has anyone ever seen an AoC task where part of the input is ignored until the end? 🙄
 
 The bytes keep falling onto our memory grid, and we're told there's a moment when all the possible paths to the end get blocked: our goal is to find the first coordinates of such byte, effectively making the end unreachable.
 
 I could bet there is a more efficient way to achieve this, but I decided not to try and be too smart - after all my function for part 1 was already pretty fast (~90ms). My idea was simply to keep adding bytes to the grid and call the pathfinding function, until it returned `-1` meaning that a path could not be found.
 
-```
-function findFirstBlockingByte(lines: string[], end: Coord, side: number, firstCount: number) {
+```ts
+function findFirstBlockingByte(
+    lines: string[],
+    end: Coord,
+    side: number,
+    firstCount: number
+) {
     let count = firstCount + 1; // Starting from 1024 + 1
-    let grid: Grid = new Map<string, string>;
+    let grid: Grid = new Map<string, string>();
 
     while (count < lines.length) {
         for (let y = 0; y < side; y++) {
             for (let x = 0; x < side; x++) {
                 const coord = `${x},${y}`;
-                if (lines.slice(0, count).some(l => l === coord)) { // Introducing a new byte to the grid with each iteration
+                if (lines.slice(0, count).some((l) => l === coord)) {
+                    // Introducing a new byte to the grid with each iteration
                     grid.set(`{${coord}}`, '#');
                 } else {
                     grid.set(`{${coord}}`, '.');
@@ -137,3 +145,12 @@ function findFirstBlockingByte(lines: string[], end: Coord, side: number, firstC
     }
 }
 ```
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day18/day18.ts" target="_blank">Day18 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

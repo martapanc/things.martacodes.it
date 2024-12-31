@@ -16,7 +16,7 @@ On the last day of this fantastic adventure, we have to match keys and locks in 
 
 Our input consists of grids (big comeback on the last day 😛) like these:
 
-```
+```ts
 #####
 .####
 .####
@@ -42,7 +42,7 @@ The puzzle's description already gives us the key hint (pun unintended) to solve
 
 For example, this lock has heights `0,5,3,4,3`:
 
-```
+```ts
 #####
 .####
 .####
@@ -54,7 +54,7 @@ For example, this lock has heights `0,5,3,4,3`:
 
 And this key has heights `5,0,2,1,3`:
 
-```
+```ts
 .....
 #....
 #....
@@ -66,11 +66,14 @@ And this key has heights `5,0,2,1,3`:
 
 This is of course the reasoning behind my main function here:
 
-```
+```ts
 function calcHeightPerPin(key: Map<string, string>) {
     const array: number[] = [];
     for (let x = 0; x < 5; x++) {
-        const height = [...key.entries()].filter(([cell, val]) => cell.x === x && val === '#').length - 1;
+        const height =
+            [...key.entries()].filter(
+                ([cell, val]) => cell.x === x && val === '#'
+            ).length - 1;
         array.push(height);
     }
     return array;
@@ -79,7 +82,7 @@ function calcHeightPerPin(key: Map<string, string>) {
 
 After this, we can simply loop through all grids split between locks and keys, compare each pin height and see if the sum is ≤ 5 (as there can be gaps between a lock's and a key's pins, it doesn't have to be a perfect match):
 
-```
+```ts
 function findFittingLocksAndKeys(keyGrids: Grid[], lockGrids: Grid[]) {
     let count = 0;
     const keys: number[][] = [];
@@ -102,8 +105,7 @@ function findFittingLocksAndKeys(keyGrids: Grid[], lockGrids: Grid[]) {
                     break;
                 }
             }
-            if (fits)
-                count++;
+            if (fits) count++;
         }
     }
 
@@ -111,8 +113,33 @@ function findFittingLocksAndKeys(keyGrids: Grid[], lockGrids: Grid[]) {
 }
 ```
 
-And this is it! As per tradition, we can obtain the 50th star for free as long as we have the previous 49 in store - so clearly no Part 2 puzzle in this article! :D
+And this is it! As per tradition, we can obtain the 50th star for free as long as we have the previous 49 in store - so clearly no Part 2 puzzle in this article! 😀
+
+<div className='flex justify-center'>
+    <img
+        src='https://res.cloudinary.com/dwrurydlt/image/upload/v1735662507/Blog/AoC2024_c7flyb.webp'
+        alt='The completed AoC 2024'
+        width='600px'
+    />
+</div>
 
 I hope you enjoyed this journey as much as I did: I'm especially pleased because, having completed all the previous years as well, I now belong to the 500-stars exclusive club! 🤩
 
-That said, I'm off to enjoy this Christmas Day… see you next year! 🌠
+That said, I'm off to enjoy this Christmas Day… see you next year!
+
+<div className='flex justify-center'>
+    <img
+        src='https://res.cloudinary.com/dwrurydlt/image/upload/v1735662507/Blog/500_stars_a4zwh8.webp'
+        alt='500 stars'
+        width='1000px'
+    />
+</div>
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day25/day25.ts" target="_blank">Day25 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

@@ -31,7 +31,7 @@
         "cloudinary": "^2.5.1",
         "clsx": "^2.1.1",
         "flag-icons": "^7.2.3",
-        "focus-trap-react": "^10.3.1",
+        "focus-trap-react": "^11.0.2",
         "framer-motion": "^11.15.0",
         "gray-matter": "^4.0.3",
         "highlight.js": "^11.11.1",

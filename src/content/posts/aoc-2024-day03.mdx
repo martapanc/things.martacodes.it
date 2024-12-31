@@ -14,7 +14,7 @@ Simple but fun puzzle today!
 
 The input is a string with a bunch of `mul(N,M)` blocks in it:
 
-```
+```bash
 x**mul(2,4)**%&mul[3,7]!@^do_not_**mul(5,5)**+mul(32,64]then(**mul(11,8)****mul(8,5)**)
 ```
 
@@ -26,7 +26,7 @@ The goal is to
 
 My solution involved a simple regex function finding all valid `mul(N,M)` instances:
 
-```
+```ts
 function getMulExpressions(input: string) {
     return input.match(/mul\([0-9]{1,3},[0-9]{1,3}\)/g);
 }
@@ -34,31 +34,35 @@ function getMulExpressions(input: string) {
 
 Then a loop to parse the numbers and multiply them:
 
-```
-lines.forEach(line => {
+```ts
+lines.forEach((line) => {
     const matches = getMulExpressions(line);
 
-    matches?.forEach(match => {
-        const parsedMatch = match.replace("mul(", "").replace(")", "");
-        const nums: number[] = parsedMatch.split(",").map(str => Number.parseInt(str));
-        result += (nums[0] * nums[1]);
-    })
+    matches?.forEach((match) => {
+        const parsedMatch = match.replace('mul(', '').replace(')', '');
+        const nums: number[] = parsedMatch
+            .split(',')
+            .map((str) => Number.parseInt(str));
+        result += nums[0] * nums[1];
+    });
 });
 ```
 
+---
+
 Part 2 is similar, except we also need to find `do()` and `don't()` blocks: any `mul(N,M)` after a `do()` needs including; any after a `don't()` needs to be skipped.
 
-```
+```ts
 const matches = input.match(/don't\(\)|do\(\)|mul\([0-9]{1,3},[0-9]{1,3}\)/g);
 
 let enable = true;
 const enabledExpressions: string[] = [];
 
-matches?.forEach(match => {
+matches?.forEach((match) => {
     if (match === "don't()") {
         enable = false;
         return;
-    } else if (match === "do()") {
+    } else if (match === 'do()') {
         enable = true;
         return;
     } else {
@@ -66,9 +70,18 @@ matches?.forEach(match => {
             enabledExpressions.push(match);
         }
     }
-})
+});
 ```
 
 I allowed myself to "cheat" a tiny bit for part 2, since the original input consists of multiple lines, and I was worried that there was going to be some `don't()` towards the end of a line that would need to carry over the following line. In order to avoid "remembering" the status across lines, I decided to remove the line breaks so that I could process the whole input at ones, without the need to worry about the `don't()`s carrying over.
 
 Yes, I'm a despicable person because of that - but a despicable person with 6 total stars nonetheless u.u
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day03/day03.ts" target="_blank">Day03 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

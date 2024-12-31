@@ -14,7 +14,7 @@ Finally, a bit of a trickier task today 💪
 
 We have a list of page ordering rules like
 
-```
+```bash
 47|53
 97|13
 97|61
@@ -22,7 +22,7 @@ We have a list of page ordering rules like
 
 and list of page numbers to print.
 
-```
+```bash
 75,47,61,53,29
 97,61,53,29,13
 75,29,13
@@ -32,17 +32,19 @@ I have an incurable idiosyncrasy for printers and print queues, but fortunately 
 
 For part 1, all we need to do for each set of page numbers is to verify whether, based on the rules, the pages are in the correct order. I solved this with low effort by simply considering only the rules containing the page numbers for the list under consideration (obviously, no need to check against rule `1|2` if the printing queue is `[3, 4, 5]`).
 
-```
+```ts
 let isQueueValid = true;
 
 // Consider only the rules affecting the current queue
-const rulesToCheck = rules.filter(rule => queue.includes(rule.a) && queue.includes(rule.b));
+const rulesToCheck = rules.filter(
+    (rule) => queue.includes(rule.a) && queue.includes(rule.b)
+);
 
 for (const ruleToCheck of rulesToCheck) {
     const aIndex = queue.indexOf(ruleToCheck.a); // Get the indices of the numbers in the list corresponding to the rule
     const bIndex = queue.indexOf(ruleToCheck.b);
 
-	// If the first number of the rule comes after the second number, then the queue is not ordered correctly
+    // If the first number of the rule comes after the second number, then the queue is not ordered correctly
     if (aIndex > bIndex) {
         isQueueValid = false;
         break;
@@ -50,7 +52,65 @@ for (const ruleToCheck of rulesToCheck) {
 }
 ```
 
+---
+
 Part 2 was, as I anticipated, a bit more challenging: now we have to considered all incorrectly-ordered queues and sort them according to the various rules.
 It took my a bit of digging and remembering Data Structures & Algorithms classes from university, but in the end I thought it would be best to treat this as a **topological sorting** problem: from a directed graph built from the list of rules (each number is a node, and each pair is a directed edge between the two nodes), we can then run the graph to get the correct orders of the numbers.
 
-I recommend referring to [Wikipedia](https://en.wikipedia.org/wiki/Topological_sorting) for the detailed explanation and the excellent tutorial on [GeeksForGeeks](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/)
+I recommend referring to [Wikipedia](https://en.wikipedia.org/wiki/Topological_sorting) for the detailed explanation and the excellent tutorial on [GeeksForGeeks](https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/).
+
+Here's my implementation of it, anyway:
+
+```ts
+function topologicalSort(numbers: Queue, rules: QueueRule[]) {
+    const adjList = new Map();
+    const inDegree = new Map();
+
+    numbers.forEach((num) => {
+        adjList.set(num, []);
+        inDegree.set(num, 0);
+    });
+
+    rules.forEach((rule) => {
+        adjList.get(rule.a).push(rule.b);
+        inDegree.set(rule.b, (inDegree.get(rule.b) ?? 0) + 1);
+    });
+
+    const queue: number[] = [];
+    const result: number[] = [];
+
+    inDegree.forEach((degree, node) => {
+        if (degree === 0) {
+            queue.push(node);
+        }
+    });
+
+    while (queue.length > 0) {
+        const node = queue.shift();
+        if (node) result.push(node);
+
+        adjList.get(node).forEach((neighbor: number) => {
+            inDegree.set(neighbor, inDegree.get(neighbor) - 1);
+
+            if (inDegree.get(neighbor) === 0) {
+                queue.push(neighbor);
+            }
+        });
+    }
+
+    if (result.length === numbers.length) {
+        return result;
+    } else {
+        throw new Error('The graph has a cycle, no valid ordering exists.');
+    }
+}
+```
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day05/day05.ts" target="_blank">Day05 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

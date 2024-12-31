@@ -60,18 +60,31 @@ article hr {
 
 /* Syntax highlighting */
 article pre {
-    @apply mb-4;
-    /*white-space: pre; !* Prevent wrapping of lines *!*/
-    /*overflow-x: auto; !* Enable horizontal scrolling for long content *!*/
-    /*max-width: 100%; !* Constrain to the parent container's width *!*/
-    /*box-sizing: border-box; !* Include padding/border in width calculations *!*/
-    /*padding: 1rem; !* Optional: better spacing inside the block *!*/
+    @apply mb-4 text-[15px] leading-6;
 }
 
-article code {
-    @apply /*display: block; !* Ensure consistent layout *!*/ /*max-width: 100%; !* Constrain to parent *!*/ container block rounded-md;
+article pre code {
+    @apply rounded-md;
+}
+
+article p code,
+article li code {
+    @apply mx-1 rounded bg-slate-100 px-1.5 py-0.5 text-slate-950 dark:bg-slate-900 dark:text-gray-200;
+}
+
+article hr {
+    @apply my-6;
 }
 
 section {
     overflow: hidden;
+}
+
+/* Post Category-specific styles */
+.gh-link {
+    @apply text-indigo-900 underline underline-offset-2 dark:text-indigo-200;
+
+    cursor:
+        url('/images/new-tab.png') 10 10,
+        pointer;
 }

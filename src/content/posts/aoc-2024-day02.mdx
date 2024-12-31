@@ -10,7 +10,7 @@ tags:
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733679885/Blog/2024-day-2_txuian.webp'
 ---
 
-```
+```bash
 7 6 4 2 1
 1 2 7 8 9
 9 7 6 2 1
@@ -23,18 +23,18 @@ No worries, that's not a representation of `The Matrix` (I mean, it is a matrix,
 
 Each row is a list of **levels** which we need to classify as `safe` or `unsafe`. A safe level has the following requirements:
 
-- The levels are either *all increasing* or *all decreasing*.
-- Any two adjacent levels differ by *at least one* and *at most three*.
+- The levels are either _all increasing_ or _all decreasing_.
+- Any two adjacent levels differ by _at least one_ and _at most three_.
 
 So for example:
 
-- `7 6 4 2 1`: *Safe* because the levels are all decreasing by 1 or 2.
-- `1 2 7 8 9`: *Unsafe* because `2 7` is an increase of 5.
-- `1 3 2 4 5`: *Unsafe* because `1 3` is increasing but `3 2` is decreasing.
+- `7 6 4 2 1`: _Safe_ because the levels are all decreasing by 1 or 2.
+- `1 2 7 8 9`: _Unsafe_ because `2 7` is an increase of 5.
+- `1 3 2 4 5`: _Unsafe_ because `1 3` is increasing but `3 2` is decreasing.
 
 In order to evaluate whether the levels are all increasing/decreasing and whether the "jumps" are within the range, I thought about calculating the difference between each two numbers in the list:
 
-```
+```ts
 export function getLevelDeltas(level: number[]) {
     const delta = [];
     for (let i = 0; i < level.length - 1; i++) {
@@ -45,7 +45,7 @@ export function getLevelDeltas(level: number[]) {
 }
 ```
 
-For example, in the first row `7 6 4 2 1` we would calculate `[(7-6), (6-4), (4-2), (2-1)]` = `[1, 2, 2, 1]`
+For example, in the first row `7 6 4 2 1` we would calculate `[(7 - 6), (6 - 4), (4 - 2), (2 - 1)]` = `[1, 2, 2, 1]`
 
 If the resulting array is _all positive_ or _all negative_ we know that it's respectively fully decreasing or increasing.
 Instead, if we had `1 3 2 4` the result would be `[-2, 1, -2]`, which is a mix of positive and negative numbers.
@@ -54,16 +54,19 @@ Regarding the range of "jump", having the differences we just need to check that
 
 Here's my function:
 
-```
+```ts
 function isLevelSafe(level: number[]): boolean {
     let isSafe = true;
     const deltas = getLevelDeltas(level);
 
     // All non-negative or all non-positive
-    if (deltas.every(delta => delta >= 0) || deltas.every(delta => delta <= 0)) {
-        const absDelta = deltas.map(delta => Math.abs(delta));
+    if (
+        deltas.every((delta) => delta >= 0) ||
+        deltas.every((delta) => delta <= 0)
+    ) {
+        const absDelta = deltas.map((delta) => Math.abs(delta));
 
-        if (absDelta.some(delta => delta < 1 || delta > 3)) {
+        if (absDelta.some((delta) => delta < 1 || delta > 3)) {
             isSafe = false;
         }
     } else {
@@ -78,7 +81,7 @@ Part 2 adds a twist - specifically, we're allowed to remove one level from the l
 
 I decided to extend the original function like this:
 
-```
+```ts
 if (isLevelSafe(level)) {
     safeLevelCount++;
 } else if (applyTolerance) {
@@ -98,3 +101,12 @@ if (isLevelSafe(level)) {
 ```
 
 That's it! Two more stars for me! 🤩
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day02/day02.ts" target="_blank">Day02 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

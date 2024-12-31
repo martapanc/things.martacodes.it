@@ -22,12 +22,12 @@ After processing the input to map each coordinate to the corresponding character
 
 This translated into the following code:
 
-```
+```ts
 grid.forEach((value, cell) => {
     if (value === 'X') {
         const all = getAllCandidates(Coord.deserialize(cell), grid);
 
-        const localXmasCount: number = all.filter(s => s === 'XMAS').length;
+        const localXmasCount: number = all.filter((s) => s === 'XMAS').length;
         xmasCount += localXmasCount;
     }
 });
@@ -35,7 +35,7 @@ grid.forEach((value, cell) => {
 
 The `getNeighbors` function is simply doing some additions on the Cartesian plane:
 
-```
+```ts
 function getNeighborCoords(source: Coord, includeDiagonals: boolean = false) {
     const neighbors = [
         new Coord(source.x, source.y - 1), // N
@@ -66,7 +66,7 @@ function getDiagonalCoords(source: Coord) {
 Might look complicated but it's really not: each `candidateDelta` considers `X` as the (0,0) point and derives the lists of 3 coordinates in each direction.
 For example `XMAS` written horizontally left to right would have X=(0,0), M=(1,0), A=(2,0), S=(3,0); if it was right to left, the coordinates would be X=(0,0), M=(-1,0), A=(-2,0), S=(-3,0), and so on.
 
-```
+```ts
 function getAllCandidates(cell: Coord, grid: Grid) {
     const candidateDeltas = [
         ['{0,0}', '{1,0}', '{2,0}', '{3,0}'],
@@ -80,27 +80,29 @@ function getAllCandidates(cell: Coord, grid: Grid) {
     ];
 
     const candidates: string[] = [];
-    candidateDeltas.forEach(deltas => {
-        const coords: Coord[] = deltas.map(delta => {
+    candidateDeltas.forEach((deltas) => {
+        const coords: Coord[] = deltas.map((delta) => {
             return new Coord(cell.x + delta.x, cell.y + delta.y);
-        })
+        });
 
         const values = coords
-            .filter(c => grid.has(c))
-            .map(c => grid.get(c)); // Filter the coordinates within the grid
+            .filter((c) => grid.has(c))
+            .map((c) => grid.get(c)); // Filter the coordinates within the grid
 
-		candidates.push(values.join(''));
+        candidates.push(values.join(''));
     });
 
     return candidates;
 }
 ```
 
+---
+
 In part 2 we learn that we misunderstood the original instructions: it's not a XMAS puzzle - it's a X-MAS puzzle 😁
 
 The goal is to find all the two `MAS` arranged as an `X`, basically like this:
 
-```
+```bash
 M.S
 .A.
 M.S
@@ -108,12 +110,17 @@ M.S
 
 Apart from a stupid bug that made me waste some time, I actually found this part easier than the previous one, if anything for the number of steps involved: I simply had to find all `A` in the grid and check if their diagonal neighbors are some variant of `MMSS`, meaning that they form an X combined with the central A.
 
-```
+```ts
 grid.forEach((value, cell) => {
     if (value === 'A') {
         const neighbors = getDiagonalNeighbors(Coord.deserialize(cell), grid);
         const str = neighbors.join('');
-        if (str === "MMSS" || str === "SSMM" || str === 'SMMS' || str === 'MSSM') {
+        if (
+            str === 'MMSS' ||
+            str === 'SSMM' ||
+            str === 'SMMS' ||
+            str === 'MSSM'
+        ) {
             xmasCount++;
         }
     }
@@ -122,7 +129,7 @@ grid.forEach((value, cell) => {
 
 It's important that the `M`s and `S`s are consecutive pairs: in the example above, starting from the top-left `M`, we get `MSSM`; if we started from the top-right `S`, it would be instead `SSMM` - essentially we want to exclude `SMSM` and `MSMS`, which would represent a "wrong" type of X-MAS:
 
-```
+```bash
 M.S
 .A.
 S.M
@@ -132,7 +139,7 @@ Obviously `MAM` and `SAS` are not quite what we want 🤔
 
 Of course in order to detect the correct instances of `X-MAS` my way, the neighbors list needs to be ordered: clockwise or counter-clockwise doesn't really matter, and neither does the edge we start from - but the list needs to follow any of these orders. Otherwise, if I had, say:
 
-```
+```ts
 coords.push(new Coord(source.x - 1, source.y - 1)); // NW
 coords.push(new Coord(source.x + 1, source.y - 1)); // NE
 coords.push(new Coord(source.x + 1, source.y + 1)); // SE
@@ -141,14 +148,14 @@ coords.push(new Coord(source.x - 1, source.y + 1)); // SW
 
 so an order like
 
-```
+```bash
 1 2
 3 4
 ```
 
 then a case like
 
-```
+```bash
 M.S
 .A.
 S.M
@@ -158,3 +165,12 @@ would still be concatenated as `MSSM` and counted as a valid `X-MAS`, while it's
 
 Lesson learned: after 9 years I can safely say that wrong assumptions are the source of 90% of the bugs I face while doing the AoC challenged.
 For now, still, that's two more shiny stars in the bag! 🌠
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day04/day04.ts" target="_blank">Day04 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

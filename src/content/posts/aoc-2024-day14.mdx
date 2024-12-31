@@ -15,7 +15,7 @@ Another fun challenge for us - especially part 2, lol.
 So, we're in a bathroom at the Easter Bunny's HQ (because why not) and we are witnessing a bunch of robots proceeding on straight lines on the tile floor.
 Representations of a robot are like the following:
 
-```
+```bash
 p=0,4 v=3,-3
 p=6,3 v=-1,-3
 p=10,3 v=-1,2
@@ -35,7 +35,7 @@ The goal is to
 
 Speaking of the quadrants, the catch is that we're excluding the middle lines, horizontally and vertically - so the example robots appear in this configuration after 100 iterations:
 
-```
+```bash
 ..... 2..1.
 ..... .....
 1.... .....
@@ -53,8 +53,13 @@ The more you learn, I guess 🤓
 
 Onto my solution, the main function I wrote is to compute the a robot's final position after 100 steps, based on its initial coordinates and velocity. This is fairly simple if we exploit some maths and we are careful with the wrapping rule:
 
-```
-export function moveRobot(robot: Robot, seconds: number, hiX: number, hiY: number) {
+```ts
+export function moveRobot(
+    robot: Robot,
+    seconds: number,
+    hiX: number,
+    hiY: number
+) {
     const { x: posX, y: posY } = robot.position;
     const { x: vX, y: vY } = robot.velocity;
 
@@ -63,19 +68,30 @@ export function moveRobot(robot: Robot, seconds: number, hiX: number, hiY: numbe
     // Taking % max again ensures the result stays within the range [0, max - 1].
     const wrap = (value: number, max: number) => ((value % max) + max) % max;
 
-    return new Coord(wrap(posX + vX * seconds, hiX), wrap(posY + vY * seconds, hiY));
+    return new Coord(
+        wrap(posX + vX * seconds, hiX),
+        wrap(posY + vY * seconds, hiY)
+    );
 }
 ```
 
 After this, here's a function to compute all robots' positions:
 
-```
-function moveAllRobots(robots: Robot[], hiX?: number, hiY?: number, seconds = 100) {
+```ts
+function moveAllRobots(
+    robots: Robot[],
+    hiX?: number,
+    hiY?: number,
+    seconds = 100
+) {
     const newRobotsPositions: Robot[] = [];
 
-    robots.forEach(robot => {
+    robots.forEach((robot) => {
         const finalPosition = moveRobot(robot, seconds, hiX!, hiY!);
-        newRobotsPositions.push({position: finalPosition, velocity: robot.velocity});
+        newRobotsPositions.push({
+            position: finalPosition,
+            velocity: robot.velocity,
+        });
     });
     return newRobotsPositions;
 }
@@ -83,14 +99,14 @@ function moveAllRobots(robots: Robot[], hiX?: number, hiY?: number, seconds = 10
 
 And finally, the computation of the safety factor, splitting the robots into the four quadrants:
 
-```
+```ts
 function calcSafetyFactor(robots: Robot[], hiX?: number, hiY?: number) {
     const midX = Math.round(hiX! / 2) - 1;
     const midY = Math.round(hiY! / 2) - 1;
 
     const quadrantCounts = { q1: 0, q2: 0, q3: 0, q4: 0 };
 
-    moveAllRobots(robots, hiX, hiY).forEach(robot => {
+    moveAllRobots(robots, hiX, hiY).forEach((robot) => {
         const { x, y } = robot.position;
 
         if (x < midX && y < midY) {
@@ -104,7 +120,10 @@ function calcSafetyFactor(robots: Robot[], hiX?: number, hiY?: number) {
         }
     });
 
-    return Object.values(quadrantCounts).reduce((product, count) => product * count, 1);
+    return Object.values(quadrantCounts).reduce(
+        (product, count) => product * count,
+        1
+    );
 }
 ```
 
@@ -112,7 +131,13 @@ I submitted my answer thinking ‘I bet in part 2 the iterations will not be 100
 
 Instead, in part 2 we had to let the robots roam freely in the bathroom, until they form nothing less than a Christmas tree 🎄
 
-![Day 14 Part 2](https://res.cloudinary.com/dwrurydlt/image/upload/v1735574038/Blog/2024-day-14-part-2_xpzmlr.webp)
+<div className='flex justify-center'>
+    <img
+        src='https://res.cloudinary.com/dwrurydlt/image/upload/v1735574038/Blog/2024-day-14-part-2_xpzmlr.webp'
+        alt='Day 14 Part 2'
+        width='600px'
+    />
+</div>
 
 So far I haven't mentioned that the real input covers a 101x103 grid, so the robots would take more than 10000 steps to cover all positions.
 
@@ -120,11 +145,20 @@ Initially, I thought there was no way out of printing all the dispositions secon
 
 Well, I was right! It was enough to keep moving the robots until I found an horizontal line of consecutive `#` - and that was it!
 
-```
-if (line.includes("##############################")) {
+```ts
+if (line.includes('##############################')) {
     console.log(`Christmas tree found after ${seconds} seconds!`);
     break;
 }
 ```
 
 Yes, I do feel a bit dirty for coming up with such a trick… but hey, it worked! 😁
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day14/day14.ts" target="_blank">Day14 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

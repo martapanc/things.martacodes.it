@@ -14,7 +14,7 @@ I think this day was the first that gave me a proper headache for the first time
 
 We're in a warehouse with a number of boxes scattered all over. Our robot `@` is moving around and causing any boxes `O` in the way to shift as well, until they point they reach a wall (`#` in the example):
 
-```
+```ts
 ##########
 #..O..O.O#
 #......O.#
@@ -29,7 +29,7 @@ We're in a warehouse with a number of boxes scattered all over. Our robot `@` is
 
 In that starting position, if the robot was to move one step towards the left, the box next to it would move as well:
 
-```
+```ts
 ##########
 #..O..O.O#
 #......O.#
@@ -44,7 +44,7 @@ In that starting position, if the robot was to move one step towards the left, t
 
 The same applies to any cases where there's multiple boxes in a row, of course. Say we are in this situation:
 
-```
+```ts
 ########
 #...@OO#
 ##..O..#
@@ -57,7 +57,7 @@ The same applies to any cases where there's multiple boxes in a row, of course. 
 
 The robot stepping towards South would result in this layout, leading to all four boxes ahead of it to shift downwards:
 
-```
+```ts
 ########
 #....OO#
 ##..@..#
@@ -76,29 +76,34 @@ The key challenge for this task is to figure out the boxes' movements, since for
 
 A strategy I thought would be useful is a recursive function that essentially address the question: can the current box move? The answer is yes if the next coordinate in the same direction (given by the robot's current movement) is an empty space. If instead there is a wall, the answer's no. If the next cell is another box, we can call the function again on such box.
 
-```
+```ts
 function shiftBox(grid: Grid, box: Coord, dir: Cardinal) {
     const candidatePos = move(box, dir);
-    if (grid.get(candidatePos) === '#') {  // The box can't move because of a wall
-        return box;                        // Return its coordinates
+    if (grid.get(candidatePos) === '#') {
+        // The box can't move because of a wall
+        return box; // Return its coordinates
     }
 
-    if (grid.get(candidatePos) === '.') {  // The box can move because there is a free space ahead
-        grid.set(candidatePos, 'O');       // Shift the box ahead by one step
+    if (grid.get(candidatePos) === '.') {
+        // The box can move because there is a free space ahead
+        grid.set(candidatePos, 'O'); // Shift the box ahead by one step
         grid.set(box, '.');
-        return candidatePos;               // Return the box' new position
+        return candidatePos; // Return the box' new position
     }
 
-    if (grid.get(candidatePos) === 'O') {  // The cell ahead is occupied by another box
+    if (grid.get(candidatePos) === 'O') {
+        // The cell ahead is occupied by another box
         const res: Coord = shiftBox(grid, candidatePos, dir)!; // Call the recursive function with the neighbor box as subject
 
-        if (res !== candidatePos) { 	   // The box can move thanks to an empty space
+        if (res !== candidatePos) {
+            // The box can move thanks to an empty space
             if (grid.get(box) === 'O') {
                 grid.set(candidatePos, 'O');
                 grid.set(box, '.');
             }
             return candidatePos;
-        } else {						   // The box cannot move
+        } else {
+            // The box cannot move
             return box;
         }
     }
@@ -107,14 +112,16 @@ function shiftBox(grid: Grid, box: Coord, dir: Cardinal) {
 
 At this point we can loop through all the input directions and find the final position of all boxes, which is used to calculate the answer for part 1:
 
-```
+```ts
 let sourcePos = new Coord(initialPos.x, initialPos.y);
 
 for (const dir of directions) {
     const newPos = move(sourcePos, dir);
-    if (grid.get(newPos) === '.') {   // If new position is empty, just move the robot
+    if (grid.get(newPos) === '.') {
+        // If new position is empty, just move the robot
         sourcePos = new Coord(newPos.x, newPos.y);
-    } else if (grid.get(newPos.serialize()) === 'O') {  // Otherwise, figure out if the boxes ahead can be moved
+    } else if (grid.get(newPos.serialize()) === 'O') {
+        // Otherwise, figure out if the boxes ahead can be moved
         const res = shiftBox(grid, sourcePos, dir)!;
         if (res === newPos) {
             sourcePos = new Coord(newPos.x, newPos.y);
@@ -125,7 +132,7 @@ for (const dir of directions) {
 
 As for part 2, the additional difficulty is due to the fact that we're essentially **doubling the width** of the warehouse - including the boxes, which go from `O` to `[]`. This translates the original example
 
-```
+```ts
 ##########
 #..O..O.O#
 #......O.#
@@ -140,7 +147,7 @@ As for part 2, the additional difficulty is due to the fact that we're essential
 
 into something like this:
 
-```
+```ts
 ####################
 ##....[]....[]..[]##
 ##............[]..##
@@ -155,7 +162,7 @@ into something like this:
 
 Not much changes if the robot moves **horizontally**: we simply need to take into account that a box is composed of two parts, so any movement will have to shift both halves.
 
-```
+```ts
 ##############
 ##......##..##
 ##..........##
@@ -176,7 +183,7 @@ Move <:
 
 Moving **vertically**, on the other hand, comes with a bit of a twist, because the boxes can now be staggered: the robot only sees one directly ahead of it, but beyond such box there could be two boxes, which in turn could be connected to three more, and so on. Essentially for every robot's step that would cause a box to shift, we need to trace the "chain" of boxes that would move together if pushed.
 
-```
+```ts
 ##############
 ##..........##
 ##....[]....##
@@ -192,21 +199,24 @@ Above, for example, if the robot was to move upwards, eight boxes would have to 
 
 First things first, I wrote a function to identify a box's two coordinates:
 
-```
-
+```ts
 function findBoxCoords(pos: Coord, grid: Grid) {
     if (grid.get(pos) === '[') {
-        return {l: pos, r: new Coord(pos.x + 1, pos.y)};
+        return { l: pos, r: new Coord(pos.x + 1, pos.y) };
     } else {
-        return {l: new Coord(pos.x - 1, pos.y), r: pos}
+        return { l: new Coord(pos.x - 1, pos.y), r: pos };
     }
 }
 ```
 
 This function is to address the case involving an "horizontal chain": we basically keep adding the boxes' coordinates until we find a space, or a wall.
 
-```
-function findHorizontalChain(pos: Coord, grid: Grid, dir: Cardinal.EAST | Cardinal.WEST): { canMove: boolean, chain: Box[]} {
+```ts
+function findHorizontalChain(
+    pos: Coord,
+    grid: Grid,
+    dir: Cardinal.EAST | Cardinal.WEST
+): { canMove: boolean; chain: Box[] } {
     let box = findBoxCoords(pos, grid);
     let chain: Box[] = [box];
     while (true) {
@@ -217,7 +227,7 @@ function findHorizontalChain(pos: Coord, grid: Grid, dir: Cardinal.EAST | Cardin
             candidatePos = new Coord(box.r.x - 2, pos.y);
         }
         if (grid.get(candidatePos.serialize()) === '#') {
-            return { chain, canMove: false }
+            return { chain, canMove: false };
         }
         if (grid.get(candidatePos.serialize()) === '.') {
             return { chain, canMove: true };
@@ -236,8 +246,12 @@ function findHorizontalChain(pos: Coord, grid: Grid, dir: Cardinal.EAST | Cardin
 
 Then, for a "vertical chain", which unlike a horizontal one can feature staggered boxes, the function iteratively explores boxes above (if moving North) or below (if moving South), and stops if encountering a space or a wall. It finally returns the chain of connected boxes and whether further movement in the specified direction is possible:
 
-```
-function findVerticalChain(pos: Coord, grid: Grid, dir: Cardinal.NORTH | Cardinal.SOUTH) {
+```ts
+function findVerticalChain(
+    pos: Coord,
+    grid: Grid,
+    dir: Cardinal.NORTH | Cardinal.SOUTH
+) {
     let box = findBoxCoords(pos, grid);
     let chain: Box[] = [box];
     let stack: Box[] = [box];
@@ -254,20 +268,24 @@ function findVerticalChain(pos: Coord, grid: Grid, dir: Cardinal.NORTH | Cardina
             candidatePos.push(new Coord(curr.r.x, curr.r.y + 1));
         }
 
-        if (candidatePos.some(p => grid.get(p) === '#')) {
-            return { chain, canMove: false }
+        if (candidatePos.some((p) => grid.get(p) === '#')) {
+            return { chain, canMove: false };
         }
 
         for (const p of candidatePos) {
             const cell = grid.get(p.serialize());
             if (cell === '[' || cell === ']') {
                 const newBoxCoords = findBoxCoords(p, grid);
-                if (!chain.some(box => box === newBoxCoords) && !stack.some(box => box === newBoxCoords)) {
-                    if (dir === Cardinal.NORTH) {    		// Add at the start if moving North
+                if (
+                    !chain.some((box) => box === newBoxCoords) &&
+                    !stack.some((box) => box === newBoxCoords)
+                ) {
+                    if (dir === Cardinal.NORTH) {
+                        // Add at the start if moving North
                         chain.splice(0, 0, newBoxCoords);
                         stack.splice(0, 0, newBoxCoords);
                     } else {
-                        chain.push(newBoxCoords);   		// or at the end if moving South
+                        chain.push(newBoxCoords); // or at the end if moving South
                         stack.push(newBoxCoords);
                     }
                 }
@@ -275,7 +293,7 @@ function findVerticalChain(pos: Coord, grid: Grid, dir: Cardinal.NORTH | Cardina
         }
     }
 
-	return { chain, canMove: true }
+    return { chain, canMove: true };
 }
 ```
 
@@ -283,7 +301,7 @@ What about the bug I mentioned at the start? Well, it was understandably linked 
 
 Imagine a case like this, which at some point happens in the real input:
 
-```
+```ts
 ##############
 ##......##..##
 ##....[]....##  D
@@ -297,7 +315,7 @@ The robot is meant to move upwards, and there's four boxes in the chain: the log
 
 I did have a check to prevent the same box from being added twice, however the problem lay in the way I added the discovered boxes to the chain, since the order - as I soon realised - is crucial to the way I shifted the boxes - upwards in this case. Long story short, without sorting the boxes properly, my program would shift the C box before the D one, resulting in the poor D box losing its right half… :(
 
-```
+```ts
 ##############
 ##....[.##..##  D
 ##...[][]...## B C
@@ -311,7 +329,7 @@ The solution to the bug was simply to sort the chain of boxes by the value of `y
 
 The general function was then fairly similar to the one from part 1, this time taking into account the double width of the boxes during the movements:
 
-```
+```ts
 function shiftBoxes(grid: Grid, box: Coord, dir: Cardinal) {
     if (dir === Cardinal.WEST || dir === Cardinal.EAST) {
         const { canMove, chain } = findHorizontalChain(box, grid, dir);
@@ -372,3 +390,14 @@ function shiftBoxes(grid: Grid, box: Coord, dir: Cardinal) {
     return true;
 }
 ```
+
+Boy, that was painful!
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day15/day15.ts" target="_blank">Day15 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

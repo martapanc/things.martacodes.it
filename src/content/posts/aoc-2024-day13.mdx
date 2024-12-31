@@ -14,20 +14,26 @@ AoC challenges like today's are probably my favourites: I was reading the specs 
 
 We are in an arcade with several claw machines (yes, I thought all along that the goal was to recover all the green aliens from Toy Story). Each machine has two buttons configured to move the claw ("THE CLAAAAWW!" 😮) a specific amount to the right and forward, such as
 
-```
+```bash
 Button A: X+94, Y+34
 Button B: X+22, Y+67
 ```
 
 Then we have our prize to recover located at a specific coordinate on the grid, like `Prize: X=8400, Y=5400`. The goal is to find the minimum amount of button presses to move the claw and reach the location of the prize.
 
-![Day 13](https://res.cloudinary.com/dwrurydlt/image/upload/v1734112627/Blog/2024-day-13_vaqxss.webp)
+<div className='flex justify-center'>
+    <img
+        src='https://res.cloudinary.com/dwrurydlt/image/upload/v1734112627/Blog/2024-day-13_vaqxss.webp'
+        alt="It's always been linear algebra after all"
+        width='600px'
+    />
+</div>
 
 ... Yes, if you have any memory at all of the maths classes in high school, it's kinda obvious: each claw machine's solution is no more and no less than a _system of equations_, where the values solving the equations are the number of presses for each of the buttons.
 
 For example a system can be composed as follows:
 
-```
+```bash
 Button A: X+94, Y+34
 Button B: X+22, Y+67
 Prize: X=8400, Y=5400
@@ -41,23 +47,25 @@ It's also possible that no integer solution exists for the system, in which case
 
 I must say a good 80% of the overall time spent on this problem was wasted parsing the input and then finding a decent JS library to solve the equations - eventually I opted for `ml-matrix`, the most basic I could find that did the work nicely.
 
-```
+```ts
 function playAllMachines(clawMachines: ClawMachine[]): number {
     let totalTokens = 0;
 
-    clawMachines.forEach(clawMachine => {
+    clawMachines.forEach((clawMachine) => {
         const { buttonA, buttonB, prize } = clawMachine;
 
         const coeffMatrix = new Matrix([
             [buttonA.x, buttonB.x],
-            [buttonA.y, buttonB.y]
+            [buttonA.y, buttonB.y],
         ]);
 
         const resultsVector = Matrix.columnVector([prize.x, prize.y]);
 
-        const solution = solve(coeffMatrix, resultsVector).to1DArray().map(v => roundCloseToInteger(v));
+        const solution = solve(coeffMatrix, resultsVector)
+            .to1DArray()
+            .map((v) => roundCloseToInteger(v));
         if (solution[0] && solution[1]) {
-            totalTokens += solution[0] * 3 + solution[1] * 1
+            totalTokens += solution[0] * 3 + solution[1] * 1;
         }
     });
 
@@ -70,7 +78,7 @@ For once, part 2 was trivial with the algorithm I had created, since the only di
 The one hiccup I had is the reason behind that `roundCloseToInteger` function towards the end: since computers handle numerical calculations using floating-point arithmetic, this introduces small rounding errors. Even though the underlying math is correct, these small errors can lead to results like `39.99999` instead of `40`.
 Therefore, a function like the following helps deal with such cases: if the difference between the result and the rounded number is small enough, we can indeed round it to the nearest integer, at least for the purpose of this challenge.
 
-```
+```ts
 function roundCloseToInteger(num: number, tolerance = 1e-4) {
     const nearestInt = Math.round(num);
     if (Math.abs(num - nearestInt) <= tolerance) {
@@ -83,6 +91,21 @@ function roundCloseToInteger(num: number, tolerance = 1e-4) {
 So yeah, my problems originated from the tolerance being too low (like `1e-9`) at the beginning, which resulted in a "Your number is too low" message when submitting my answer the first time 🤦‍♀️
 Making the function a bit more lenient fortunately solved it all.
 
-![Wasting a lot of time unnecessarily dealing with floating errors](https://res.cloudinary.com/dwrurydlt/image/upload/v1734112626/Blog/2024-day-13-2_tpw9wt.webp)
+<div className='flex justify-center'>
+    <img
+        src='https://res.cloudinary.com/dwrurydlt/image/upload/v1734112626/Blog/2024-day-13-2_tpw9wt.webp'
+        alt='Wasting a lot of time unnecessarily dealing with floating errors'
+        width='400px'
+    />
+</div>
 
 You know what? With this 26th star we're already past the 50% mark! 🤩
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day13/day13.ts" target="_blank">Day13 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

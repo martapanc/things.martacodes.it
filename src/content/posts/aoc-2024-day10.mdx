@@ -14,7 +14,7 @@ Today's task was in retrospect pretty standard; yet, I'm still re-reading the de
 
 We have a grid with numbers from 0 to 9, representing a topographic map:
 
-```
+```bash
 0123
 1234
 8765
@@ -26,7 +26,7 @@ Specifically, part 1 is about finding **trailheads** - meaning the start of a hi
 
 For example a map like this has **one** trailhead with score 2, because starting from the one 0 we can reach two 9s:
 
-```
+```bash
 ...0...
 ...1...
 ...2...
@@ -40,11 +40,11 @@ The goal is to find all possible trailheads and their scores, adding everything 
 
 In order to find the score for a trailhead, I opted for a breadth-first search algorithm: we start from a trailhead (`startCoord`), explore neighboring coordinates one step at a time, and tracks which coordinates can be reached by following height-incrementing paths. For each neighbor, if its height is one greater than the current position, it is added to the queue and marked as visited. If the neighbor’s height is 9, it’s added to the `reachableNines` set. The function returns the size of this set, representing how many 9s can be reached from the starting point.
 
-```
+```ts
 function bfsTrailhead(startCoord: Coord): number {
     const queue: Coord[] = [startCoord];
-    const visited = new Set<string>;
-    const reachableNines = new Set<string>;
+    const visited = new Set<string>();
+    const reachableNines = new Set<string>();
 
     visited.add(startCoord.serialize());
 
@@ -76,7 +76,7 @@ function bfsTrailhead(startCoord: Coord): number {
 
 The main function is of course a loop through all the cells of the map having a 0, that is the start of a trailhead: the `bfsTrailhead` function computes the score, which is then added to the count:
 
-```
+```ts
 let totalScore = 0;
 for (const [coord, value] of grid) {
     if (value === '0') {
@@ -98,7 +98,7 @@ After some thinking, I thought a useful way to solve this was a depth-first sear
 - If conditions are met, we recursively call `dfsTrailhead` for the neighbor, and add the result to `paths`.
 - After exploring all neighbors, return the total valid paths to `9`.
 
-```
+```ts
 function dfsTrailhead(coord: Coord, currentHeight: number): number {
     if (currentHeight === 9) {
         return 1;
@@ -121,4 +121,13 @@ function dfsTrailhead(coord: Coord, currentHeight: number): number {
 }
 ```
 
-So yeah, difficult at first glance but feasible.
+So yeah, difficult at first glance but feasible 💪
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day10/day10.ts" target="_blank">Day10 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

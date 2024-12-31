@@ -27,7 +27,7 @@ I'm not going to bore you with my extremely inefficient function (keeping track 
 The idea is that we don't need to track the behavior of _every single stone_ individually with each blink. By focusing only on the distinct stone numbers and their counts, we can apply the rules collectively for all stones of the same type, saving significant time and space in the process.
 A way to do achieve this is by using a map and updating the counts whenever we find a stone number we already saw:
 
-```
+```ts
 function blink(stoneCounts: Map<string, number>): Map<string, number> {
     const newStoneCounts: Map<string, number> = new Map();
 
@@ -39,10 +39,16 @@ function blink(stoneCounts: Map<string, number>): Map<string, number> {
             const first = Number.parseInt(stone.slice(0, half)) + '';
             const second = Number.parseInt(stone.slice(half)) + '';
             newStoneCounts.set(first, (newStoneCounts.get(first) || 0) + count);
-            newStoneCounts.set(second, (newStoneCounts.get(second) || 0) + count);
+            newStoneCounts.set(
+                second,
+                (newStoneCounts.get(second) || 0) + count
+            );
         } else {
-            const multiplied = (Number.parseInt(stone) * 2024) + '';
-            newStoneCounts.set(multiplied, (newStoneCounts.get(multiplied) || 0) + count);
+            const multiplied = Number.parseInt(stone) * 2024 + '';
+            newStoneCounts.set(
+                multiplied,
+                (newStoneCounts.get(multiplied) || 0) + count
+            );
         }
     });
 
@@ -51,3 +57,12 @@ function blink(stoneCounts: Map<string, number>): Map<string, number> {
 ```
 
 So yeah - all in all easy, once you understand how to optimise it ✌️
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day11/day11.ts" target="_blank">Day11 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

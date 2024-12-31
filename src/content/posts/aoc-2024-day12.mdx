@@ -15,7 +15,7 @@ Easily the most frustrating puzzle I've tried so far, this was 😩
 Essentially we have a gardener who didn't like the idea of boring, rectangular patches of land for his farm; instead he decided to plotting all sorts of weird shapes, concave and convex, and with loads of angles.
 Why do we care, you may ask? Well, because our task for today is to calculate all the plots' areas and perimeters.
 
-```
+```bash
 AAAA
 BBCD
 BBCC
@@ -26,7 +26,7 @@ Excluding the initial part where I thought I could be clever and simply go from 
 
 Here's the simple flood-fill function I created for the purpose: starting from a given coordinate, it uses a stack to explore all connected cells with the same `fieldId`. Then it keeps track of visited cells to calculate the total area, while incrementing the perimeter whenever a neighboring cell doesn't match the field or is out of bounds.
 
-```
+```ts
 function floodFill(start: Coord) {
     const stack: Coord[] = [start];
     const fieldId = grid.get(start.serialize());
@@ -60,7 +60,7 @@ So, we made our gardener happy so we can go home and forget about crazily-shaped
 Well, not exactly, because the elves have figured out a way to save money on the meters of fence: the perimeter no longer counts - the number of _sides_ of a plot of land does.
 A simple region like `C` below has a perimeter of 10 _and_ 8 total sides. Good luck with that 😛
 
-```
+```bash
 +-+-+-+-+
 |A A A A|
 +-+-+-+-+     +-+
@@ -78,8 +78,8 @@ A simple region like `C` below has a perimeter of 10 _and_ 8 total sides. Good l
 
 To be fair, identifying a single cell's side was the easiest part: I just expanded my `getNeighborCoords` to be `getNeighborCoordsWithDirections`:
 
-```
-export function getNeighborCoordsWithDirections(coord: Coord): [Cardinal, Coord][] {
+```ts
+function getNeighborCoordsWithDirections(coord: Coord): [Cardinal, Coord][] {
     return [
         [Cardinal.NORTH, new Coord(coord.x, coord.y - 1)],
         [Cardinal.EAST, new Coord(coord.x + 1, coord.y)],
@@ -97,7 +97,7 @@ The directions are useful because they help keep track of a cell's boundaries, i
 
 There's just one _small_ problem to solve: for example, the four North sides of the `A` region obviously form a single side for the whole rectangle; so in order to compute the total sides of the region, we need to "merge" these 4 North sides into one.
 
-Again, I'm not going to show the full code because I'm not too proud of that (feel free to check it out https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day12/day12.ts, though), but here's my idea behind it:
+Again, I'm not going to show the full code because I'm not too proud of that (feel free to check it out on GitHub, though), but here's my idea behind it:
 
 - for each of the directions, we have groups of cells sharing either the X (for West-East sides) or the Y (for North-South sides) axis: for instance, the coordinates of A's North-facing side would be `{0,0} {1,0} {2,0} {3,0}`)
 - The X (or Y) for the cells with the same direction is not always the same: for example `C` has two North-facing sides with different Y - so counting unique Xs or Ys for the same direction is a start.
@@ -105,7 +105,7 @@ Again, I'm not going to show the full code because I'm not too proud of that (fe
 
 For example for a region like this:
 
-```
+```bash
 ....CC..
 ....CCC.
 ...CC...
@@ -118,3 +118,12 @@ For example for a region like this:
 we have two distinct East-facing sides sharing the same X. The solution I found for these cases was to check if, for cells with the same `X`, their `Y`s are consecutive or not: if so, we found one single side; otherwise, we have as many sides as there are "holes" on the Y axis.
 
 Well, after a few hours of debugging and finding ways to solve special cases, I've proudly managed to achieve the 2nd star 💫
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day12/day12.ts" target="_blank">Day12 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

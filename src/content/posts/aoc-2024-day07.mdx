@@ -12,33 +12,30 @@ image: https://res.cloudinary.com/dwrurydlt/image/upload/v1733679884/Blog/2024-d
 
 Today's challenge was good fun!
 
-The goal was to find combinations of operators (+ and \* for part 1, then part 2 introduced concatenation) that would result in the left side of the equation matching the right side.
+The goal was to find combinations of operators (`+` and `*` for part 1, then part 2 introduced concatenation) that would result in the left side of the equation matching the right side.
 
 For example, for an input like
 
-```
+```bash
 190: 10 19
 ```
 
 by multiplying the two numbers we obtain the result.
 Clearly, the average input is not as intuitive as this. For instance, `292: 11 6 16 20` can only be solved in one way: 11 + 6 \* 16 + 20.
-Also the catch (which actually made my life considerably easier) is that the operations are always evaluated from left to right, and not according to precedence rules. Essentially the example above would be solved like `[(11 + 6) _ 16] + 20`.
+Also the catch (which actually made my life considerably easier) is that the operations are always evaluated from left to right, and not according to precedence rules. Essentially the example above would be solved like `[(11 + 6) * 16] + 20`.
 
 As usual, it's quite possible that maths geniuses have already found a much more efficient strategy - but I'm no genius, so I went for a classical "try 'em all" approach: compute the total using all possible combinations of operators, and check if the result matches the left side of the equation. Pretty basic and brute-force-y, but hey - it's the Advent of Code: as long as you get the correct answer and don't melt your computer in the process, all approaches are valid :P
 
 I therefore created a simple recursive function to find all combinations of operations: as mentioned it's `+` and`*` for part one, but I decided to use 0s and 1s as it would make the logic reusable and extendable to different cases.
 
-```
+```ts
 function generateBinaryStrings(length: number): string[] {
     if (length === 0) {
-        return [""];
+        return [''];
     }
 
     const smallerCombos = generateBinaryStrings(length - 1);
-    return smallerCombos.flatMap((combo) => [
-        "0" + combo,
-        "1" + combo
-    ]);
+    return smallerCombos.flatMap((combo) => ['0' + combo, '1' + combo]);
 }
 ```
 
@@ -47,24 +44,25 @@ Say we want to find the possible ways to operate on `81 40 27` - three numbers, 
 
 Onto my complete solution, for each of the equation I'm computing the array of combinations, and then for each 0 or 1 in the combination I'm executing the corresponding operation (`0` corresponds to `+` and 1 to `*`, for no particular reason):
 
-```
+```ts
 for (const combo of generateBinaryStrings(numbers.length - 1)) {
-     let partialRes = numbers[0]; // initiating the result to the first number
-     combo.split("").forEach((opId, index) => {
-         switch (opId) {
+    let partialRes = numbers[0]; // initiating the result to the first number
+    combo.split('').forEach((opId, index) => {
+        switch (opId) {
             case '0':
                 partialRes += ops[index + 1];
                 break;
             case '1':
                 partialRes *= ops[index + 1];
                 break;
-         }
-     });
+        }
+    });
 
-     if (partialRes === res) { // Check if what we obtained matches the left-hand side of the equation
-         validEquationChecksum += res;
-         continue eqLoop; // We found a combo that makes the current true, so we continue to the next equation
-     }
+    if (partialRes === res) {
+        // Check if what we obtained matches the left-hand side of the equation
+        validEquationChecksum += res;
+        continue eqLoop; // We found a combo that makes the current true, so we continue to the next equation
+    }
 }
 ```
 
@@ -72,19 +70,28 @@ Part 2 introduces a third operator, `||`: essentially `12 || 345` would become `
 
 Fortunately, my `generatedBinaryStrings` comes in handy, since now it's just a matter of creating the combination strings in base 3 instead of 2, which was as easy as:
 
-```
+```ts
 return smallerCombos.flatMap((combo) => [
-    "0" + combo,
-    "1" + combo,
-    "2" + combo
+    '0' + combo,
+    '1' + combo,
+    '2' + combo,
 ]);
 ```
 
 Of course a new `case` is also needed to use the third operator: here I just created a string concatenating the two numbers, then parsed it again as number.
 
-```
+```ts
 case '2':
     partialRes = Number.parseInt(`${partialRes}${ops[index + 1]}`);
 ```
 
 The computation for part 2 took around 8 seconds - again, probably a lot of room for improvement and optimisation, but you know what? I got my 2 stars, so who cares? 😂
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day07/day07.ts" target="_blank">Day07 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

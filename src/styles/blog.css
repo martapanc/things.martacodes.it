@@ -69,11 +69,15 @@ article pre code {
 
 article p code,
 article li code {
-    @apply mx-1 rounded bg-slate-100 px-1.5 py-0.5 text-slate-950 dark:bg-slate-900 dark:text-gray-200;
+    @apply mx-1 rounded bg-slate-100 px-1.5 py-0.5 text-[15px] text-slate-950 dark:bg-slate-900 dark:text-gray-200;
 }
 
 article hr {
     @apply my-6;
+}
+
+article img {
+    @apply mb-8 mt-2 rounded-sm shadow-md;
 }
 
 section {

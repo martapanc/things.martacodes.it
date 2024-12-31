@@ -14,7 +14,7 @@ I keep being amazed by Eric Wastl's skills of coming up with puzzles involving 2
 
 This time, part 1 is a rather classical "start from a `^` point and keep straight until you bump into a `#` obstacle, then rotate 90 degrees towards the right, and continue until you fall beyond the grid's edge" kind of task.
 
-```
+```bash
 ....#.....
 .........#
 ..........
@@ -23,21 +23,28 @@ This time, part 1 is a rather classical "start from a `^` point and keep straigh
 ..........
 .#..^.....
 ........#.
-#.........
 ......#...
 ```
 
 Parsing the input with my established data structure (a map with an \{x,y\} coordinate as key and the corresponding character as the value), I just had to write a bunch of helper types and functions, specifically enums for cardinals and rotation directions:
 
-```
-enum Cardinal { NORTH, EAST, SOUTH, WEST }
+```ts
+enum Cardinal {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST,
+}
 
-enum Direction { LEFT, RIGHT } // only RIGHT is needed for this challenge
+enum Direction {
+    LEFT,
+    RIGHT,
+} // only RIGHT is needed for this challenge
 ```
 
 and functions to move straight depending on the source position and facing direction, and to right-rotate (I also did the left version, because after the past years I suspect I will need it sooner or later...):
 
-```
+```ts
 function move(source: Coord, direction: Cardinal) {
     switch (direction) {
         case Cardinal.NORTH:
@@ -56,9 +63,9 @@ function move(source: Coord, direction: Cardinal) {
 function rotate(source: Cardinal, rotationSense: Direction): Cardinal {
     switch (rotationSense) {
         case Direction.RIGHT:
-            return (source + 1) % 4 as Cardinal;
+            return ((source + 1) % 4) as Cardinal;
         case Direction.LEFT:
-            return (source - 1 + 4) % 4 as Cardinal;
+            return ((source - 1 + 4) % 4) as Cardinal;
     }
 }
 ```
@@ -67,14 +74,16 @@ Note that in my grid definition the X and Y axis point towards East and South (a
 
 The goal for part 1 is to find the number of distinct positions on the grid that the pointer (our Guard Gallivant) occupies, so the logic behind my solution is basically to let the guard move and rotate on the grid until it bumps into an edge, keeping track of the various coordinates along the way.
 
-```
+```ts
 let currentPos = new Coord(initialPos.x, initialPos.y);
 let direction = Cardinal.NORTH;
 
 let distinctPositions = new Set();
-distinctPositions.push(currentPos);let newPosCoord = move(currentPos, direction);
+distinctPositions.push(currentPos);
+let newPosCoord = move(currentPos, direction);
 
-while (grid.get(newPosCoord)) { // Move until the grid ends, i.e. the value is undefined
+while (grid.get(newPosCoord)) {
+    // Move until the grid ends, i.e. the value is undefined
     if (grid.get(newPosCoord) === '#') {
         direction = rotate(direction, Direction.RIGHT); // Rotate when finding an obstacle
     } else if (grid.get(newPosCoord) === '.') {
@@ -92,7 +101,7 @@ Essentially, now the goal is to introduce a new obstacle somewhere along the gua
 
 In the example, you can see one of six options - placing a new `O` obstacle to the left of the initial position results in a loop:
 
-```
+```bash
 ....#.....
 ....+---+#
 ....|...|.
@@ -101,7 +110,6 @@ In the example, you can see one of six options - placing a new `O` obstacle to t
 ....|...|.
 .#.O^---+.
 ........#.
-#.........
 ......#...
 ```
 
@@ -113,7 +121,7 @@ After placing a new obstacle on the grid, I could fundamentally run the move&rot
 How to know if the guard is stuck in a loop? I just needed to tweak the original loop a bit.
 First of all the `distinctPositions` set became a `Map<Coordinate, Direction>`: we keep adding the steps walked to the map including the direction, and after a while if the new candidate position matches both the coordinate and the direction, it means we walked through that cell - we're retracing our steps. Why is the direction needed as well? Because stepping on a previously visited cell doesn't imply a loop, since we could be walking on it first, say, from East to West then from North to South.
 
-```
+```bash
 +--+
 |  |
 +--X--...
@@ -125,7 +133,7 @@ Instead, if we're back on the same cell walking towards the same direction, then
 
 That being said, we can add a few checks to the original `while`:
 
-```
+```ts
 let foundLoop = false;
 
 while (grid.get(newPosCoord) && !foundLoop) {
@@ -140,24 +148,33 @@ while (grid.get(newPosCoord) && !foundLoop) {
 
 Then in the main function:
 
-```
+```ts
 // Part 1 function to find the distinct coordinates
 const { distinctPositions } = calcDistinctPositions(grid, initialPos);
 
 // Remove initial position, as we don't want an obstacle there
 distinctPositions.delete(initialPos);
 
-Array.from(distinctPositions.keys()).forEach(coord => {
-     const newGrid = new Map(grid);
-     newGrid.set(coord, "#"); // Create a new grid with one new obstacle along the path
+Array.from(distinctPositions.keys()).forEach((coord) => {
+    const newGrid = new Map(grid);
+    newGrid.set(coord, '#'); // Create a new grid with one new obstacle along the path
 
-     // If a loop is found, increase the counter
-     const { foundLoop } = calcDistinctPositions(newGrid, initialPos);
+    // If a loop is found, increase the counter
+    const { foundLoop } = calcDistinctPositions(newGrid, initialPos);
 
-     if (foundLoop) {
-         loopCount++;
-     }
+    if (foundLoop) {
+        loopCount++;
+    }
 });
 ```
 
-This works like a charmed - admittedly a bit slow (~ 8 seconds on my machine) due to the large number of iterations, but it got me the 2nd star no problem 🤩
+This works like a charm - admittedly a bit slow (~ 8 seconds on my machine) due to the large number of iterations, but it got me the 2nd star no problem 🤩
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day06/day06.ts" target="_blank">Day06 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

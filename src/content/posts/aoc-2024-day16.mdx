@@ -14,7 +14,7 @@ So many puzzles involving 2d grids this year!
 
 Time for an a-maze-ing Reindeer race:
 
-```
+```ts
 ###############
 #.......#....E#
 #.#.###.#.###.#
@@ -34,7 +34,7 @@ Time for an a-maze-ing Reindeer race:
 
 Start from `S` and ending at `E` (duh), the goal here is to optimize on corners, since one movement forward costs 1 point, whereas a rotation costs 1000 points. For example, one of the above maze's best paths has 36 total steps and 7 rotations, reaching a total of 7036 points:
 
-```
+```ts
 ###############
 #.......#....E#
 #.#.###.#.###^#
@@ -58,7 +58,7 @@ Essentially, part 1 is about finding the length / score of the best path; part 2
 
 For example, keeping the same grid as above, there's a total of three paths with a score of 7036, and 45 unique cells covering each of them:
 
-```
+```ts
 ###############
 #.......#....O#
 #.#.###.#.###O#
@@ -78,24 +78,29 @@ For example, keeping the same grid as above, there's a total of three paths with
 
 To solve both problems at once, we can rather simply create a Dijkstra-like pathfinding algorithm that keeps track of the paths found (as opposed to just returning the shortest path whenever one is found):
 
-- It uses a priority queue to explore paths with the lowest cost first.
+\- It uses a priority queue to explore paths with the lowest cost first.
 
-- Movement is allowed in the current direction (low cost) or via turns (higher cost).
+\- Movement is allowed in the current direction (low cost) or via turns (higher cost).
 
-- Tracks visited states and avoids revisiting with higher costs.
+\- Tracks visited states and avoids revisiting with higher costs.
 
-- Stops when the target is reached and all shortest paths are found.
+\- Stops when the target is reached and all shortest paths are found.
 
-- Returns the lowest cost and the number of unique positions (seats) in the path.
+\- Returns the lowest cost and the number of unique positions (seats) in the path.
 
-```
+```ts
 function traverse(grid: Grid, start: Coord, end: Coord) {
     const paths = new Set<string>();
     let lowest = Infinity;
     const scores = new Map<string, number>();
     const toVisit = new PriorityQueue<State>((a, b) => a.cost - b.cost);
 
-    toVisit.enqueue({ position: start, direction: Cardinal.EAST, cost: 0, path: [] });
+    toVisit.enqueue({
+        position: start,
+        direction: Cardinal.EAST,
+        cost: 0,
+        path: [],
+    });
 
     while (toVisit.size() > 0) {
         const { position, direction, cost, path } = toVisit.dequeue()!;
@@ -108,7 +113,7 @@ function traverse(grid: Grid, start: Coord, end: Coord) {
         if (position.equals(end)) {
             if (cost > lowest) break;
 
-            path.forEach(coord => paths.add(coord.serialize()));
+            path.forEach((coord) => paths.add(coord.serialize()));
             lowest = cost;
         }
 
@@ -120,7 +125,7 @@ function traverse(grid: Grid, start: Coord, end: Coord) {
 
         for (const { dir, moveCost } of moves) {
             const nextPosition = move(position, dir);
-            if (grid.get(nextPosition.serialize()) !== "#") {
+            if (grid.get(nextPosition.serialize()) !== '#') {
                 toVisit.enqueue({
                     position: nextPosition,
                     direction: dir,
@@ -134,3 +139,12 @@ function traverse(grid: Grid, start: Coord, end: Coord) {
     return { lowestScore: lowest, seats: paths.size + 1 };
 }
 ```
+
+---
+
+<div className="flex flex-col gap-2">
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/day16/day16.ts" target="_blank">Day16 on GitHub</a>
+
+    * <a className="gh-link" href="https://github.com/martapanc/Advent-of-Code/blob/master/2024/src/2024/README.md" target="_blank">AoC 2024 Overview</a>
+
+</div>

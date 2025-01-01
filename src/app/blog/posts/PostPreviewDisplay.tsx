@@ -15,9 +15,9 @@ type PostPreviewProps = {
 
 export default function PostPreviewDisplay({ post }: PostPreviewProps) {
     return (
-        <div className='duration-400 lg:h-68 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'>
+        <div className='duration-400 lg:h-68 my-3 h-fit rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'>
             <div className='flex h-full flex-col gap-5 lg:flex-row'>
-                <div className='relative flex h-56 w-full md:h-7 lg:h-auto lg:w-[20rem] xl:w-[16rem]'>
+                <div className='relative flex h-52 w-full md:h-72 lg:h-auto lg:w-[20rem] xl:w-[16rem]'>
                     <Link href={`/blog/posts/${post.slug}`}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img

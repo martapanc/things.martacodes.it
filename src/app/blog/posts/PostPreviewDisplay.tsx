@@ -17,7 +17,7 @@ export default function PostPreviewDisplay({ post }: PostPreviewProps) {
     return (
         <div className='duration-400 lg:h-68 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'>
             <div className='flex h-full flex-col gap-5 lg:flex-row'>
-                <div className='relative flex h-44 w-full lg:h-auto lg:w-[20rem] xl:w-[16rem]'>
+                <div className='relative flex h-56 w-full md:h-7 lg:h-auto lg:w-[20rem] xl:w-[16rem]'>
                     <Link href={`/blog/posts/${post.slug}`}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -29,7 +29,7 @@ export default function PostPreviewDisplay({ post }: PostPreviewProps) {
                 </div>
                 <div className='flex h-full w-full flex-col justify-between'>
                     <div>
-                        <div className='mb-2 flex flex-col items-start sm:flex-row sm:justify-between'>
+                        <div className='mb-2 flex flex-col items-start gap-1 sm:flex-row sm:justify-between'>
                             <span className='flex gap-1.5'>
                                 <BgIcon icon={<FaTag />} accent />
                                 <UnstyledLink
@@ -74,7 +74,7 @@ export default function PostPreviewDisplay({ post }: PostPreviewProps) {
                                     <Link
                                         key={tag}
                                         href={`/blog/tags/${tag}`}
-                                        className='rounded-md bg-indigo-300 px-1 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 lg:text-base'
+                                        className='rounded-md bg-indigo-300 px-1 py-0.5 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 sm:py-0 lg:text-base'
                                     >
                                         {allTags[tag]}
                                     </Link>

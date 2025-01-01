@@ -2,10 +2,15 @@ import '@/styles/blog.css';
 
 import { formatDate } from '@/app/api/posts/lib';
 import { ReactNode } from 'react';
-import { allCategories, Post, Slug } from '@/types/Post';
+import { allCategories, allTags, Post, Slug } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchApi } from '@/app/api/fetch';
+import BgIcon from '@/components/atoms/BgIcon';
+import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
+import UnstyledLink from '@/components/atoms/links/UnstyledLink';
+import { FaHashtag } from 'react-icons/fa6';
+import Link from 'next/link';
 
 export async function generateStaticParams() {
     try {
@@ -40,7 +45,8 @@ export default async function PostLayout({
 }) {
     const { slug } = await params;
 
-    const { title, category, description, date, image } = await getData(slug);
+    const { title, category, tags, description, date, image } =
+        await getData(slug);
 
     const breadcrumbs = {
         past: [
@@ -55,8 +61,38 @@ export default async function PostLayout({
 
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs} params={params}>
-            <div className='flex flex-col items-end'>
-                <span className='italic'>{formatDate(date)}</span>
+            <div className='flex justify-between'>
+                <div className='flex gap-1 lg:flex-row lg:gap-4'>
+                    <span className='flex gap-1.5'>
+                        <BgIcon icon={<FaTag />} accent />
+                        <UnstyledLink
+                            className='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
+                            href={`/blog/categories/${category ?? 'uncategorized'}`}
+                            aria-label={allCategories[category]}
+                        >
+                            {allCategories[category] ?? 'Uncategorized'}
+                        </UnstyledLink>
+                    </span>
+
+                    {tags && tags.length > 0 && (
+                        <div className='flex flex-wrap gap-1'>
+                            <BgIcon icon={<FaHashtag />} accent />
+                            {tags.map((tag) => (
+                                <Link
+                                    key={tag}
+                                    href={`/blog/tags/${tag}`}
+                                    className='rounded-md bg-indigo-300 px-1 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 lg:text-base'
+                                >
+                                    {allTags[tag]}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <span className='flex justify-end gap-1 italic'>
+                    <BgIcon icon={<FaRegCalendarAlt />} />
+                    {formatDate(date)}
+                </span>
             </div>
             <article>
                 <h1 className='my-4'>{title}</h1>

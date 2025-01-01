@@ -91,7 +91,14 @@ export function getPost(slug?: string): Post | null {
             const postContent = fs.readFileSync(fullPath, 'utf-8');
 
             const { data, content } = matter(postContent);
-            return { ...data, slug, body: content } as Post;
+            const { wordCount, readingTime } = calcWordsAndReadingTime(content);
+            return {
+                ...data,
+                slug,
+                wordCount,
+                readingTime,
+                body: content,
+            } as Post;
         } else {
             console.warn(`File ${slug} not found`);
             return null;

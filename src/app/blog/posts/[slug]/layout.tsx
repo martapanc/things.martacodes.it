@@ -108,16 +108,18 @@ export default async function PostLayout({
                 <div className='flex flex-col'>
                     <h1 className='my-4'>{title}</h1>
 
-                    <div className='flex gap-5 text-sm'>
-                        <span className='flex gap-1.5'>
-                            <BgIcon icon={<BsTextLeft />} size='sm' />
-                            {wordCount} words
-                        </span>
-                        <span className='flex gap-1.5'>
-                            <BgIcon icon={<MdOutlineTimer />} size='sm' />
-                            {readingTime}
-                        </span>
-                    </div>
+                    {wordCount && readingTime && (
+                        <div className='flex gap-5 text-sm'>
+                            <span className='flex gap-1.5'>
+                                <BgIcon icon={<BsTextLeft />} size='sm' />
+                                {wordCount} words
+                            </span>
+                            <span className='flex gap-1.5'>
+                                <BgIcon icon={<MdOutlineTimer />} size='sm' />
+                                {readingTime}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 <div className='mb-4 mt-2 flex max-h-[36rem] justify-center'>

@@ -5,9 +5,14 @@ import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchApi } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const categories: Category[] = await fetchApi('Categories');
+    try {
+        const categories: Category[] = await fetchApi('Categories');
 
-    return categories.map((category) => ({ category }));
+        return categories.map((category) => ({ category }));
+    } catch (e) {
+        console.error('error fetching categories: ', e);
+        return [];
+    }
 }
 
 export default async function CategoryPage({

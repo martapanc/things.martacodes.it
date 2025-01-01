@@ -8,9 +8,14 @@ import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchApi } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const slugs: Slug[] = await fetchApi('Slugs');
+    try {
+        const slugs: Slug[] = await fetchApi('Slugs');
 
-    return slugs.map((slug) => ({ slug }));
+        return slugs.map((slug) => ({ slug }));
+    } catch (e) {
+        console.error('error fetching slugs: ', e);
+        return [];
+    }
 }
 
 async function getData(slug: string) {

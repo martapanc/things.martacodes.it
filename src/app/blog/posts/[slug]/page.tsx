@@ -6,9 +6,13 @@ import { Slug } from '@/types/Post';
 import { fetchApi } from '@/api/fetch';
 
 export async function generateStaticParams() {
-    const slugs: Slug[] = await fetchApi('Slugs');
-
-    return slugs.map((slug) => ({ slug }));
+    try {
+        const slugs: Slug[] = await fetchApi('Slugs');
+        return slugs.map((slug) => ({ slug }));
+    } catch (e) {
+        console.error('error fetching slugs: ', e);
+        return [];
+    }
 }
 
 export default async function PostPage({

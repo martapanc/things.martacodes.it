@@ -4,7 +4,12 @@ import { getTravelImages, ImageProps } from '@/lib/cloudinary';
 import PhotoGallery from '@/app/travel/[album]/PhotoGallery';
 
 export async function generateStaticParams() {
-    return Array.from(albums).map((album) => ({ params: { album } }));
+    try {
+        return Array.from(albums).map((album) => ({ params: { album } }));
+    } catch (e) {
+        console.error('error fetching albums: ', e);
+        return [];
+    }
 }
 
 export default async function AlbumPage({

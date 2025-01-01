@@ -5,9 +5,13 @@ import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { fetchApi } from '@/app/api/fetch';
 
 export async function generateStaticParams() {
-    const tags: Tag[] = await fetchApi('Tags');
-
-    return tags.map((tag) => ({ tag }));
+    try {
+        const tags: Tag[] = await fetchApi('Tags');
+        return tags.map((tag) => ({ tag }));
+    } catch (e) {
+        console.error('error fetching tags: ', e);
+        return [];
+    }
 }
 
 export default async function TagPage({

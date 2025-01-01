@@ -4,6 +4,7 @@ import { getPost } from '@/app/api/posts/lib';
 import { MarkdownBody } from '@/components/MarkdownBody';
 import { Slug } from '@/types/Post';
 import { fetchApi } from '@/api/fetch';
+import ScrollToTop from '@/components/layout/ScrollToTop';
 
 export async function generateStaticParams() {
     try {
@@ -25,5 +26,11 @@ export default async function PostPage({
 
     if (!post) return notFound();
 
-    return <MarkdownBody>{post.body}</MarkdownBody>;
+    return (
+        <>
+            <ScrollToTop />
+
+            <MarkdownBody>{post.body}</MarkdownBody>
+        </>
+    );
 }

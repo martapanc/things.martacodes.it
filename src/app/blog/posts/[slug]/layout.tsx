@@ -11,6 +11,8 @@ import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
 import { FaHashtag } from 'react-icons/fa6';
 import Link from 'next/link';
+import { BsTextLeft } from 'react-icons/bs';
+import { MdOutlineTimer } from 'react-icons/md';
 
 export async function generateStaticParams() {
     try {
@@ -45,8 +47,16 @@ export default async function PostLayout({
 }) {
     const { slug } = await params;
 
-    const { title, category, tags, description, date, image } =
-        await getData(slug);
+    const {
+        title,
+        category,
+        tags,
+        description,
+        date,
+        image,
+        wordCount,
+        readingTime,
+    } = await getData(slug);
 
     const breadcrumbs = {
         past: [
@@ -62,11 +72,11 @@ export default async function PostLayout({
     return (
         <BlogLayoutWrapper breadcrumbs={breadcrumbs} params={params}>
             <div className='flex justify-between'>
-                <div className='flex gap-1 lg:flex-row lg:gap-4'>
+                <div className='flex gap-1 lg:flex-row lg:gap-5'>
                     <span className='flex gap-1.5'>
                         <BgIcon icon={<FaTag />} accent />
                         <UnstyledLink
-                            className='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
+                            className='flex items-center text-sm font-medium text-blue-950 hover:text-blue-800 dark:text-gray-200'
                             href={`/blog/categories/${category ?? 'uncategorized'}`}
                             aria-label={allCategories[category]}
                         >
@@ -95,14 +105,27 @@ export default async function PostLayout({
                 </span>
             </div>
             <article>
-                <h1 className='my-4'>{title}</h1>
+                <div className='flex flex-col'>
+                    <h1 className='my-4'>{title}</h1>
 
-                <div className='mb-4 flex max-h-[36rem] justify-center'>
+                    <div className='flex gap-5 text-sm'>
+                        <span className='flex gap-1.5'>
+                            <BgIcon icon={<BsTextLeft />} size='sm' />
+                            {wordCount} words
+                        </span>
+                        <span className='flex gap-1.5'>
+                            <BgIcon icon={<MdOutlineTimer />} size='sm' />
+                            {readingTime}
+                        </span>
+                    </div>
+                </div>
+
+                <div className='mb-4 mt-2 flex max-h-[36rem] justify-center'>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         alt='Post preview image'
                         src={image}
-                        className='w-full rounded-xl object-cover object-center md:w-1/2'
+                        className='w-full rounded-xl object-cover object-center'
                     />
                 </div>
                 <div className='my-6 text-xl font-semibold'>{description}</div>

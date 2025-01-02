@@ -11,8 +11,14 @@ import rehypeHighlight from 'rehype-highlight';
 
 import langBash from 'highlight.js/lib/languages/bash';
 import langTs from 'highlight.js/lib/languages/typescript';
+import langAoc from '@/lib/aoc';
+
+// import hljs from 'highlight.js/lib/core';
+//
+// hljs.highlightAll();
 
 import 'highlight.js/scss/tokyo-night-dark.scss';
+import '@/styles/aoc.scss';
 
 export function MarkdownBody({ children }: { children: string }) {
     return (
@@ -39,7 +45,13 @@ export function MarkdownBody({ children }: { children: string }) {
                         rehypeAutolinkHeadings,
                         [
                             rehypeHighlight,
-                            { languages: { bash: langBash, ts: langTs } },
+                            {
+                                languages: {
+                                    bash: langBash,
+                                    ts: langTs,
+                                    aoc: langAoc,
+                                },
+                            },
                         ],
                     ],
                 },

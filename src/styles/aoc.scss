@@ -1,0 +1,29 @@
+.language-aoc {
+    .hljs-dot {
+        @apply text-gray-50/35;
+    }
+
+    .hljs-hash {
+        @apply text-slate-50;
+    }
+
+    .hljs-up {
+        @apply text-green-600;
+    }
+
+    .hljs-pipe {
+        @apply text-indigo-400;
+    }
+
+    .hljs-caret {
+        @apply text-blue-400;
+    }
+
+    .hljs-at {
+        @apply text-amber-500;
+    }
+
+    .hljs-box {
+        @apply text-orange-700;
+    }
+}

@@ -102,7 +102,7 @@ In part 2 we learn that we misunderstood the original instructions: it's not a X
 
 The goal is to find all the two `MAS` arranged as an `X`, basically like this:
 
-```bash
+```aoc
 M.S
 .A.
 M.S
@@ -129,7 +129,7 @@ grid.forEach((value, cell) => {
 
 It's important that the `M`s and `S`s are consecutive pairs: in the example above, starting from the top-left `M`, we get `MSSM`; if we started from the top-right `S`, it would be instead `SSMM` - essentially we want to exclude `SMSM` and `MSMS`, which would represent a "wrong" type of X-MAS:
 
-```bash
+```aoc
 M.S
 .A.
 S.M
@@ -155,7 +155,7 @@ so an order like
 
 then a case like
 
-```bash
+```aoc
 M.S
 .A.
 S.M

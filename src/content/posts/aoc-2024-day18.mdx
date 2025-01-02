@@ -33,7 +33,7 @@ We start with a list of pairs that we're told represent an `X,Y` coordinate:
 
 Starting from the top, each coordinate is the position of a **byte** that falls into the memory space, making it corrupted - so for example after the first 12 falling bytes we have a grid like this:
 
-```ts
+```aoc
 ...#...
 ..#..#.
 ....#..
@@ -45,7 +45,7 @@ Starting from the top, each coordinate is the position of a **byte** that falls 
 
 The task for part 1 is to simulate the fall of the first kilobyte, that is the first 1024 bytes, onto the memory space. Then we need to find the best path from the top-left corner to the bottom-right corner avoiding all the bytes.
 
-```ts
+```aoc
 SO.#OOO
 .O#OO#O
 .OOO#OO

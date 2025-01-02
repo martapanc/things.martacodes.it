@@ -14,7 +14,7 @@ I think this day was the first that gave me a proper headache for the first time
 
 We're in a warehouse with a number of boxes scattered all over. Our robot `@` is moving around and causing any boxes `O` in the way to shift as well, until they point they reach a wall (`#` in the example):
 
-```ts
+```aoc
 ##########
 #..O..O.O#
 #......O.#
@@ -29,7 +29,7 @@ We're in a warehouse with a number of boxes scattered all over. Our robot `@` is
 
 In that starting position, if the robot was to move one step towards the left, the box next to it would move as well:
 
-```ts
+```aoc
 ##########
 #..O..O.O#
 #......O.#
@@ -44,7 +44,7 @@ In that starting position, if the robot was to move one step towards the left, t
 
 The same applies to any cases where there's multiple boxes in a row, of course. Say we are in this situation:
 
-```ts
+```aoc
 ########
 #...@OO#
 ##..O..#
@@ -57,7 +57,7 @@ The same applies to any cases where there's multiple boxes in a row, of course. 
 
 The robot stepping towards South would result in this layout, leading to all four boxes ahead of it to shift downwards:
 
-```ts
+```aoc
 ########
 #....OO#
 ##..@..#
@@ -132,7 +132,7 @@ for (const dir of directions) {
 
 As for part 2, the additional difficulty is due to the fact that we're essentially **doubling the width** of the warehouse - including the boxes, which go from `O` to `[]`. This translates the original example
 
-```ts
+```aoc
 ##########
 #..O..O.O#
 #......O.#
@@ -147,7 +147,7 @@ As for part 2, the additional difficulty is due to the fact that we're essential
 
 into something like this:
 
-```ts
+```aoc
 ####################
 ##....[]....[]..[]##
 ##............[]..##
@@ -162,7 +162,7 @@ into something like this:
 
 Not much changes if the robot moves **horizontally**: we simply need to take into account that a box is composed of two parts, so any movement will have to shift both halves.
 
-```ts
+```aoc
 ##############
 ##......##..##
 ##..........##
@@ -183,7 +183,7 @@ Move <:
 
 Moving **vertically**, on the other hand, comes with a bit of a twist, because the boxes can now be staggered: the robot only sees one directly ahead of it, but beyond such box there could be two boxes, which in turn could be connected to three more, and so on. Essentially for every robot's step that would cause a box to shift, we need to trace the "chain" of boxes that would move together if pushed.
 
-```ts
+```aoc
 ##############
 ##..........##
 ##....[]....##
@@ -301,7 +301,7 @@ What about the bug I mentioned at the start? Well, it was understandably linked 
 
 Imagine a case like this, which at some point happens in the real input:
 
-```ts
+```aoc
 ##############
 ##......##..##
 ##....[]....##  D
@@ -315,7 +315,7 @@ The robot is meant to move upwards, and there's four boxes in the chain: the log
 
 I did have a check to prevent the same box from being added twice, however the problem lay in the way I added the discovered boxes to the chain, since the order - as I soon realised - is crucial to the way I shifted the boxes - upwards in this case. Long story short, without sorting the boxes properly, my program would shift the C box before the D one, resulting in the poor D box losing its right half… :(
 
-```ts
+```aoc
 ##############
 ##....[.##..##  D
 ##...[][]...## B C

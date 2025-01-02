@@ -14,7 +14,7 @@ I keep being amazed by Eric Wastl's skills of coming up with puzzles involving 2
 
 This time, part 1 is a rather classical "start from a `^` point and keep straight until you bump into a `#` obstacle, then rotate 90 degrees towards the right, and continue until you fall beyond the grid's edge" kind of task.
 
-```bash
+```aoc
 ....#.....
 .........#
 ..........
@@ -101,7 +101,7 @@ Essentially, now the goal is to introduce a new obstacle somewhere along the gua
 
 In the example, you can see one of six options - placing a new `O` obstacle to the left of the initial position results in a loop:
 
-```bash
+```aoc
 ....#.....
 ....+---+#
 ....|...|.
@@ -121,7 +121,7 @@ After placing a new obstacle on the grid, I could fundamentally run the move&rot
 How to know if the guard is stuck in a loop? I just needed to tweak the original loop a bit.
 First of all the `distinctPositions` set became a `Map<Coordinate, Direction>`: we keep adding the steps walked to the map including the direction, and after a while if the new candidate position matches both the coordinate and the direction, it means we walked through that cell - we're retracing our steps. Why is the direction needed as well? Because stepping on a previously visited cell doesn't imply a loop, since we could be walking on it first, say, from East to West then from North to South.
 
-```bash
+```aoc
 +--+
 |  |
 +--X--...

@@ -1,0 +1,13 @@
+---
+title: 'Hello, World!'
+description: The mandatory first article of the blog
+slug: hello-world
+date: 2022-12-31T23:00:00.000Z
+published: true
+category: uncategorized
+image: /blog/helloworld.png
+---
+
+## Hello World!
+
+This is the very first article published on the blog.

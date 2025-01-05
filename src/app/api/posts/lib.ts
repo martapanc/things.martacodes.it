@@ -79,6 +79,26 @@ export const listTags = (posts?: PostPreview[]) => {
         .sort();
 };
 
+const fetchAll = () => {
+    const files = fs.readdirSync(postDirectory);
+    return files
+        .filter((file) => file.endsWith('.mdx'))
+        .map((file) => {
+            const slug = file.replace(/\.mdx$/, '');
+            const fullPath = path.join(postDirectory, file);
+            const fileContent = fs.readFileSync(fullPath, 'utf-8');
+            const { data } = matter(fileContent);
+            return {
+                slug,
+                title: data.title,
+                date: data.date,
+            };
+        })
+        .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+};
+
 export function getPost(slug?: string): Post | null {
     if (!slug) {
         return null;
@@ -92,12 +112,30 @@ export function getPost(slug?: string): Post | null {
 
             const { data, content } = matter(postContent);
             const { wordCount, readingTime } = calcWordsAndReadingTime(content);
+
+            const allPosts = fetchAll();
+            const currIndex = allPosts.findIndex((p) => p.slug === slug);
+
+            const previousPost = currIndex > 0 ? allPosts[currIndex - 1] : null;
+            const nextPost =
+                currIndex < allPosts.length - 1
+                    ? allPosts[currIndex + 1]
+                    : null;
+
+            const previous = previousPost
+                ? { slug: previousPost.slug, title: previousPost.title }
+                : null;
+            const next = nextPost
+                ? { slug: nextPost.slug, title: nextPost.title }
+                : null;
             return {
                 ...data,
                 slug,
                 wordCount,
                 readingTime,
                 body: content,
+                previous,
+                next,
             } as Post;
         } else {
             console.warn(`File ${slug} not found`);

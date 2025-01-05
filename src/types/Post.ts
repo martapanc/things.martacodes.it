@@ -22,6 +22,14 @@ export type PostPreview = Base & {
 export type Post = PostPreview & {
     body: string;
     toc: boolean;
+    previous: {
+        slug: string;
+        title: string;
+    } | null;
+    next: {
+        slug: string;
+        title: string;
+    } | null;
 };
 
 export type Slug = string;

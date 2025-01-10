@@ -36,11 +36,11 @@ export default function RootLayout({
                 async
             ></script>
 
-            <script
-                defer
-                src='https://cloud.umami.is/script.js'
-                data-website-id='ba2cb4a6-6b6c-48af-bf35-918c4ff6966f'
-            ></script>
+            {/*<script*/}
+            {/*    defer*/}
+            {/*    src='https://cloud.umami.is/script.js'*/}
+            {/*    data-website-id='ba2cb4a6-6b6c-48af-bf35-918c4ff6966f'*/}
+            {/*></script>*/}
         </>
     );
 }

@@ -7,6 +7,7 @@ import Breadcrumbs, {
 } from '@/components/molecules/Breadcrumbs';
 import { fetchApi } from '@/api/fetch';
 import { CategoryCount, Post, Tag } from '@/types/Post';
+import { Navigation } from '@/app/blog/Navigation';
 
 export default async function BlogLayout({
     children,
@@ -24,8 +25,10 @@ export default async function BlogLayout({
     }
 
     let toc;
+    let post: Post | null = null;
+
     if (slug) {
-        const post: Post = await fetchApi('Post', { params: { slug } });
+        post = await fetchApi('Post', { params: { slug } });
         toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
     }
 
@@ -38,6 +41,27 @@ export default async function BlogLayout({
             </section>
 
             <Sidebar categories={categories} tags={tags} toc={toc} />
+
+            {post && (post?.previous || post?.next) && (
+                <section className='grid w-full grid-cols-2 gap-4 pb-2'>
+                    {post.previous ? (
+                        <Navigation
+                            direction='previous'
+                            slug={post.previous.slug}
+                            title={post.previous.title}
+                        />
+                    ) : (
+                        <div></div>
+                    )}
+                    {post.next && (
+                        <Navigation
+                            direction='next'
+                            slug={post.next.slug}
+                            title={post.next.title}
+                        />
+                    )}
+                </section>
+            )}
         </div>
     );
 }

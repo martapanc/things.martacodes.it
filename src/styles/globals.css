@@ -120,7 +120,7 @@
 
     /* Class to adjust with sticky footer */
     .min-h-main {
-        @apply min-h-[calc(100vh-56px)];
+        @apply min-h-[calc(100vh-10rem)];
     }
 
     .min-h-no-header {

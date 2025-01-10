@@ -13,10 +13,6 @@ import langBash from 'highlight.js/lib/languages/bash';
 import langTs from 'highlight.js/lib/languages/typescript';
 import langAoc from '@/lib/aoc';
 
-// import hljs from 'highlight.js/lib/core';
-//
-// hljs.highlightAll();
-
 import 'highlight.js/scss/tokyo-night-dark.scss';
 import '@/styles/aoc.scss';
 

@@ -40,7 +40,7 @@ export const footerItems: NavbarItem[] = [
         name: 'Source code',
     },
     {
-        href: 'https://analytics.eu.umami.is/share/Dw94G9vRDiMT9YXN/MartaCodes.it',
+        href: 'https://cloud.umami.is/share/hGId7Ix7vRdsekqV/things.martacodes.it',
         label: 'Analytics',
         name: 'Umami - Analytics',
     },

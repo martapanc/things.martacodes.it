@@ -8,6 +8,7 @@ import Breadcrumbs, {
 import { fetchApi } from '@/api/fetch';
 import { CategoryCount, Post, Tag } from '@/types/Post';
 import { Navigation } from '@/app/blog/Navigation';
+import { Comments } from '@/app/blog/posts/Comments';
 
 export default async function BlogLayout({
     children,
@@ -62,6 +63,10 @@ export default async function BlogLayout({
                     )}
                 </section>
             )}
+
+            <div />
+
+            <Comments />
         </div>
     );
 }

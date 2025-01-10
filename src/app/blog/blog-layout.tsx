@@ -41,7 +41,9 @@ export default async function BlogLayout({
                 </div>
             </section>
 
-            <Sidebar categories={categories} tags={tags} toc={toc} />
+            <div className='hidden lg:block'>
+                <Sidebar categories={categories} tags={tags} toc={toc} />
+            </div>
         </div>
     );
 }
@@ -66,6 +68,7 @@ export function BlogLayoutWrapper({
     return (
         <LayoutClient headerText='Marta Writes'>
             {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
+
             <BlogLayout params={params}>{children}</BlogLayout>
 
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>

@@ -56,6 +56,8 @@ export default async function PostLayout({
         image,
         wordCount,
         readingTime,
+        previous,
+        next,
     } = await getData(slug);
 
     const breadcrumbs = {
@@ -70,7 +72,13 @@ export default async function PostLayout({
     };
 
     return (
-        <BlogLayoutWrapper breadcrumbs={breadcrumbs} params={params}>
+        <BlogLayoutWrapper
+            breadcrumbs={breadcrumbs}
+            params={params}
+            previous={previous}
+            next={next}
+            comments={true}
+        >
             <div className='flex flex-col-reverse justify-start gap-1 sm:flex-row sm:justify-between'>
                 <div className='flex flex-col gap-1 md:flex-row md:gap-5'>
                     <span className='flex gap-1.5'>

@@ -8,7 +8,7 @@ import Breadcrumbs, {
 import { fetchApi } from '@/api/fetch';
 import { CategoryCount, Post, Tag } from '@/types/Post';
 import { Navigation } from '@/app/blog/Navigation';
-import { Comments } from '@/app/blog/posts/Comments';
+import { Comments } from '@/app/blog/posts/[slug]/Comments';
 
 export default async function BlogLayout({
     children,
@@ -34,7 +34,7 @@ export default async function BlogLayout({
     }
 
     return (
-        <div className='grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 lg:grid-cols-[1fr_17.5rem] lg:grid-rows-[auto]'>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
             <section className='w-full rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
                 <div className='layout relative flex flex-col gap-3 py-6'>
                     {children}
@@ -42,31 +42,6 @@ export default async function BlogLayout({
             </section>
 
             <Sidebar categories={categories} tags={tags} toc={toc} />
-
-            {post && (post?.previous || post?.next) && (
-                <section className='grid w-full grid-cols-2 gap-4 pb-2'>
-                    {post.previous ? (
-                        <Navigation
-                            direction='previous'
-                            slug={post.previous.slug}
-                            title={post.previous.title}
-                        />
-                    ) : (
-                        <div></div>
-                    )}
-                    {post.next && (
-                        <Navigation
-                            direction='next'
-                            slug={post.next.slug}
-                            title={post.next.title}
-                        />
-                    )}
-                </section>
-            )}
-
-            <div />
-
-            <Comments />
         </div>
     );
 }
@@ -75,17 +50,50 @@ interface BlogLayoutWrapperProps {
     children: ReactNode;
     breadcrumbs?: BreadcrumbsProps;
     params?: Promise<{ slug: string }>;
+    previous?: { slug: string; title: string } | null;
+    next?: { slug: string; title: string } | null;
+    comments?: boolean;
 }
 
 export function BlogLayoutWrapper({
     children,
     breadcrumbs,
     params,
+    previous,
+    next,
+    comments,
 }: BlogLayoutWrapperProps) {
     return (
         <LayoutClient headerText='Marta Writes'>
             {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
             <BlogLayout params={params}>{children}</BlogLayout>
+
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
+                {(previous || next) && (
+                    <section className='grid w-full grid-cols-2 gap-4 pb-2 pt-4'>
+                        {previous ? (
+                            <Navigation
+                                direction='previous'
+                                slug={previous.slug}
+                                title={previous.title}
+                            />
+                        ) : (
+                            <div></div>
+                        )}
+                        {next && (
+                            <Navigation
+                                direction='next'
+                                slug={next.slug}
+                                title={next.title}
+                            />
+                        )}
+                    </section>
+                )}
+
+                <div />
+
+                {comments && <Comments />}
+            </div>
         </LayoutClient>
     );
 }

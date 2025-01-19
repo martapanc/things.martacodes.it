@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import Headroom from 'react-headroom';
 
 import { useOnKeyDown } from '@/hooks/useOnKeyDown';
 
@@ -37,7 +36,7 @@ export default function Header({ headerText }: { headerText?: string }) {
     useOnKeyDown('Escape', () => setIsOpen(false));
 
     return (
-        <Headroom style={{ zIndex: 50 }}>
+        <>
             <header className='sticky top-0 z-50 bg-gradient-to-r from-sky-300 to-blue-400 py-6 dark:from-sky-900 dark:to-blue-950'>
                 <div className='layout flex h-12 w-full items-center justify-between'>
                     <nav className='m-4 flex w-full items-center justify-between text-xl'>
@@ -77,6 +76,6 @@ export default function Header({ headerText }: { headerText?: string }) {
             </header>
 
             <MobileMenu isOpen={isOpen} />
-        </Headroom>
+        </>
     );
 }

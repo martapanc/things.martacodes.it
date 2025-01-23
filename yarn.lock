@@ -2558,10 +2558,10 @@
   resolved "https://registry.yarnpkg.com/@theme-toggles/react/-/react-4.1.0.tgz#8b20055749f93bee3d6e4b6bbfaa2d5573caa18a"
   integrity sha512-h3SuJMsej8DfelHt5fjNIlaMfJOK52Vku4pPDVoHaTwjAcoTr4fn8hzeur2oiqWBYFYfKugvv1RdQaBFXaiPKg==
 
-"@tinacms/app@2.1.15":
-  version "2.1.15"
-  resolved "https://registry.yarnpkg.com/@tinacms/app/-/app-2.1.15.tgz#b5915be9da3e31f11aa1bf7b82cf08e68a03eddf"
-  integrity sha512-SWTnMPJVsS4hqxIjqMlmzKTufyv+3L3MIv8o9oa2TBZB/Iaqbi0fgSLptIM445uFpW2Tm6ss4/3aaP1mjzoSbQ==
+"@tinacms/app@2.1.16":
+  version "2.1.16"
+  resolved "https://registry.yarnpkg.com/@tinacms/app/-/app-2.1.16.tgz#3033ee176bbcf6cde8c5d7ef9cd12625bcc06044"
+  integrity sha512-/DDprXwXhuCeVnqktcHsWrot6jfsRRmF34f4WxcAZRTcMswEwFn7pYoK8Ug2l8ffMt3kzrRVu6D1xFNZNfS1Kw==
   dependencies:
     "@graphiql/toolkit" "0.8.4"
     "@headlessui/react" "2.1.8"
@@ -2575,14 +2575,14 @@
     react "^18.3.1"
     react-dom "^18.3.1"
     react-router-dom "6.3.0"
-    tinacms "2.6.0"
+    tinacms "2.6.1"
     typescript "^5.6.3"
     zod "^3.23.8"
 
-"@tinacms/cli@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@tinacms/cli/-/cli-1.8.0.tgz#c1f9a816e1bd2abc8f86e36b6228a439e91e65f8"
-  integrity sha512-C2/yjHHQONRZ36/wlIOJNM9Mg8WiblT9rcYqbuUVzYmcCz1zPPai3BUPOCsRXsjNl7tTQbEGoqo4n8Lh2ShGAQ==
+"@tinacms/cli@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@tinacms/cli/-/cli-1.8.1.tgz#2f879bf52ca92394a3e628c27ad733dbb0e65b49"
+  integrity sha512-KwG8B+AZ1moOd+z5AQJon5UKIy3H+Fr8LeOJMwYdf2Xp965UnxbXBDgv6hJ9rM48wIDqBXvMadAnOMUrIeeIWw==
   dependencies:
     "@graphql-codegen/core" "^2.6.8"
     "@graphql-codegen/plugin-helpers" latest
@@ -2597,7 +2597,7 @@
     "@tailwindcss/aspect-ratio" "^0.4.2"
     "@tailwindcss/container-queries" "^0.1.1"
     "@tailwindcss/typography" "^0.5.15"
-    "@tinacms/app" "2.1.15"
+    "@tinacms/app" "2.1.16"
     "@tinacms/graphql" "1.5.10"
     "@tinacms/metrics" "1.0.8"
     "@tinacms/schema-tools" "1.7.0"
@@ -2628,7 +2628,7 @@
     prompts "^2.4.2"
     readable-stream "^4.5.2"
     tailwindcss "^3.4.15"
-    tinacms "2.6.0"
+    tinacms "2.6.1"
     typanion "3.13.0"
     typescript "^5.6.3"
     vite "^4.5.5"
@@ -2839,10 +2839,10 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.34.tgz#10964ba0dee6ac4cd462e2795b6bebd407303433"
   integrity sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==
 
-"@types/node@^22.10.7":
-  version "22.10.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.7.tgz#14a1ca33fd0ebdd9d63593ed8d3fbc882a6d28d7"
-  integrity sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg==
+"@types/node@^22.10.10":
+  version "22.10.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.10.tgz#85fe89f8bf459dc57dfef1689bd5b52ad1af07e6"
+  integrity sha512-X47y/mPNzxviAGY5TcYPtYL8JsY3kAq2n8fMmKoRCxq/c4v4pyGNCzM2R6+M5/umG4ZfHuT+sgqDYqWc9rJ6ww==
   dependencies:
     undici-types "~6.20.0"
 
@@ -2894,10 +2894,10 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/react@^19.0.7":
-  version "19.0.7"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.0.7.tgz#c451968b999d1cb2d9207dc5ff56496164cf511d"
-  integrity sha512-MoFsEJKkAtZCrC1r6CM8U22GzhG7u2Wir8ons/aCKH6MBdD1ibV24zOSSkdZVUKqN5i396zG5VKLYZ3yaUZdLA==
+"@types/react@^19.0.8":
+  version "19.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.0.8.tgz#7098e6159f2a61e4f4cef2c1223c044a9bec590e"
+  integrity sha512-9P/o1IGdfmQxrujGbIMDyYaaCykhLKc0NGCtYcECNUr9UAaDe4gwvV9bR6tvd5Br1SG0j+PBpbKr2UYY8CwqSw==
   dependencies:
     csstype "^3.0.2"
 
@@ -9633,10 +9633,10 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier-plugin-tailwindcss@^0.6.10:
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.6.10.tgz#ecd6303cdb89b368af4bdf0d4b3653abdd1f23bf"
-  integrity sha512-ndj2WLDaMzACnr1gAYZiZZLs5ZdOeBYgOsbBmHj3nvW/6q8h8PymsXiEnKvj/9qgCCAoHyvLOisoQdIcsDvIgw==
+prettier-plugin-tailwindcss@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.6.11.tgz#cfacd60c4f81997353ee913e589037f796df0f5f"
+  integrity sha512-YxaYSIvZPAqhrrEpRtonnrXdghZg1irNg4qrjboCXrpybLWVs55cW2N3juhspVJiO0JBvYJT8SYsJpc8OQSnsA==
 
 prettier@^2.8.8:
   version "2.8.8"
@@ -11234,10 +11234,10 @@ throttle-debounce@^3.0.1:
   resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-3.0.1.tgz#32f94d84dfa894f786c9a1f290e7a645b6a19abb"
   integrity sha512-dTEWWNu6JmeVXY0ZYoPuH5cRIwc0MeGbJwah9KUNYSJwommQpCzTySTpEe8Gs1J23aeWEuAobe4Ag7EHVt/LOg==
 
-tinacms@2.6.0, tinacms@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/tinacms/-/tinacms-2.6.0.tgz#7de9fc3c8fc84ed470f525ffeefa94e78551d644"
-  integrity sha512-WRuPrxCC5sALEBO4Wct8YyxFlLVnKxpOw6cx9pifa0slGyEae52JdX5TC5zBWoxMuAmO7fyYGMyqiqHieb5Ndg==
+tinacms@2.6.1, tinacms@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/tinacms/-/tinacms-2.6.1.tgz#a6e44cdcc5a8c971517c4a2d7540ed86dea06b37"
+  integrity sha512-wxxLOIhmxG15zNTR/fJO4NMuskcQE32yUXk8ghk7ORxKPBDFICIcUqmTVpPussCC7DRjWs17B+ywSsdy/+s93g==
   dependencies:
     "@ariakit/react" "^0.4.13"
     "@floating-ui/dom" "^1.6.12"
@@ -11274,6 +11274,7 @@ tinacms@2.6.0, tinacms@^2.6.0:
     "@udecode/plate-resizable" "36.0.0"
     "@udecode/plate-slash-command" "^36.0.0"
     "@udecode/plate-table" "36.5.8"
+    async-lock "^1.4.1"
     class-variance-authority "^0.7.0"
     clsx "^2.1.1"
     cmdk "^1.0.4"

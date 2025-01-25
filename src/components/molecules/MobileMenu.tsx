@@ -1,7 +1,7 @@
 'use client';
 
 import FocusTrap from 'focus-trap-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import * as React from 'react';
 
 import { NavigationItem } from '@/components/atoms/NavigationItem';

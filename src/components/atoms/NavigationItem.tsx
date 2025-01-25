@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'motion/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

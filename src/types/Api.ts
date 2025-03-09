@@ -9,7 +9,7 @@ export const ApiRoutes = {
     },
     Slugs: { path: '/posts/slugs', response: [] as Slug[] },
     Tags: { path: '/posts/tags', response: [] as Tag[] },
-    Categories: { path: '/posts/tags', response: [] as Category[] },
+    Categories: { path: '/posts/categories', response: [] as Category[] },
     CategoryCounts: {
         path: '/posts/categories/counts',
         response: {} as Record<string, number>,

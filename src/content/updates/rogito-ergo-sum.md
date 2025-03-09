@@ -5,6 +5,7 @@ date: 2023-11-28T12:00:00.000Z
 published: true
 tags:
     - house
+    - life
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731785110/Updates/casina_peolar.webp
 ---
 

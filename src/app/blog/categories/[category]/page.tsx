@@ -8,6 +8,8 @@ export async function generateStaticParams() {
     try {
         const categories: Category[] = await fetchApi('Categories');
 
+        console.log({ categories });
+
         return categories.map((category) => ({ category }));
     } catch (e) {
         console.error('error fetching categories: ', e);

@@ -6,6 +6,8 @@ import { CategoryCount } from '@/types/Post';
 export default async function Categories() {
     const categories: CategoryCount = await fetchApi('CategoryCounts');
 
+    console.log({ categoryCount: categories });
+
     const breadcrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],
         current: 'Categories',

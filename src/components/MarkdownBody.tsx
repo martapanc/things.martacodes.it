@@ -1,12 +1,10 @@
 // @ts-expect-error no types
 import remarkA11yEmoji from '@fec/remark-a11y-emoji';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import Markdown from 'react-markdown';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
-import remarkFrontmatter from 'remark-frontmatter';
+import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
-import remarkHeadingId from 'remark-heading-id';
-import remarkToc from 'remark-toc';
 import rehypeHighlight from 'rehype-highlight';
 
 import langBash from 'highlight.js/lib/languages/bash';
@@ -18,40 +16,25 @@ import '@/styles/aoc.scss';
 
 export function MarkdownBody({ children }: { children: string }) {
     return (
-        <MDXRemote
-            source={children}
-            options={{
-                mdxOptions: {
-                    remarkPlugins: [
-                        remarkGfm,
-                        remarkFrontmatter,
-                        remarkA11yEmoji,
-                        [
-                            remarkToc,
-                            {
-                                tight: true,
-                                maxDepth: 5,
-                                // heading: 'structure'
-                            },
-                        ],
-                        remarkHeadingId,
-                    ],
-                    rehypePlugins: [
-                        rehypeSlug,
-                        rehypeAutolinkHeadings,
-                        [
-                            rehypeHighlight,
-                            {
-                                languages: {
-                                    bash: langBash,
-                                    ts: langTs,
-                                    aoc: langAoc,
-                                },
-                            },
-                        ],
-                    ],
-                },
-            }}
-        />
+        <Markdown
+            remarkPlugins={[remarkGfm, remarkA11yEmoji]}
+            rehypePlugins={[
+                rehypeRaw,
+                rehypeSlug,
+                rehypeAutolinkHeadings,
+                [
+                    rehypeHighlight,
+                    {
+                        languages: {
+                            bash: langBash,
+                            ts: langTs,
+                            aoc: langAoc,
+                        },
+                    },
+                ],
+            ]}
+        >
+            {children}
+        </Markdown>
     );
 }

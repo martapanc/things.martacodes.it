@@ -1,11 +1,10 @@
 import '@/styles/blog.css';
 
-import { formatDate } from '@/app/api/posts/lib';
+import { formatDate, getPost, getPostSlugs } from '@/app/api/posts/lib';
 import { Fragment, ReactNode } from 'react';
-import { allCategories, allTags, Post, Slug } from '@/types/Post';
+import { allCategories, allTags } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
-import { fetchApi } from '@/app/api/fetch';
 import BgIcon from '@/components/atoms/BgIcon';
 import { FaRegCalendarAlt, FaTag } from 'react-icons/fa';
 import UnstyledLink from '@/components/atoms/links/UnstyledLink';
@@ -15,27 +14,18 @@ import { MdOutlineTimer } from 'react-icons/md';
 import ResponsiveImage from '@/components/PostImage';
 
 export async function generateStaticParams() {
-    try {
-        const slugs: Slug[] = await fetchApi('Slugs');
-
-        return slugs.map((slug) => ({ slug }));
-    } catch (e) {
-        console.error('error fetching slugs: ', e);
-        return [];
-    }
+    const slugs = getPostSlugs();
+    return slugs.map((slug) => ({ slug }));
 }
 
-async function getData(slug: string) {
-    const post: Post = await fetchApi('Post', { params: { slug } });
+function getData(slug: string) {
+    const post = getPost(slug);
 
     if (!post) {
         notFound();
     }
-    const { ...rest } = post;
 
-    return {
-        ...rest,
-    };
+    return post;
 }
 
 export default async function PostLayout({
@@ -58,7 +48,7 @@ export default async function PostLayout({
         readingTime,
         previous,
         next,
-    } = await getData(slug);
+    } = getData(slug);
 
     const breadcrumbs = {
         past: [

@@ -2,19 +2,14 @@ import { PostList } from '@/app/blog/posts/PostList';
 import { allCategories, Category } from '@/types/Post';
 import { notFound } from 'next/navigation';
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
-import { fetchApi } from '@/app/api/fetch';
+import {
+    getAllPostPreviews,
+    listCategoriesWithCounts,
+} from '@/app/api/posts/lib';
 
 export async function generateStaticParams() {
-    try {
-        const categories: Category[] = await fetchApi('Categories');
-
-        console.log({ categories });
-
-        return categories.map((category) => ({ category }));
-    } catch (e) {
-        console.error('error fetching categories: ', e);
-        return [];
-    }
+    const categories = Object.keys(listCategoriesWithCounts()) as Category[];
+    return categories.map((category) => ({ category }));
 }
 
 export default async function CategoryPage({
@@ -24,7 +19,7 @@ export default async function CategoryPage({
 }) {
     const { category } = await params;
 
-    const allPosts = await fetchApi('PostPreviews');
+    const allPosts = getAllPostPreviews();
     const posts = allPosts.filter((post) => post && post.category === category);
 
     if (posts.length === 0) {

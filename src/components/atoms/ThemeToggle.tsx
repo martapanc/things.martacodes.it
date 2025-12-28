@@ -6,22 +6,26 @@ import { useEffect, useState } from 'react';
 import '@theme-toggles/react/css/Expand.css';
 import { Expand } from '@theme-toggles/react';
 
-type Mode = 'dark' | 'light';
-
 const ThemeToggle = () => {
     const { theme, setTheme } = useTheme();
-    const [, setMode] = useState<Mode>(theme as Mode);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMode(theme as Mode);
-    }, [theme]);
+        setMounted(true);
+    }, []);
 
     const toggleTheme = () => {
-        const currentTheme = theme === 'dark';
-
-        setMode(currentTheme ? 'light' : 'dark');
-        return setTheme(currentTheme ? 'light' : 'dark');
+        setTheme(theme === 'dark' ? 'light' : 'dark');
     };
+
+    // Prevent hydration mismatch by not rendering until mounted
+    if (!mounted) {
+        return (
+            <div className='flex w-full justify-center'>
+                <div style={{ width: 24, height: 24 }} />
+            </div>
+        );
+    }
 
     return (
         <div className='flex w-full justify-center'>

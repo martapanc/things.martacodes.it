@@ -1,12 +1,16 @@
 import { ReactNode } from 'react';
 import LayoutClient from '@/app/layout-client';
-import { getToc } from '@/app/api/posts/lib';
+import {
+    getPost,
+    getToc,
+    listCategoriesWithCounts,
+    listTags,
+} from '@/app/api/posts/lib';
 import Sidebar from '@/app/blog/Sidebar';
 import Breadcrumbs, {
     BreadcrumbsProps,
 } from '@/components/molecules/Breadcrumbs';
-import { fetchApi } from '@/api/fetch';
-import { CategoryCount, Post, Tag } from '@/types/Post';
+import { Post, Tag } from '@/types/Post';
 import { Navigation } from '@/app/blog/Navigation';
 import { Comments } from '@/app/blog/posts/[slug]/Comments';
 
@@ -17,8 +21,8 @@ export default async function BlogLayout({
     children: ReactNode;
     params?: Promise<{ slug: string }>;
 }) {
-    const categories: CategoryCount = await fetchApi('CategoryCounts');
-    const tags: Tag[] = await fetchApi('Tags');
+    const categories = listCategoriesWithCounts();
+    const tags = listTags() as Tag[];
 
     let slug;
     if (params) {
@@ -29,7 +33,7 @@ export default async function BlogLayout({
     let post: Post | null = null;
 
     if (slug) {
-        post = await fetchApi('Post', { params: { slug } });
+        post = getPost(slug);
         toc = post && post.toc ? getToc(post.body, post.toc) : undefined;
     }
 

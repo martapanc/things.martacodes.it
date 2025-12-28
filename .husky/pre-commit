@@ -4,4 +4,4 @@ yarn run lint:fix
 npx prettier . --write
 git add .
 
-yarn build:next
+yarn build

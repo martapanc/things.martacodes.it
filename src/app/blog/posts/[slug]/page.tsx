@@ -1,19 +1,12 @@
 import { notFound } from 'next/navigation';
 
-import { getPost } from '@/app/api/posts/lib';
+import { getPost, getPostSlugs } from '@/app/api/posts/lib';
 import { MarkdownBody } from '@/components/MarkdownBody';
-import { Slug } from '@/types/Post';
-import { fetchApi } from '@/api/fetch';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 
 export async function generateStaticParams() {
-    try {
-        const slugs: Slug[] = await fetchApi('Slugs');
-        return slugs.map((slug) => ({ slug }));
-    } catch (e) {
-        console.error('error fetching slugs: ', e);
-        return [];
-    }
+    const slugs = getPostSlugs();
+    return slugs.map((slug) => ({ slug }));
 }
 
 export default async function PostPage({

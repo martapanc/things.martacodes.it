@@ -1,12 +1,9 @@
 import { BlogLayoutWrapper } from '@/app/blog/blog-layout';
 import { CategoryRow } from '@/components/molecules/CategoryRow';
-import { fetchApi } from '@/app/api/fetch';
-import { CategoryCount } from '@/types/Post';
+import { listCategoriesWithCounts } from '@/app/api/posts/lib';
 
 export default async function Categories() {
-    const categories: CategoryCount = await fetchApi('CategoryCounts');
-
-    console.log({ categoryCount: categories });
+    const categories = listCategoriesWithCounts();
 
     const breadcrumbs = {
         past: [{ path: '/blog', label: 'Blog' }],

@@ -20,15 +20,8 @@ export default defineConfig({
     },
     vite: {
         plugins: [tailwindcss()],
-        resolve: {
-            alias: [
-                {
-                    find: /^@theme-toggles\/react$/,
-                    replacement: '@theme-toggles/react/dist/index.js',
-                },
-            ],
-        },
         ssr: {
+            // Ships raw .tsx source, so it must be transformed rather than externalized
             noExternal: ['@theme-toggles/react'],
         },
     },

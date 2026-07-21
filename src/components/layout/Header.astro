@@ -13,34 +13,43 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header
-    class='sticky top-0 z-50 bg-gradient-to-r from-sky-300 to-blue-400 py-6 dark:from-sky-900 dark:to-blue-950'
+    class='sticky top-0 z-50 border-b border-b-gray-300 bg-gradient-to-r from-sky-100 to-blue-200 py-5 dark:border-b-slate-800 dark:from-cyan-950 dark:to-sky-950'
 >
     <div class='layout flex h-12 w-full items-center justify-between'>
         <nav class='m-4 flex w-full items-center justify-between text-xl'>
             <a
                 href='/'
-                class='w-48 font-bold text-slate-900 hover:text-slate-700 dark:text-blue-50 dark:hover:text-blue-200'
+                class='font-jetbrains font-medium tracking-tight text-slate-900 hover:text-slate-700 dark:text-blue-50 dark:hover:text-blue-200'
             >
-                {headerText ?? meta.title}
+                &lt;{headerText ?? meta.title}
+                <span class='text-blue-600 dark:text-blue-400'>/</span>&gt;
             </a>
 
-            <ul class='hidden items-center justify-between space-x-10 text-lg md:flex'>
-                {
-                    headerItems.map(({ href, label }) => (
-                        <li>
-                            <a
-                                href={href}
-                                class={`animated-underline-2 dark:animated-underline rounded-sm font-medium text-slate-950 dark:text-blue-50 ${currentPath.startsWith(href) ? 'font-bold' : ''}`}
-                            >
-                                {label}
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
+            <div class='flex justify-between gap-16'>
+                <ul class='hidden items-center justify-between space-x-6 text-base md:flex'>
+                    {
+                        headerItems.map(({ href, label }) => (
+                            <li>
+                                <a
+                                    href={href}
+                                    class:list={[
+                                        'animated-underline-2 dark:animated-underline rounded-sm font-medium text-slate-950 dark:text-blue-50',
+                                        {
+                                            'underline-active':
+                                                currentPath.startsWith(href),
+                                        },
+                                    ]}
+                                >
+                                    {label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
 
-            <div class='hidden md:flex md:flex-row w-48'>
-                <ThemeToggle client:load />
+                <div class='hidden md:flex md:flex-row'>
+                    <ThemeToggle client:load />
+                </div>
             </div>
         </nav>
 

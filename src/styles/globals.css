@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/jetbrains-mono';
 @import '@fontsource/caveat/500.css';
 @import '@fontsource/kalam/400.css';
 @import 'flag-icons/css/flag-icons.min.css';
@@ -9,6 +10,7 @@
     --font-updates: 'Georgia', ui-sans-serif, system-ui, sans-serif;
     --font-handwritten: 'Caveat', ui-sans-serif, system-ui, sans-serif;
     --font-handwritten-2: 'Kalam', ui-sans-serif, system-ui, sans-serif;
+    --font-jetbrains: 'JetBrains Mono Variable', ui-monospace, monospace;
 
     --color-dark: #0c1018;
     --color-light: #f1f1f1;
@@ -123,10 +125,10 @@
     /* #endregion  !**======== Typography =========== */
 
     .layout {
-        /* 1280px */
-        max-width: 80rem;
+        /* 1100px */
+        max-width: 68.75rem;
 
-        @apply mx-auto w-[94%];
+        @apply mx-auto w-11/12;
     }
 
     .bg-dark a.custom-link {
@@ -191,7 +193,9 @@
     .animated-underline:hover,
     .animated-underline-2:hover,
     .animated-underline:focus-visible,
-    .animated-underline-2:focus-visible {
+    .animated-underline-2:focus-visible,
+    .animated-underline.underline-active,
+    .animated-underline-2.underline-active {
         background-size:
             0 2px,
             100% 2px;

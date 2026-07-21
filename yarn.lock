@@ -607,6 +607,11 @@
     mdast-util-find-and-replace "^1.1.1"
     unist-util-visit "^2.0.3"
 
+"@fontsource-variable/jetbrains-mono@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@fontsource-variable/jetbrains-mono/-/jetbrains-mono-5.3.0.tgz#5738dedd3af40606b0d9b7626f4ba7c4586cb39b"
+  integrity sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw==
+
 "@fontsource/caveat@^5.2.5":
   version "5.2.8"
   resolved "https://registry.yarnpkg.com/@fontsource/caveat/-/caveat-5.2.8.tgz#c7b0b45113a089340de0c798be813e929a5c6a92"
@@ -1251,10 +1256,12 @@
     "@tailwindcss/oxide" "4.2.1"
     tailwindcss "4.2.1"
 
-"@theme-toggles/react@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@theme-toggles/react/-/react-4.1.0.tgz#8b20055749f93bee3d6e4b6bbfaa2d5573caa18a"
-  integrity sha512-h3SuJMsej8DfelHt5fjNIlaMfJOK52Vku4pPDVoHaTwjAcoTr4fn8hzeur2oiqWBYFYfKugvv1RdQaBFXaiPKg==
+"@theme-toggles/react@^5.0.0-rc.0":
+  version "5.0.0-rc.0"
+  resolved "https://registry.yarnpkg.com/@theme-toggles/react/-/react-5.0.0-rc.0.tgz#f1a3763927c56f299404231b36c7b737c13952de"
+  integrity sha512-24icbf85M9AZs2jQNe9Z4Boy5Gic5S5qkjHcNpDwC1xuWmUhO7ksXAOq//8ZsYVEFYhMBHCpiJAbZ/XTwEDwaA==
+  dependencies:
+    clsx "^2.1.1"
 
 "@tybys/wasm-util@^0.10.1":
   version "0.10.1"

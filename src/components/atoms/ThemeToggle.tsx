@@ -1,29 +1,18 @@
-import { useState } from 'react';
-import '@theme-toggles/react/css/Expand.css';
-import { Expand } from '@theme-toggles/react';
+import '@theme-toggles/react/styles/classic.css';
+import { Classic } from '@theme-toggles/react';
 
 const ThemeToggle = () => {
-    const [isDark, setIsDark] = useState(() =>
-        typeof window !== 'undefined'
-            ? localStorage.getItem('theme') !== 'light'
-            : true
-    );
-
+    // The icon's own state is driven purely by the `dark` class on <html>,
+    // which the inline script in BaseLayout sets before first paint.
     const toggle = () => {
-        const next = !isDark;
-        setIsDark(next);
+        const next = !document.documentElement.classList.contains('dark');
         localStorage.setItem('theme', next ? 'dark' : 'light');
         document.documentElement.classList.toggle('dark', next);
     };
 
     return (
-        <div className='flex w-full justify-center sm:justify-end'>
-            {/* @ts-expect-error: required props */}
-            <Expand
-                toggle={toggle}
-                toggled={!isDark}
-                placeholder={'Theme toggle'}
-            />
+        <div className='flex w-full items-center justify-center gap-2 px-2 sm:justify-end'>
+            <Classic className='cursor-pointer' onClick={toggle} />
         </div>
     );
 };

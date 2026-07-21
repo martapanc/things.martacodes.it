@@ -1,0 +1,57 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import PostPreviewDisplay from '@/components/PostPreviewDisplay.astro';
+import Pagination from '@/components/molecules/Pagination.astro';
+import { getAllPostPreviews, POSTS_PER_PAGE } from '@/lib/posts';
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+    const posts = await getAllPostPreviews();
+    return paginate(posts, { pageSize: POSTS_PER_PAGE });
+};
+
+interface Props {
+    page: Page<CollectionEntry<'posts'>>;
+}
+
+const { page } = Astro.props;
+---
+
+<BlogLayout title='Blog | Marta Makes Things'>
+    <div class='mb-2 border-b border-slate-200 pb-4 dark:border-slate-700'>
+        <div
+            class='flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'
+        >
+            <div>
+                <h1>Blog</h1>
+                <p class='mt-1 text-slate-500 dark:text-slate-400'>
+                    Thoughts on software, AI, and more
+                </p>
+            </div>
+
+            <div class='flex gap-4 text-sm'>
+                <a
+                    href='/blog/categories'
+                    class='text-indigo-700 hover:underline dark:text-indigo-300'
+                >
+                    By category
+                </a>
+                <a
+                    href='/blog/tags'
+                    class='text-indigo-700 hover:underline dark:text-indigo-300'
+                >
+                    By tag
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <div class='flex flex-col gap-6 py-6'>
+            {page.data.map((post) => <PostPreviewDisplay post={post} />)}
+        </div>
+    </section>
+
+    <Pagination page={page} />
+</BlogLayout>

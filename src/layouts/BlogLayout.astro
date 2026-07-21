@@ -17,28 +17,34 @@ interface Props {
     previous?: { slug: string; title: string } | null;
     next?: { slug: string; title: string } | null;
     showComments?: boolean;
+    showSidebar?: boolean;
 }
 
-const { title, description, image, breadcrumbs, headings, previous, next, showComments } = Astro.props;
+const { title, description, image, breadcrumbs, headings, previous, next, showComments, showSidebar = false } = Astro.props;
 
-const allPosts = await getAllPostPreviews();
+// Listing pages fetch their own posts, so only pay for this when the sidebar renders
+const allPosts = showSidebar ? await getAllPostPreviews() : [];
 const categories = listCategoriesWithCounts(allPosts);
 const tags = listTags(allPosts);
 ---
 
-<SiteLayout title={title} description={description} image={image} headerText='Marta Writes'>
+<SiteLayout title={title} description={description} image={image} headerText='MartaWrites'>
     {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
 
-    <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
+    <div class:list={['grid grid-cols-1 gap-4', showSidebar && 'lg:grid-cols-[1fr_17.5rem]']}>
         <section class='w-full rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
-            <div class='layout relative flex flex-col gap-3 py-6'>
+            <div class='relative flex flex-col gap-3 px-6 py-6'>
                 <slot />
             </div>
         </section>
 
-        <div class='hidden lg:block'>
-            <Sidebar categories={categories} tags={tags} headings={headings} />
-        </div>
+        {
+            showSidebar && (
+                <div class='hidden lg:block'>
+                    <Sidebar categories={categories} tags={tags} headings={headings} />
+                </div>
+            )
+        }
     </div>
 
     {

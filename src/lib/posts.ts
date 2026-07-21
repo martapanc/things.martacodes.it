@@ -1,5 +1,7 @@
 import { getCollection } from 'astro:content';
 
+export const POSTS_PER_PAGE = 12;
+
 export async function getAllPostPreviews() {
     const posts = await getCollection('posts', ({ data }) => data.published);
     return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());

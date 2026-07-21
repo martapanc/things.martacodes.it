@@ -1,0 +1,86 @@
+---
+import Icon from '@/components/atoms/Icon.astro';
+import type { Page } from 'astro';
+
+interface Props {
+    page: Page;
+}
+
+const { page } = Astro.props;
+
+// On page 1 `url.first` is undefined, but `url.current` is itself the base path
+const base = (page.url.first ?? page.url.current).replace(/\/$/, '');
+const hrefFor = (n: number) => (n === 1 ? base || '/' : `${base}/${n}`);
+
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+
+const stepClass =
+    'flex items-center gap-1 rounded-xl bg-white px-3 py-2 drop-shadow-sm transition hover:bg-slate-50 dark:bg-dark dark:hover:bg-slate-800 group';
+const stepDisabledClass =
+    'flex items-center gap-1 rounded-xl px-3 py-2 text-slate-400 dark:text-slate-600 cursor-default';
+---
+
+{
+    page.lastPage > 1 && (
+        <nav
+            aria-label='Pagination'
+            class='flex flex-wrap items-center justify-center gap-2 pt-2'
+        >
+            {page.url.prev ? (
+                <a href={page.url.prev} rel='prev' class={stepClass}>
+                    <Icon
+                        icon='material-symbols:chevron-left'
+                        class='h-5 w-5 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-1'
+                    />
+                    <span class='text-sm'>Previous</span>
+                </a>
+            ) : (
+                <span class={stepDisabledClass} aria-hidden='true'>
+                    <Icon icon='material-symbols:chevron-left' class='h-5 w-5' />
+                    <span class='text-sm'>Previous</span>
+                </span>
+            )}
+
+            <ol class='flex flex-wrap items-center gap-1.5'>
+                {pages.map((n) => (
+                    <li>
+                        {n === page.currentPage ? (
+                            <span
+                                aria-current='page'
+                                class='flex min-w-9 justify-center rounded-lg bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white'
+                            >
+                                {n}
+                            </span>
+                        ) : (
+                            <a
+                                href={hrefFor(n)}
+                                aria-label={`Page ${n}`}
+                                class='flex min-w-9 justify-center rounded-lg bg-white px-2.5 py-1.5 text-sm font-medium drop-shadow-sm transition hover:bg-indigo-100 dark:bg-dark dark:hover:bg-indigo-900/50'
+                            >
+                                {n}
+                            </a>
+                        )}
+                    </li>
+                ))}
+            </ol>
+
+            {page.url.next ? (
+                <a href={page.url.next} rel='next' class={stepClass}>
+                    <span class='text-sm'>Next</span>
+                    <Icon
+                        icon='material-symbols:chevron-right'
+                        class='h-5 w-5 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-1'
+                    />
+                </a>
+            ) : (
+                <span class={stepDisabledClass} aria-hidden='true'>
+                    <span class='text-sm'>Next</span>
+                    <Icon
+                        icon='material-symbols:chevron-right'
+                        class='h-5 w-5'
+                    />
+                </span>
+            )}
+        </nav>
+    )
+}

@@ -10,11 +10,17 @@ import remarkGfm from 'remark-gfm';
 import remarkA11yEmoji from '@fec/remark-a11y-emoji';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import { unified } from '@astrojs/markdown-remark';
 import { aocLang } from './src/lib/shiki-aoc-lang.ts';
 import { aocTransformer } from './src/lib/shiki-aoc-transformer.ts';
 
 export default defineConfig({
     site: 'https://things.martacodes.it',
+    // Astro 7 defaults to the Sätteri pipeline, which silently ignores
+    // remark/rehype plugins. Opt back into unified() to keep them working.
+    markdown: {
+        processor: unified(),
+    },
     image: {
         // We use Cloudinary for images, skip Astro's built-in image optimization
         service: { entrypoint: 'astro/assets/services/noop' },

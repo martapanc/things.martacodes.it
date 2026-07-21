@@ -1,0 +1,60 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import PagefindConfig from 'astro-pagefind/components/PagefindConfig.astro';
+
+const breadcrumbs = {
+    past: [{ path: '/blog', label: 'Blog' }],
+    current: 'Search',
+};
+---
+
+<BlogLayout title='Search | Marta Makes Things' breadcrumbs={breadcrumbs}>
+    <div class='mb-2 border-b border-slate-200 pb-4 dark:border-slate-700'>
+        <h1>Search</h1>
+        <p class='mt-1 text-slate-500 dark:text-slate-400'>
+            Find something across all blog posts
+        </p>
+    </div>
+
+    {/* Loads the Pagefind web components and points them at /pagefind/ */}
+    <PagefindConfig />
+
+    <div class='pf-scope flex flex-col gap-4 py-6'>
+        <pagefind-input placeholder='Search posts…' autofocus></pagefind-input>
+        <pagefind-summary default-message='Type to search across every post.'
+        ></pagefind-summary>
+        <pagefind-results></pagefind-results>
+    </div>
+</BlogLayout>
+
+<style>
+    /* Pagefind's UI themes via --pf-* custom properties and has no built-in
+       dark mode (it keys off [data-pf-theme], which this site doesn't set).
+       Map them onto the site's own palette instead, so the widget follows the
+       existing `.dark` class toggle. */
+    /* Light is the base; `.dark` on <html> overrides it. Don't invert this
+       with :not(.dark) — that matches intermediate ancestors like <body>
+       and would always win. */
+    .pf-scope {
+        --pf-border-radius: 0.75rem;
+        --pf-mark: #4338ca;
+        --pf-background: #ffffff;
+        --pf-text: #0c1018;
+        --pf-text-secondary: #475569;
+        --pf-text-muted: #64748b;
+        --pf-border: #e2e8f0;
+        --pf-border-focus: #4f46e5;
+        --pf-hover: #f1f5f9;
+    }
+
+    :global(.dark) .pf-scope {
+        --pf-mark: #a5b4fc;
+        --pf-background: #0c1018;
+        --pf-text: #f1f1f1;
+        --pf-text-secondary: #cbd5e1;
+        --pf-text-muted: #94a3b8;
+        --pf-border: #334155;
+        --pf-border-focus: #818cf8;
+        --pf-hover: #1e293b;
+    }
+</style>

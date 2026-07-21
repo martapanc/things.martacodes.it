@@ -32,6 +32,7 @@
         "@tailwindcss/vite": "^4.2.1",
         "@theme-toggles/react": "^5.0.0-rc.0",
         "astro": "^6.0.0",
+        "astro-pagefind": "^2.0.1",
         "change-case": "^5.4.4",
         "cloudinary": "^2.5.1",
         "clsx": "^2.1.1",

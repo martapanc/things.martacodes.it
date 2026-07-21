@@ -61,11 +61,15 @@ const breadcrumbs = {
     showComments={true}
     showSidebar={true}
 >
-    <PostHeader entry={entry} body={entry.body ?? ''} />
+    {/* Pagefind indexes only what's inside `data-pagefind-body`, so search
+        covers blog posts and nothing else on the site. */}
+    <div data-pagefind-body>
+        <PostHeader entry={entry} body={entry.body ?? ''} />
 
-    <article>
-        <Content />
-    </article>
+        <article>
+            <Content />
+        </article>
+    </div>
 
     <Comments client:visible slot='comments' />
 </BlogLayout>

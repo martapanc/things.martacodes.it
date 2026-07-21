@@ -4,13 +4,14 @@ import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import pagefind from 'astro-pagefind';
 import remarkGfm from 'remark-gfm';
 // @ts-expect-error no types
 import remarkA11yEmoji from '@fec/remark-a11y-emoji';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { aocLang } from './src/lib/shiki-aoc-lang.ts';
-import { aocTransformer } from './src/lib/shiki-aoc-transformer.ts';
+import { aocLang } from '@/lib/shiki-aoc-lang.ts';
+import { aocTransformer } from '@/lib/shiki-aoc-transformer.ts';
 
 export default defineConfig({
     site: 'https://things.martacodes.it',
@@ -37,5 +38,8 @@ export default defineConfig({
             },
         }),
         sitemap(),
+        // Indexes the built HTML. Only elements marked `data-pagefind-body`
+        // are indexed, which scopes search to blog posts.
+        pagefind(),
     ],
 });

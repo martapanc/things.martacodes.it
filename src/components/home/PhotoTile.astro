@@ -1,0 +1,65 @@
+---
+import BentoCard from './BentoCard.astro';
+
+interface Props {
+    href: string;
+    title: string;
+    image?: string;
+    subtitle?: string;
+    badge?: string;
+    class?: string;
+}
+
+const {
+    href,
+    title,
+    image,
+    subtitle,
+    badge,
+    class: className = '',
+} = Astro.props;
+---
+
+<!-- min-height only matters before the fixed-row grid kicks in at lg; leaving it
+     on would overflow the row track and overlap the tile below -->
+<BentoCard href={href} padded={false} class={`min-h-56 lg:min-h-0 ${className}`}>
+    {
+        image ? (
+            <img
+                src={image}
+                alt=''
+                loading='lazy'
+                class='absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+            />
+        ) : (
+            <div class='absolute inset-0 bg-gradient-to-br from-sky-200 to-blue-300 dark:from-sky-900 dark:to-blue-950' />
+        )
+    }
+
+    <div
+        class='absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-slate-950/5'
+    >
+    </div>
+
+    {
+        badge && (
+            <span class='absolute right-4 top-4 rounded-full bg-slate-950/45 px-2.5 py-1 font-jetbrains text-[11px] font-medium text-white ring-1 ring-white/20 backdrop-blur-md'>
+                {badge}
+            </span>
+        )
+    }
+
+    <div class='absolute inset-x-0 bottom-0 p-5'>
+        <h2
+            class='flex items-center gap-1.5 text-lg font-bold text-white md:text-xl'
+        >
+            {title}
+            <span
+                class='translate-x-0 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100'
+                aria-hidden='true'>→</span
+            >
+        </h2>
+        {subtitle && <p class='mt-0.5 text-sm text-white/75'>{subtitle}</p>}
+        <slot />
+    </div>
+</BentoCard>

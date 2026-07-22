@@ -1,0 +1,28 @@
+---
+interface Props {
+    href?: string;
+    class?: string;
+    padded?: boolean;
+}
+
+const { href, class: className = '', padded = true } = Astro.props;
+
+// Renders as a link when it leads somewhere, otherwise a plain surface
+const Tag = href ? 'a' : 'div';
+const attrs = href
+    ? { href, ...(href.startsWith('http') ? { rel: 'noopener' } : {}) }
+    : {};
+
+const base =
+    'group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white transition duration-300 ease-out dark:border-slate-700/60 dark:bg-slate-900/60';
+const interactive = href
+    ? 'hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-slate-900/5 dark:hover:border-blue-500/50'
+    : '';
+---
+
+<Tag
+    {...attrs}
+    class={`${base} ${interactive} ${padded ? 'p-5 md:p-6' : ''} ${className}`}
+>
+    <slot />
+</Tag>

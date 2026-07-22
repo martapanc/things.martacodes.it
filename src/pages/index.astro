@@ -1,3 +1,212 @@
 ---
-return Astro.redirect('/blog');
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import BentoCard from '@/components/home/BentoCard.astro';
+import PhotoTile from '@/components/home/PhotoTile.astro';
+import Icon from '@/components/atoms/Icon.astro';
+import { getAllPostPreviews, getAllUpdates, formatDate } from '@/lib/posts';
+import { getFoodImages, resized } from '@/lib/cloudinary';
+import { albums } from '@/data/albums';
+import { socialLinks } from '@/data/Navigation';
+
+const posts = await getAllPostPreviews();
+const latestPosts = posts.slice(0, 3);
+
+const updates = await getAllUpdates();
+const latestUpdates = updates.slice(0, 3);
+
+// The cats have no gallery of their own — their photos live on tagged updates
+const catImage = resized(
+    updates.find(
+        (update) => update.data.tags.includes('cats') && update.data.image
+    )?.data.image,
+    600,
+    400
+);
+
+// Food images come from Cloudinary; the tile degrades to a gradient without it
+let foodImage: string | undefined;
+try {
+    foodImage = (await getFoodImages())[0]?.src;
+} catch {
+    foodImage = undefined;
+}
+
+const travelImage = resized(albums[0]?.preview, 1200, 800);
+
+const intro = socialLinks.filter((link) =>
+    ['Github', 'Instagram', 'Goodreads', 'Steam'].includes(link.id)
+);
 ---
+
+<SiteLayout
+    title='Marta Makes Things'
+    description="My other digital space — a blog about software and life, photos from around the world, and adventures in the kitchen."
+>
+    <div
+        class='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:auto-rows-[10.5rem] lg:grid-cols-4'
+    >
+        <!-- Intro -->
+        <BentoCard
+            class='justify-center bg-gradient-to-br from-blue-50 to-sky-100 sm:col-span-2 lg:row-span-2 dark:from-sky-950/60 dark:to-slate-900/60'
+        >
+            <h1 class='text-3xl font-bold antialiased md:text-4xl'>
+                <span class='home-greeting'>Marta makes things</span>{' '}<span
+                    class='wave inline-block'>👋</span
+                >
+            </h1>
+            <p class='mt-1 text-lg text-slate-600 dark:text-slate-300'>
+                My <em>other</em> digital space
+            </p>
+            <p class='mt-4 max-w-md text-slate-600 dark:text-slate-400'>
+                Programming is my day job <em>and</em> my greatest passion — but
+                there's a lot more to explore around here. Take a look around,
+                there's something for everyone.
+            </p>
+
+            <div class='mt-5 flex items-center gap-2'>
+                {
+                    intro.map(({ href, icon, id }) => (
+                        <a
+                            href={href}
+                            rel='noopener'
+                            aria-label={id}
+                            class='flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-slate-600 transition hover:-translate-y-0.5 hover:text-blue-600 dark:bg-white/10 dark:text-slate-300 dark:hover:text-blue-400'
+                        >
+                            <Icon icon={icon} class='h-4 w-4' />
+                        </a>
+                    ))
+                }
+            </div>
+        </BentoCard>
+
+        <!-- Travel -->
+        <PhotoTile
+            href='/travel'
+            image={travelImage}
+            title='Pictures from around the world'
+            badge={`${albums.length} albums`}
+            class='sm:col-span-2 lg:row-span-2'
+        >
+            <div class='mt-3 flex flex-wrap items-center gap-1.5'>
+                {
+                    albums.map((album) => (
+                        <span
+                            class={`fi fi-${album.flag} h-4 w-6 rounded-xs ring-1 ring-white/30`}
+                            title={album.title}
+                        />
+                    ))
+                }
+            </div>
+        </PhotoTile>
+
+        <!-- Blog -->
+        <BentoCard
+            href='/blog'
+            class='sm:col-span-2 lg:row-span-2'
+        >
+            <div class='flex items-baseline justify-between'>
+                <h2 class='text-lg font-bold md:text-xl'>Words I've written</h2>
+                <span
+                    class='font-jetbrains text-xs text-slate-400 dark:text-slate-500'
+                >
+                    {posts.length} posts
+                </span>
+            </div>
+
+            <ul class='mt-3 flex flex-1 flex-col justify-center'>
+                {
+                    latestPosts.map((post) => (
+                        <li class='border-b border-slate-100 py-2.5 last:border-0 dark:border-slate-800'>
+                            <p class='line-clamp-1 font-medium text-slate-800 transition-colors group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400'>
+                                {post.data.title}
+                            </p>
+                            <p class='mt-0.5 font-jetbrains text-xs text-slate-400 dark:text-slate-500'>
+                                {formatDate(post.data.date)}
+                            </p>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <span
+                class='mt-2 text-sm font-medium text-blue-700 dark:text-blue-400'
+            >
+                All posts →
+            </span>
+        </BentoCard>
+
+        <!-- Food -->
+        <PhotoTile
+            href='/food'
+            image={foodImage}
+            title='Adventures in the kitchen'
+            class='lg:row-span-2'
+        />
+
+        <!-- Cats -->
+        <PhotoTile
+            href='/updates?tags=cats'
+            image={catImage}
+            title='Photogenic voids'
+        />
+
+        <!-- Portfolio -->
+        <BentoCard
+            href='https://martacodes.it'
+            class='min-h-44 justify-center border-transparent bg-gradient-to-br from-blue-600 to-sky-500 text-white sm:col-span-2 lg:col-span-1 dark:border-transparent dark:from-blue-800 dark:to-sky-700'
+        >
+            <p class='font-jetbrains text-[11px] uppercase tracking-widest text-white/70'>
+                the day job
+            </p>
+            <p class='mt-1.5 font-medium leading-snug'>
+                Looking for the coding stuff? My projects and CV live over here.
+            </p>
+            <span class='mt-3 flex items-center gap-1.5 text-sm font-semibold'>
+                martacodes.it
+                <span
+                    class='transition-transform duration-300 group-hover:translate-x-1'
+                    aria-hidden='true'>→</span
+                >
+            </span>
+        </BentoCard>
+
+        <!-- Updates -->
+        <BentoCard href='/updates' class='sm:col-span-2 lg:col-span-4'>
+            <div class='flex items-baseline justify-between'>
+                <h2 class='text-lg font-bold md:text-xl'>
+                    Moments I've cherished
+                </h2>
+                <span
+                    class='font-jetbrains text-xs text-slate-400 dark:text-slate-500'
+                >
+                    {updates.length} updates
+                </span>
+            </div>
+
+            <div class='mt-3 grid flex-1 content-center gap-3 sm:grid-cols-3'>
+                {
+                    latestUpdates.map((update) => (
+                        <div class='flex items-center gap-3'>
+                            {update.data.image && (
+                                <img
+                                    src={resized(update.data.image, 96, 96)}
+                                    alt=''
+                                    loading='lazy'
+                                    class='h-11 w-11 shrink-0 rounded-xl object-cover'
+                                />
+                            )}
+                            <div class='min-w-0'>
+                                <p class='line-clamp-1 text-sm font-medium text-slate-800 dark:text-slate-100'>
+                                    {update.data.title}
+                                </p>
+                                <p class='font-jetbrains text-xs text-slate-400 dark:text-slate-500'>
+                                    {formatDate(update.data.date)}
+                                </p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </BentoCard>
+    </div>
+</SiteLayout>

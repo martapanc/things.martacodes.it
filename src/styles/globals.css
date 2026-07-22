@@ -317,27 +317,6 @@
 
 /* #region  !**=========== Homepage =========== */
 
-/* Gradient-clipped hero greeting, adapted from the portfolio landing page */
-.home-greeting {
-    background-image: linear-gradient(
-        89deg,
-        rgb(21, 74, 189) 0.1%,
-        rgb(26, 138, 211) 51.5%,
-        rgb(72, 177, 234) 100.2%
-    );
-    background-clip: text;
-    color: transparent;
-}
-
-.dark .home-greeting {
-    background-image: linear-gradient(
-        89deg,
-        rgb(96, 165, 250) 0.1%,
-        rgb(56, 189, 248) 51.5%,
-        rgb(125, 211, 252) 100.2%
-    );
-}
-
 .wave {
     display: inline-block;
     transform-origin: 70% 70%;
@@ -377,4 +356,86 @@
     }
 }
 
+/* Stacked photos that cross-fade in turn. Every layer runs the same keyframes
+   with a negative delay, so only one is held opaque at a time. The outgoing
+   layer briefly lifts to z-index 3 — it has to fade out *on top of* the
+   incoming one, otherwise the swap reads as a hard cut. */
+.cross-fade {
+    opacity: 0;
+}
+
+@keyframes cross-fade-2 {
+    0%,
+    49.99% {
+        opacity: 1;
+        z-index: 2;
+    }
+    50% {
+        opacity: 1;
+        z-index: 3;
+    }
+    56% {
+        opacity: 0;
+        z-index: 3;
+    }
+    56.01%,
+    100% {
+        opacity: 0;
+        z-index: 1;
+    }
+}
+
+@keyframes cross-fade-3 {
+    0%,
+    33.32% {
+        opacity: 1;
+        z-index: 2;
+    }
+    33.33% {
+        opacity: 1;
+        z-index: 3;
+    }
+    39.33% {
+        opacity: 0;
+        z-index: 3;
+    }
+    39.34%,
+    100% {
+        opacity: 0;
+        z-index: 1;
+    }
+}
+
+@keyframes cross-fade-4 {
+    0%,
+    24.99% {
+        opacity: 1;
+        z-index: 2;
+    }
+    25% {
+        opacity: 1;
+        z-index: 3;
+    }
+    31% {
+        opacity: 0;
+        z-index: 3;
+    }
+    31.01%,
+    100% {
+        opacity: 0;
+        z-index: 1;
+    }
+}
+
+/* Hold the first frame rather than cycling */
+@media (prefers-reduced-motion: reduce) {
+    .cross-fade {
+        animation: none !important;
+        opacity: 0;
+    }
+
+    .cross-fade:first-of-type {
+        opacity: 1;
+    }
+}
 /* #endregion  !**======== Homepage =========== */

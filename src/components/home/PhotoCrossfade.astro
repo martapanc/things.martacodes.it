@@ -1,23 +1,33 @@
 ---
 interface Props {
     images: (string | undefined)[];
-    /** Seconds for one full loop through every image */
-    duration?: number;
+    /** Seconds each image is held before it fades to the next */
+    hold?: number;
+    /** Pushes this tile's schedule later, so neighbouring tiles don't all
+     *  change on the same beat. Keep it below `hold` to stay staggered. */
+    offset?: number;
     class?: string;
 }
 
-const { images, duration = 20, class: className = '' } = Astro.props;
+const {
+    images,
+    hold = 8,
+    offset = 0,
+    class: className = '',
+} = Astro.props;
 
-// Up to four layers: one keyframe set per count, so each image gets an equal slot
+// Up to four layers: one keyframe set per count, so each image gets an equal turn
 const layers = images.filter((src): src is string => !!src).slice(0, 4);
 const count = layers.length;
+const duration = hold * count;
 
 /**
  * Negative delays start every layer part-way through the loop. The extra half
- * slot means the first image sits mid-hold on load, so nothing is caught
- * mid-fade before the visitor has even looked at it.
+ * turn means the first image sits mid-hold on load, so nothing is caught
+ * mid-fade before the visitor has even looked at it — and it puts the first
+ * swap at `hold / 2`, which `offset` then shifts.
  */
-const delayFor = (index: number) => -((index + 0.5) * duration) / count;
+const delayFor = (index: number) => -((index + 0.5) * hold) + offset;
 ---
 
 {
@@ -41,6 +51,7 @@ const delayFor = (index: number) => -((index + 0.5) * duration) / count;
                       `animation-duration: ${duration}s;` +
                       'animation-timing-function: linear;' +
                       'animation-iteration-count: infinite;' +
+                      'animation-fill-mode: backwards;' +
                       `animation-delay: ${delayFor(index).toFixed(2)}s;`
                     : 'opacity: 1;'
             }

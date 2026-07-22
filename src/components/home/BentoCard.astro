@@ -7,6 +7,9 @@ interface Props {
      *  (or `border-*`) utilities resolve by stylesheet order, not class
      *  order, so the default surface has to be left off entirely. */
     surface?: boolean;
+    /** Set false for tiles whose hover is carried by the artwork itself —
+     *  a photo that zooms shouldn't also lift off the page. */
+    lift?: boolean;
 }
 
 const {
@@ -14,6 +17,7 @@ const {
     class: className = '',
     padded = true,
     surface = true,
+    lift = true,
 } = Astro.props;
 
 // Renders as a link when it leads somewhere, otherwise a plain surface
@@ -28,9 +32,10 @@ const base =
 const surfaceClasses = surface
     ? 'border-stone-200/70 bg-[#fffcf8] shadow-sm shadow-stone-900/3 dark:border-slate-700/60 dark:bg-slate-900/60 dark:shadow-none'
     : '';
-const interactive = href
-    ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-900/8 dark:hover:shadow-none'
-    : '';
+const interactive =
+    href && lift
+        ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-900/8 dark:hover:shadow-none'
+        : '';
 ---
 
 <Tag

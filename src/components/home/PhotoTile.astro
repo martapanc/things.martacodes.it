@@ -1,23 +1,44 @@
 ---
 import BentoCard from './BentoCard.astro';
 import PhotoCrossfade from './PhotoCrossfade.astro';
+import HoverArrow from './HoverArrow.astro';
 
 interface Props {
     href: string;
     title: string;
     images: (string | undefined)[];
     badge?: string;
+    /** Seconds each photo is held */
+    hold?: number;
+    /** Staggers this tile against its neighbours */
+    offset?: number;
     class?: string;
 }
 
-const { href, title, images, badge, class: className = '' } = Astro.props;
+const {
+    href,
+    title,
+    images,
+    badge,
+    hold,
+    offset,
+    class: className = '',
+} = Astro.props;
 ---
 
 <!-- min-height only matters before the fixed-row grid kicks in at lg; leaving it
-     on would overflow the row track and overlap the tile below -->
-<BentoCard href={href} padded={false} class={`min-h-56 lg:min-h-0 ${className}`}>
+     on would overflow the row track and overlap the tile below.
+     `lift` is off: the photo zoom is this tile's hover, it doesn't also pop. -->
+<BentoCard
+    href={href}
+    padded={false}
+    lift={false}
+    class={`min-h-56 lg:min-h-0 ${className}`}
+>
     <PhotoCrossfade
         images={images}
+        hold={hold}
+        offset={offset}
         class='transition-transform duration-700 ease-out group-hover:scale-105'
     />
 
@@ -35,14 +56,12 @@ const { href, title, images, badge, class: className = '' } = Astro.props;
     }
 
     <div class='absolute inset-x-0 bottom-0 z-[5] p-5'>
+        <!-- Inline rather than flex: a title that wraps to two lines would push
+             a flex-item arrow out to the far edge of the tile -->
         <h2
-            class='flex items-center gap-1.5 font-jetbrains text-xs font-semibold uppercase tracking-[0.14em] text-white'
+            class='font-jetbrains text-xs font-semibold uppercase tracking-[0.14em] text-white'
         >
-            {title}
-            <span
-                class='translate-x-0 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100'
-                aria-hidden='true'>→</span
-            >
+            {title}<HoverArrow class='ml-1.5' />
         </h2>
         <slot />
     </div>

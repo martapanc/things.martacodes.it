@@ -1,0 +1,14 @@
+---
+interface Props {
+    class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<!-- Slides in on hover of the enclosing `.group` tile. One shared treatment so
+     every card reads the same way. -->
+<span
+    class={`inline-block translate-x-0 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 ${className}`}
+    aria-hidden='true'>→</span
+>

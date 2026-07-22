@@ -1,0 +1,47 @@
+---
+interface Props {
+    href?: string;
+    class?: string;
+    padded?: boolean;
+    /** Set false when the tile brings its own colours — two competing `bg-*`
+     *  (or `border-*`) utilities resolve by stylesheet order, not class
+     *  order, so the default surface has to be left off entirely. */
+    surface?: boolean;
+    /** Set false for tiles whose hover is carried by the artwork itself —
+     *  a photo that zooms shouldn't also lift off the page. */
+    lift?: boolean;
+}
+
+const {
+    href,
+    class: className = '',
+    padded = true,
+    surface = true,
+    lift = true,
+} = Astro.props;
+
+// Renders as a link when it leads somewhere, otherwise a plain surface
+const Tag = href ? 'a' : 'div';
+const attrs = href
+    ? { href, ...(href.startsWith('http') ? { rel: 'noopener' } : {}) }
+    : {};
+
+const base =
+    'group relative flex flex-col overflow-hidden rounded-[1.75rem] border shadow-sm shadow-stone-900/3 transition duration-300 ease-out dark:shadow-none';
+// `.bento-surface` lives in globals.css — layered gradients are well past the
+// point where Tailwind utilities stay readable
+const surfaceClasses = surface
+    ? 'bento-surface border-stone-200/70 dark:border-slate-700/60'
+    : '';
+const interactive =
+    href && lift
+        ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-900/8 dark:hover:shadow-none'
+        : '';
+---
+
+<Tag
+    {...attrs}
+    class={`${base} ${surfaceClasses} ${interactive} ${padded ? 'p-5 md:p-6' : ''} ${className}`}
+>
+    <slot />
+</Tag>

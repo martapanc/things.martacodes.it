@@ -38,6 +38,23 @@ type CloudinaryResource = {
     };
 };
 
+/**
+ * Resize an existing Cloudinary delivery URL without an API call. Album
+ * previews and update images are stored as full-size originals (up to 2000px),
+ * which is wasteful for homepage tiles and thumbnails.
+ */
+export function resized(
+    url: string | undefined,
+    width: number,
+    height: number
+): string | undefined {
+    if (!url?.includes('/image/upload/')) return url;
+    return url.replace(
+        '/image/upload/',
+        `/image/upload/w_${width},h_${height},c_fill,g_auto,f_auto,q_auto/`
+    );
+}
+
 export async function getTravelImages(albumId: string) {
     return await getImagesByFolder(`Travel/${albumId}`);
 }

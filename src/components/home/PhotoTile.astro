@@ -1,0 +1,94 @@
+---
+import BentoCard from './BentoCard.astro';
+import PhotoCrossfade from './PhotoCrossfade.astro';
+import HoverArrow from './HoverArrow.astro';
+
+interface Props {
+    href: string;
+    title: string;
+    caption?: string;
+    /** Which top corner the caption sits in — away from the badge, usually */
+    captionAlign?: 'left' | 'right';
+    images: (string | undefined)[];
+    badge?: string;
+    /** Seconds each photo is held */
+    hold?: number;
+    /** Staggers this tile against its neighbours */
+    offset?: number;
+    class?: string;
+}
+
+const {
+    href,
+    title,
+    caption,
+    captionAlign = 'left',
+    images,
+    badge,
+    hold,
+    offset,
+    class: className = '',
+} = Astro.props;
+
+const captionCorner =
+    captionAlign === 'right' ? 'right-5 text-right' : 'left-5';
+---
+
+<!-- min-height only matters before the fixed-row grid kicks in at lg; leaving it
+     on would overflow the row track and overlap the tile below.
+     `lift` is off: the photo zoom is this tile's hover, it doesn't also pop. -->
+<BentoCard
+    href={href}
+    padded={false}
+    lift={false}
+    class={`min-h-56 lg:min-h-0 ${className}`}
+>
+    <PhotoCrossfade
+        images={images}
+        hold={hold}
+        offset={offset}
+        class='transition-transform duration-700 ease-out group-hover:scale-105'
+    />
+
+    <div
+        class='absolute inset-0 z-[4] bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-slate-950/5'
+    >
+    </div>
+
+    <!-- The main scrim fades out towards the top, which leaves the corner
+         caption and badge unreadable over a bright sky. This darkens just the
+         top band rather than dimming the whole photo. -->
+    <div
+        class='absolute inset-x-0 top-0 z-[4] h-28 bg-gradient-to-b from-slate-950/60 via-slate-950/20 to-transparent'
+    >
+    </div>
+
+    {
+        caption && (
+            <p
+                class={`absolute top-3 z-[5] max-w-[86%] text-balance font-handwritten text-lg leading-tight text-white/90 ${captionCorner}`}
+            >
+                {caption}
+            </p>
+        )
+    }
+
+    {
+        badge && (
+            <span class='absolute right-4 top-4 z-[5] rounded-full bg-slate-950/45 px-2.5 py-1 font-jetbrains text-[11px] font-medium text-white ring-1 ring-white/20 backdrop-blur-md'>
+                {badge}
+            </span>
+        )
+    }
+
+    <div class='absolute inset-x-0 bottom-0 z-[5] p-5'>
+        <!-- Inline rather than flex: a title that wraps to two lines would push
+             a flex-item arrow out to the far edge of the tile -->
+        <h2
+            class='font-jetbrains text-xs font-semibold uppercase tracking-[0.14em] text-white'
+        >
+            {title}<HoverArrow class='ml-1.5' />
+        </h2>
+        <slot />
+    </div>
+</BentoCard>

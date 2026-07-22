@@ -1,0 +1,24 @@
+---
+interface Props {
+    /** Keep the arrow visible at rest, so it only nudges on hover. For tiles
+     *  where the arrow is part of an explicit call to action rather than a
+     *  reveal. Identical glyph and offset either way. */
+    persist?: boolean;
+    class?: string;
+}
+
+const { persist = false, class: className = '' } = Astro.props;
+
+const motion = 'transition-all duration-300 group-hover:translate-x-1';
+const reveal = persist ? '' : 'opacity-0 group-hover:opacity-100';
+---
+
+<!-- Slides on hover of the enclosing `.group` tile. One shared treatment so
+     every card reads the same way. -->
+<!-- Size, family and tracking are all pinned: the labels are text-xs JetBrains
+     Mono with wide tracking and the CTA pill is text-sm sans, so left to
+     inherit, the same arrow renders as two visibly different glyphs -->
+<span
+    class={`inline-block translate-x-0 align-middle font-primary text-sm leading-none tracking-normal ${motion} ${reveal} ${className}`}
+    aria-hidden='true'>→</span
+>

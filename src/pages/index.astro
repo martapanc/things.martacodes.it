@@ -1,3 +1,291 @@
 ---
-return Astro.redirect('/blog');
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import BentoCard from '@/components/home/BentoCard.astro';
+import PhotoTile from '@/components/home/PhotoTile.astro';
+import HoverArrow from '@/components/home/HoverArrow.astro';
+import Icon from '@/components/atoms/Icon.astro';
+import { getAllPostPreviews, getAllUpdates, formatDate } from '@/lib/posts';
+import { getFoodImages, resized } from '@/lib/cloudinary';
+import { albums } from '@/data/albums';
+import { socialLinks } from '@/data/Navigation';
+
+/**
+ * Fisher-Yates shuffle, then take the first `count`. This runs at build time,
+ * so the tiles draw a different set — and a different running order — on every
+ * deploy rather than always showing the same first four.
+ */
+function sample<T>(items: T[], count: number): T[] {
+    const pool = [...items];
+    for (let index = pool.length - 1; index > 0; index--) {
+        const swap = Math.floor(Math.random() * (index + 1));
+        [pool[index], pool[swap]] = [pool[swap], pool[index]];
+    }
+    return pool.slice(0, count);
+}
+
+const posts = await getAllPostPreviews();
+const latestPosts = posts.slice(0, 3);
+
+const updates = await getAllUpdates();
+const latestUpdates = updates.slice(0, 2);
+
+// The cats have no gallery of their own — their photos live on tagged updates
+const catImages = sample(
+    updates
+        .filter(
+            (update) => update.data.tags.includes('cats') && update.data.image
+        )
+        .map((update) => resized(update.data.image, 300, 300)),
+    3
+);
+
+// Food images come from Cloudinary; the tile degrades to a gradient without it
+let foodImages: (string | undefined)[] = [];
+try {
+    foodImages = sample(await getFoodImages(), 4).map((image) => image.src);
+} catch {
+    foodImages = [];
+}
+
+const travelImages = sample(albums, 4).map((album) =>
+    resized(album.preview, 1200, 800)
+);
+
+const intro = socialLinks.filter((link) =>
+    ['Github', 'Instagram', 'Goodreads', 'Steam'].includes(link.id)
+);
+
+const label =
+    'font-jetbrains text-xs font-semibold uppercase tracking-[0.14em] text-stone-500 dark:text-slate-400';
+
+// Caveat runs small for its point size, hence text-lg for a caption
+const caption =
+    'text-balance font-handwritten text-lg leading-tight text-stone-500 dark:text-slate-400';
+
+const updatesCaption = 'life updates, big and small';
 ---
+
+<SiteLayout
+    title='Marta Makes Things'
+    description="My other internet home — a blog about software and life, photos from around the world, and adventures in the kitchen."
+>
+    <div
+        class='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:auto-rows-[10.5rem] lg:grid-cols-4'
+    >
+        <!-- Intro -->
+        <BentoCard
+            surface={false}
+            class='justify-center border-sky-200/70 bg-linear-to-br from-blue-50 via-sky-50 to-sky-100 sm:col-span-2 lg:row-span-2 dark:border-slate-700/60 dark:from-sky-950 dark:via-slate-900 dark:to-slate-900'
+        >
+            <h1
+                class='font-updates text-4xl font-bold tracking-tight text-slate-800 md:text-5xl dark:text-blue-50'
+            >
+                hi, i'm marta{' '}<span class='wave inline-block'>👋</span>
+            </h1>
+            <p class='mt-2 text-lg text-slate-500 dark:text-slate-300'>
+                this is my other internet home
+            </p>
+            <p class='mt-4 max-w-md text-slate-600 dark:text-slate-400'>
+                Programming is my day job <em>and</em> my greatest passion — but
+                there's a lot more to poke around here.
+            </p>
+
+            <div class='mt-5 flex items-center gap-2'>
+                {
+                    intro.map(({ href, icon, id }) => (
+                        <a
+                            href={href}
+                            rel='noopener'
+                            aria-label={id}
+                            class='flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/5 text-slate-600 transition hover:-translate-y-0.5 hover:bg-white hover:text-blue-600 dark:bg-white/10 dark:text-slate-300 dark:hover:bg-white/15 dark:hover:text-blue-400'
+                        >
+                            <Icon icon={icon} class='h-4 w-4' />
+                        </a>
+                    ))
+                }
+            </div>
+        </BentoCard>
+
+        <!-- Travel -->
+        <PhotoTile
+            href='/travel'
+            images={travelImages}
+            title='Pictures from around the world'
+            caption='snapshots from near and far'
+            badge={`${albums.length} albums`}
+            hold={5}
+            offset={0}
+            class='sm:col-span-2 lg:row-span-2'
+        >
+            <div class='mt-2.5 flex flex-wrap items-center gap-1.5'>
+                {
+                    albums.map((album) => (
+                        <span
+                            class={`fi fi-${album.flag} h-4 w-6 rounded-xs ring-1 ring-white/30`}
+                            title={album.title}
+                        />
+                    ))
+                }
+            </div>
+        </PhotoTile>
+
+        <!-- Cats -->
+        <BentoCard
+            href='/updates?tags=cats'
+            class='justify-between lg:row-span-2'
+        >
+            <h2 class={label}>
+                Photogenic voids<HoverArrow class='ml-1.5' />
+            </h2>
+
+            <!-- Scattered rather than gridded — the wonkiness is the point -->
+            <div class='relative my-3 h-36 w-full'>
+                {
+                    catImages[0] && (
+                        <img
+                            src={catImages[0]}
+                            alt=''
+                            loading='lazy'
+                            class='absolute left-0 top-0 h-24 w-24 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:-translate-x-1 group-hover:-translate-y-1 dark:ring-slate-900'
+                        />
+                    )
+                }
+                {
+                    catImages[1] && (
+                        <img
+                            src={catImages[1]}
+                            alt=''
+                            loading='lazy'
+                            class='absolute right-1 top-7 h-20 w-20 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:translate-x-1 dark:ring-slate-900'
+                        />
+                    )
+                }
+                {
+                    catImages[2] && (
+                        <img
+                            src={catImages[2]}
+                            alt=''
+                            loading='lazy'
+                            class='absolute bottom-0 left-8 h-22 w-22 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:translate-y-1 dark:ring-slate-900'
+                        />
+                    )
+                }
+            </div>
+
+            <p class={caption}>the cats, who run this place</p>
+        </BentoCard>
+
+        <!-- Food — offset by half a turn (2.5s) so it never swaps in step
+             with Travel. The caption holds a non-breaking space between
+             "learning" and "moments", so the only place it can wrap is
+             after "and" rather than mid-phrase. -->
+        <PhotoTile
+                href='/food'
+                images={foodImages}
+                title='Adventures in the kitchen'
+                caption={"successes and 'learning\u00A0moments'"}
+                captionAlign='right'
+                hold={5}
+                offset={2.5}
+                class='lg:row-span-2'
+        />
+
+        <!-- Blog -->
+        <BentoCard href='/blog' class='sm:col-span-2 lg:row-span-2'>
+            <div class='flex items-baseline justify-between'>
+                <h2 class={label}>
+                    Words I've written<HoverArrow class='ml-1.5' />
+                </h2>
+                <span
+                        class='font-jetbrains text-xs text-stone-400 dark:text-slate-500'
+                >
+                    {posts.length} posts
+                </span>
+            </div>
+
+            <ul class='mt-3 flex flex-1 flex-col justify-center'>
+                {
+                    latestPosts.map((post) => (
+                            <li class='border-b border-stone-100 py-2.5 last:border-0 dark:border-slate-800'>
+                                <p class='line-clamp-1 font-medium text-stone-800 transition-colors group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400'>
+                                    {post.data.title}
+                                </p>
+                                <p class='mt-0.5 font-jetbrains text-xs text-stone-400 dark:text-slate-500'>
+                                    {formatDate(post.data.date)}
+                                </p>
+                            </li>
+                    ))
+                }
+            </ul>
+
+            <p class={`mt-2 self-end ${caption}`}>articles and musings</p>
+        </BentoCard>
+
+        <!-- Updates -->
+        <BentoCard href='/updates' class='sm:col-span-2'>
+            <div class='flex items-baseline justify-between'>
+                <h2 class={label}>
+                    Moments I've cherished<HoverArrow class='ml-1.5' />
+                </h2>
+                <!-- Desktop swaps the count out for the caption; narrow tiles
+                     keep the count up here and drop the caption below -->
+                <span
+                    class='font-jetbrains text-xs text-stone-400 lg:hidden dark:text-slate-500'
+                >
+                    {updates.length} updates
+                </span>
+                <p class={`hidden lg:block ${caption}`}>{updatesCaption}</p>
+            </div>
+
+            <p class={`mt-1 lg:hidden ${caption}`}>{updatesCaption}</p>
+
+            <!-- Side by side rather than stacked: this is a wide, single-row
+                 tile, and stacking them overflows it once the caption is in -->
+            <div class='mt-3 grid flex-1 content-center gap-3 sm:grid-cols-2'>
+                {
+                    latestUpdates.map((update) => (
+                        <div class='flex items-center gap-3'>
+                            {update.data.image && (
+                                <img
+                                    src={resized(update.data.image, 96, 96)}
+                                    alt=''
+                                    loading='lazy'
+                                    class='h-10 w-10 shrink-0 rounded-full object-cover'
+                                />
+                            )}
+                            <div class='min-w-0'>
+                                <p class='line-clamp-1 text-sm font-medium text-stone-800 dark:text-slate-100'>
+                                    {update.data.title}
+                                </p>
+                                <p class='font-jetbrains text-xs text-stone-400 dark:text-slate-500'>
+                                    {formatDate(update.data.date)}
+                                </p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </BentoCard>
+
+        <!-- Portfolio -->
+        <BentoCard
+                href='https://martacodes.it'
+                surface={false}
+                class='min-h-44 border-amber-300 bg-linear-to-br from-amber-300 via-amber-400 to-amber-500 sm:col-span-2 lg:min-h-0 dark:border-amber-800 dark:from-amber-700 dark:via-amber-800 dark:to-amber-900'
+        >
+            <p
+                class='mb-4 max-w-sm text-lg leading-snug text-amber-950 dark:text-amber-50'
+            >
+                Here for the code stuff? My projects and CV are just over there.
+            </p>
+            <!-- mt-auto pins it to the bottom; the paragraph's mb-4 keeps a gap
+                 when the card is too short to have free space to push into -->
+            <span
+                    class='mt-auto flex w-fit items-center gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-sm font-semibold text-amber-50 transition group-hover:bg-stone-800 dark:bg-amber-950'
+            >
+                see my work
+                <HoverArrow persist />
+            </span>
+        </BentoCard>
+    </div>
+</SiteLayout>

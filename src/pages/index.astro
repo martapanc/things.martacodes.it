@@ -57,6 +57,12 @@ const intro = socialLinks.filter((link) =>
 
 const label =
     'font-jetbrains text-xs font-semibold uppercase tracking-[0.14em] text-stone-500 dark:text-slate-400';
+
+// Caveat runs small for its point size, hence text-lg for a caption
+const caption =
+    'text-balance font-handwritten text-lg leading-tight text-stone-500 dark:text-slate-400';
+
+const updatesCaption = 'life updates, big and small';
 ---
 
 <SiteLayout
@@ -105,6 +111,7 @@ const label =
             href='/travel'
             images={travelImages}
             title='Pictures from around the world'
+            caption='snapshots from near and far'
             badge={`${albums.length} albums`}
             hold={5}
             offset={0}
@@ -165,16 +172,19 @@ const label =
                 }
             </div>
 
-            <p class='text-sm text-stone-500 dark:text-slate-400'>
-                the cats, who run this place
-            </p>
+            <p class={caption}>the cats, who run this place</p>
         </BentoCard>
 
-        <!-- Food — offset by half a turn (2.5s) so it never swaps in step with Travel -->
+        <!-- Food — offset by half a turn (2.5s) so it never swaps in step
+             with Travel. The caption holds a non-breaking space between
+             "learning" and "moments", so the only place it can wrap is
+             after "and" rather than mid-phrase. -->
         <PhotoTile
                 href='/food'
                 images={foodImages}
                 title='Adventures in the kitchen'
+                caption={"successes and 'learning\u00A0moments'"}
+                captionAlign='right'
                 hold={5}
                 offset={2.5}
                 class='lg:row-span-2'
@@ -208,27 +218,30 @@ const label =
                 }
             </ul>
 
-            <span
-                    class='mt-2 text-sm font-medium text-blue-700 dark:text-blue-400'
-            >
-                read them all
-            </span>
+            <p class={`mt-2 self-end ${caption}`}>articles and musings</p>
         </BentoCard>
 
         <!-- Updates -->
         <BentoCard href='/updates' class='sm:col-span-2'>
             <div class='flex items-baseline justify-between'>
                 <h2 class={label}>
-                    Updates<HoverArrow class='ml-1.5' />
+                    Moments I've cherished<HoverArrow class='ml-1.5' />
                 </h2>
+                <!-- Desktop swaps the count out for the caption; narrow tiles
+                     keep the count up here and drop the caption below -->
                 <span
-                    class='font-jetbrains text-xs text-stone-400 dark:text-slate-500'
+                    class='font-jetbrains text-xs text-stone-400 lg:hidden dark:text-slate-500'
                 >
                     {updates.length} updates
                 </span>
+                <p class={`hidden lg:block ${caption}`}>{updatesCaption}</p>
             </div>
 
-            <div class='mt-3 flex flex-1 flex-col justify-center gap-3'>
+            <p class={`mt-1 lg:hidden ${caption}`}>{updatesCaption}</p>
+
+            <!-- Side by side rather than stacked: this is a wide, single-row
+                 tile, and stacking them overflows it once the caption is in -->
+            <div class='mt-3 grid flex-1 content-center gap-3 sm:grid-cols-2'>
                 {
                     latestUpdates.map((update) => (
                         <div class='flex items-center gap-3'>

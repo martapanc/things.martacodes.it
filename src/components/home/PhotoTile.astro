@@ -6,6 +6,9 @@ import HoverArrow from './HoverArrow.astro';
 interface Props {
     href: string;
     title: string;
+    caption?: string;
+    /** Which top corner the caption sits in — away from the badge, usually */
+    captionAlign?: 'left' | 'right';
     images: (string | undefined)[];
     badge?: string;
     /** Seconds each photo is held */
@@ -18,12 +21,17 @@ interface Props {
 const {
     href,
     title,
+    caption,
+    captionAlign = 'left',
     images,
     badge,
     hold,
     offset,
     class: className = '',
 } = Astro.props;
+
+const captionCorner =
+    captionAlign === 'right' ? 'right-5 text-right' : 'left-5';
 ---
 
 <!-- min-height only matters before the fixed-row grid kicks in at lg; leaving it
@@ -46,6 +54,24 @@ const {
         class='absolute inset-0 z-[4] bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-slate-950/5'
     >
     </div>
+
+    <!-- The main scrim fades out towards the top, which leaves the corner
+         caption and badge unreadable over a bright sky. This darkens just the
+         top band rather than dimming the whole photo. -->
+    <div
+        class='absolute inset-x-0 top-0 z-[4] h-28 bg-gradient-to-b from-slate-950/60 via-slate-950/20 to-transparent'
+    >
+    </div>
+
+    {
+        caption && (
+            <p
+                class={`absolute top-3 z-[5] max-w-[86%] text-balance font-handwritten text-lg leading-tight text-white/90 ${captionCorner}`}
+            >
+                {caption}
+            </p>
+        )
+    }
 
     {
         badge && (

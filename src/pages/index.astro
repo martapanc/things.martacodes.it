@@ -68,7 +68,8 @@ const label =
     >
         <!-- Intro -->
         <BentoCard
-            class='justify-center bg-gradient-to-br from-blue-50 via-sky-50 to-sky-100 sm:col-span-2 lg:row-span-2 dark:from-sky-950 dark:via-slate-900 dark:to-slate-900'
+            surface={false}
+            class='justify-center border-sky-200/70 bg-linear-to-br from-blue-50 via-sky-50 to-sky-100 sm:col-span-2 lg:row-span-2 dark:border-slate-700/60 dark:from-sky-950 dark:via-slate-900 dark:to-slate-900'
         >
             <h1
                 class='font-updates text-4xl font-bold tracking-tight text-slate-800 md:text-5xl dark:text-blue-50'
@@ -257,18 +258,20 @@ const label =
         <BentoCard
                 href='https://martacodes.it'
                 surface={false}
-                class='min-h-44 border-amber-300 bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 shadow-sm shadow-stone-900/3 sm:col-span-2 lg:min-h-0 dark:border-amber-400 dark:from-amber-400 dark:via-amber-500 dark:to-amber-600'
+                class='min-h-44 border-amber-300 bg-linear-to-br from-amber-300 via-amber-400 to-amber-500 sm:col-span-2 lg:min-h-0 dark:border-amber-800 dark:from-amber-700 dark:via-amber-800 dark:to-amber-900'
         >
-            <p class='mb-4 max-w-sm text-lg leading-snug text-amber-950'>
+            <p
+                class='mb-4 max-w-sm text-lg leading-snug text-amber-950 dark:text-amber-50'
+            >
                 Here for the code stuff? My projects and CV are just over there.
             </p>
             <!-- mt-auto pins it to the bottom; the paragraph's mb-4 keeps a gap
                  when the card is too short to have free space to push into -->
             <span
-                    class='mt-auto flex w-fit items-center gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-sm font-semibold text-amber-50 transition group-hover:bg-stone-800'
+                    class='mt-auto flex w-fit items-center gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-sm font-semibold text-amber-50 transition group-hover:bg-stone-800 dark:bg-amber-950'
             >
                 see my work
-                <HoverArrow />
+                <HoverArrow persist />
             </span>
         </BentoCard>
     </div>

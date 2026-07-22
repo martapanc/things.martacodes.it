@@ -27,10 +27,11 @@ const attrs = href
     : {};
 
 const base =
-    'group relative flex flex-col overflow-hidden rounded-[1.75rem] border transition duration-300 ease-out';
-// Warm off-white rather than pure white — it reads softer against the page
+    'group relative flex flex-col overflow-hidden rounded-[1.75rem] border shadow-sm shadow-stone-900/3 transition duration-300 ease-out dark:shadow-none';
+// `.bento-surface` lives in globals.css — layered gradients are well past the
+// point where Tailwind utilities stay readable
 const surfaceClasses = surface
-    ? 'border-stone-200/70 bg-[#fffcf8] shadow-sm shadow-stone-900/3 dark:border-slate-700/60 dark:bg-slate-900/60 dark:shadow-none'
+    ? 'bento-surface border-stone-200/70 dark:border-slate-700/60'
     : '';
 const interactive =
     href && lift

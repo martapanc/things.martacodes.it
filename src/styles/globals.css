@@ -356,6 +356,41 @@
     }
 }
 
+/* Card surfaces. A corner sheen plus a directional wash, so the tiles read as
+   lit from the top-left rather than as flat fills. Deliberately low contrast —
+   this sits behind real content and shouldn't compete with it. */
+.bento-surface {
+    background-color: #fffcf8;
+    background-image:
+        radial-gradient(
+            120% 110% at 0% 0%,
+            rgb(255 255 255 / 0.95) 0%,
+            rgb(255 255 255 / 0) 55%
+        ),
+        radial-gradient(
+            90% 90% at 100% 100%,
+            rgb(245 158 11 / 0.1) 0%,
+            rgb(245 158 11 / 0) 60%
+        ),
+        linear-gradient(155deg, #fffdfa 0%, #fbf4e8 100%);
+}
+
+.dark .bento-surface {
+    background-color: #0e1626;
+    background-image:
+        radial-gradient(
+            120% 110% at 0% 0%,
+            rgb(56 189 248 / 0.13) 0%,
+            rgb(56 189 248 / 0) 55%
+        ),
+        radial-gradient(
+            90% 90% at 100% 100%,
+            rgb(129 140 248 / 0.13) 0%,
+            rgb(129 140 248 / 0) 60%
+        ),
+        linear-gradient(155deg, #131e33 0%, #0b1220 100%);
+}
+
 /* Stacked photos that cross-fade in turn. Every layer runs the same keyframes
    with a negative delay, so only one is held opaque at a time. The outgoing
    layer briefly lifts to z-index 3 — it has to fade out *on top of* the

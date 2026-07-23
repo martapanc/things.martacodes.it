@@ -24,21 +24,30 @@ export const Comments = () => {
     }, []);
 
     return (
-        <Giscus
-            id='comments'
-            repo='martapanc/things.martacodes.it'
-            repoId='R_kgDORm-gXA'
-            category='General'
-            categoryId='DIC_kwDORm-gXM4DB0PB'
-            strict='0'
-            mapping='title'
-            term='Welcome to @giscus/react component!'
-            reactionsEnabled='1'
-            emitMetadata='0'
-            inputPosition='top'
-            theme={theme}
-            lang='en'
-            loading='lazy'
-        />
+        // `@giscus/react`'s <Giscus> renders `null` until its lazy-loaded
+        // script resolves, so on first render (including Astro's SSR pass)
+        // this component has no output at all. That's fine for client:load,
+        // but Astro's client:visible directive observes the *children* of
+        // the island — not the island itself — to know when to hydrate. An
+        // island with zero children gives it nothing to watch, so it never
+        // fires and the comments never load. This wrapper div is the thing
+        // client:visible actually observes.
+        <div className="pt-4">
+            <Giscus
+                id='comments'
+                repo='martapanc/things.martacodes.it'
+                repoId='R_kgDORm-gXA'
+                category='General'
+                categoryId='DIC_kwDORm-gXM4DB0PB'
+                strict='0'
+                mapping='title'
+                reactionsEnabled='1'
+                emitMetadata='0'
+                inputPosition='top'
+                theme={theme}
+                lang='en'
+                loading='lazy'
+            />
+        </div>
     );
 };

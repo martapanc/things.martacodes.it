@@ -25,7 +25,7 @@ const updates = await getAllUpdates();
     </div>
 
     <section>
-        <div class='flex flex-col gap-6 py-6 max-w-260'>
+        <div class='flex flex-col gap-6 py-6 max-w-260' data-reveal-group>
             {updates.map((update) => <UpdateItem update={update} />)}
         </div>
     </section>

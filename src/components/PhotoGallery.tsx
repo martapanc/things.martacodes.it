@@ -14,7 +14,10 @@ const PhotoGallery = ({ images, album }: PhotoGalleryProps) => {
 
     return (
         <Gallery>
-            <div className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3'>
+            <div
+                className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3'
+                data-reveal-group
+            >
                 {memoizedImages.map((image, index) => (
                     <Item
                         key={index}

@@ -35,6 +35,105 @@ const {
             const theme = localStorage.getItem('theme') ?? 'dark';
             document.documentElement.classList.toggle('dark', theme === 'dark');
         </script>
+
+        <!--
+            Staggered reveal for `[data-reveal-group]` children.
+
+            Inline and in the head on purpose: the `js-reveal` class has to land
+            before first paint, or the items flash in at full opacity and then
+            get hidden. Everything stays in one script so there is no separate
+            file that can fail to load and leave the page permanently blank —
+            and if anything here throws, the catch drops the class and the page
+            renders as plain, visible HTML.
+        -->
+        <script is:inline>
+            (function () {
+                const root = document.documentElement;
+                const show = () => root.classList.remove('js-reveal');
+
+                if (!('IntersectionObserver' in window)) return;
+                root.classList.add('js-reveal');
+
+                let revealedAny = false;
+
+                /*
+                    Nothing here is allowed to leave the page blank. If the
+                    observer hasn't delivered anything a few seconds after the
+                    page is actually on screen, give up and show everything.
+                    Gated on visibility because a background tab legitimately
+                    gets no callbacks until it's looked at — that's the desired
+                    behaviour, not a failure.
+                */
+                const armFailsafe = () => {
+                    setTimeout(() => {
+                        if (!revealedAny) show();
+                    }, 3000);
+                };
+
+                if (document.hidden) {
+                    document.addEventListener(
+                        'visibilitychange',
+                        function onVisible() {
+                            if (document.hidden) return;
+                            document.removeEventListener(
+                                'visibilitychange',
+                                onVisible
+                            );
+                            armFailsafe();
+                        }
+                    );
+                } else {
+                    armFailsafe();
+                }
+
+                try {
+                    const observer = new IntersectionObserver(
+                        (entries) => {
+                            // Stagger within each batch rather than by index in
+                            // the group: item 40 shouldn't wait 40 steps, and a
+                            // row scrolled into view should still cascade.
+                            entries
+                                .filter((entry) => entry.isIntersecting)
+                                .sort(
+                                    (a, b) =>
+                                        a.boundingClientRect.top -
+                                        b.boundingClientRect.top
+                                )
+                                .forEach((entry, index) => {
+                                    const el = entry.target;
+                                    observer.unobserve(el);
+                                    // Stagger with timers rather than
+                                    // animation-delay: see the note in
+                                    // globals.css — a delayed animation with
+                                    // fill-mode would hold the item invisible
+                                    // even where the animation never runs.
+                                    setTimeout(() => {
+                                        revealedAny = true;
+                                        el.setAttribute('data-revealed', '');
+                                    }, index * 70);
+                                });
+                        },
+                        { threshold: 0.05, rootMargin: '0px 0px -5% 0px' }
+                    );
+
+                    const start = () => {
+                        const items = document.querySelectorAll(
+                            '[data-reveal-group] > *'
+                        );
+                        if (!items.length) return show();
+                        items.forEach((el) => observer.observe(el));
+                    };
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', start);
+                    } else {
+                        start();
+                    }
+                } catch (e) {
+                    show();
+                }
+            })();
+        </script>
     </head>
 
     <body class='antialiased'>

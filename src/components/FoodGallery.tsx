@@ -19,7 +19,10 @@ const FoodGallery = ({ photos }: FoodGalleryProps) => {
     return (
         <section className='w-auto rounded-xl bg-food-gradient drop-shadow-lg dark:bg-food-gradient-dark'>
             <div className='layout relative flex w-full px-4 py-8'>
-                <div className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3'>
+                <div
+                    className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3'
+                    data-reveal-group
+                >
                     {photos.map((photo, index) => (
                         <PhotoWithCaption key={index} photo={photo} />
                     ))}

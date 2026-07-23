@@ -356,6 +356,54 @@
     }
 }
 
+/* #region  !**=========== Progressive reveal =========== */
+
+/* Children of a `[data-reveal-group]` fade up as they enter the viewport,
+   staggered top to bottom. Scoped to `.js-reveal`, which the head script only
+   adds once it knows it can undo it — without JS nothing is ever hidden.
+
+   Uses `animation` rather than `transition` deliberately: these elements
+   already carry Tailwind `transition` utilities for their hover states, and a
+   competing `transition` shorthand here would wipe those out. For the same
+   reason the movement is `transform`, which composes with the `translate`
+   property Tailwind v4 uses for `-translate-y-*`. */
+.js-reveal [data-reveal-group] > * {
+    opacity: 0;
+}
+
+/* No animation-delay and no fill-mode, on purpose. The stagger is scheduled in
+   JS instead, so `opacity: 1` here is the real resting state rather than just
+   the animation's last keyframe — a fill-mode of `both` would outrank it and
+   pin the item at opacity 0 for the whole delay, leaving the content invisible
+   anywhere the animation clock doesn't advance (a background tab, an engine
+   that drops the animation). The animation now only ever adds the entrance. */
+.js-reveal [data-reveal-group] > [data-revealed] {
+    opacity: 1;
+    animation: reveal-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@keyframes reveal-in {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js-reveal [data-reveal-group] > * {
+        opacity: 1;
+    }
+
+    .js-reveal [data-reveal-group] > [data-revealed] {
+        animation: none;
+    }
+}
+/* #endregion  !**======== Progressive reveal =========== */
+
 /* Card surfaces. A corner sheen plus a directional wash, so the tiles read as
    lit from the top-left rather than as flat fills. Deliberately low contrast —
    this sits behind real content and shouldn't compete with it. */

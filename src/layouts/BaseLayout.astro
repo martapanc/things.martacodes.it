@@ -134,6 +134,10 @@ const {
                 }
             })();
         </script>
+
+        <!-- Unused by every page except those that opt in (e.g. /upload's
+             manifest + apple-touch-icon tags) -->
+        <slot name='head' />
     </head>
 
     <body class='antialiased'>

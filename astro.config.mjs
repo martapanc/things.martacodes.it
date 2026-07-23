@@ -43,7 +43,10 @@ export default defineConfig({
                 transformers: [aocTransformer()],
             },
         }),
-        sitemap(),
+        sitemap({
+            // Personal utility page, not content - keep it out of search
+            filter: (page) => !page.includes('/upload'),
+        }),
         // Indexes the built HTML. Only elements marked `data-pagefind-body`
         // are indexed, which scopes search to blog posts.
         pagefind(),

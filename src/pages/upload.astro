@@ -1,0 +1,20 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PhotoUploader from '@/components/upload/PhotoUploader';
+---
+
+<BaseLayout title='Upload | Marta Makes Things' description='Photo upload'>
+    <Fragment slot='head'>
+        <link rel='manifest' href='/manifest.webmanifest' />
+        <link
+            rel='apple-touch-icon'
+            href='https://res.cloudinary.com/dwrurydlt/image/upload/w_180,h_180,c_fill,g_face/v1693038096/avatar_md_292b112d97.png'
+        />
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name='apple-mobile-web-app-title' content='Upload' />
+        <meta name='theme-color' content='#2563eb' />
+        <meta name='robots' content='noindex, nofollow' />
+    </Fragment>
+
+    <PhotoUploader client:only='react' />
+</BaseLayout>

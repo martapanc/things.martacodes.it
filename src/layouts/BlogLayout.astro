@@ -49,40 +49,34 @@ const tags = listTags(allPosts);
 
     {
         (previous || next) && (
-            <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
-                <section class='grid w-full grid-cols-2 gap-4 pb-2 pt-4'>
-                    {previous ? (
-                        <a href={`/blog/posts/${previous.slug}`}>
-                            <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-start'>
-                                <Icon icon='material-symbols:chevron-left' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-2' />
-                                <span class='text-md max-w-[400px] truncate'>{previous.title}</span>
-                            </div>
-                        </a>
-                    ) : (
-                        <div />
-                    )}
-                    {next && (
-                        <a href={`/blog/posts/${next.slug}`}>
-                            <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-end'>
-                                <span class='text-md max-w-[400px] truncate'>{next.title}</span>
-                                <Icon icon='material-symbols:chevron-right' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-2' />
-                            </div>
-                        </a>
-                    )}
-                </section>
-                <div />
-            </div>
+            <section class='grid w-full grid-cols-1 sm:grid-cols-2 gap-4 pb-2 pt-4'>
+                {previous ? (
+                    <a href={`/blog/posts/${previous.slug}`}>
+                        <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-start'>
+                            <Icon icon='material-symbols:chevron-left' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-2' />
+                            <span class='text-md max-w-[400px] truncate'>{previous.title}</span>
+                        </div>
+                    </a>
+                ) : (
+                    <div />
+                )}
+                {next && (
+                    <a href={`/blog/posts/${next.slug}`}>
+                        <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-end'>
+                            <span class='text-md max-w-[400px] truncate'>{next.title}</span>
+                            <Icon icon='material-symbols:chevron-right' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-2' />
+                        </div>
+                    </a>
+                )}
+            </section>
         )
     }
 
     {
         showComments && (
-            <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
-                <div>
-                    {/* Comments React island inserted by page */}
-                    <slot name='comments' />
-                </div>
-                <div />
+            <div>
+                {/* Comments React island inserted by page */}
+                <slot name='comments' />
             </div>
         )
     }

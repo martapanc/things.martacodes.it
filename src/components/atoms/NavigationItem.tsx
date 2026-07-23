@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { motion, type Variants } from 'motion/react';
+import { isNavActive } from '@/lib/nav';
 
 export interface NavigationItemProps {
     href: string;
@@ -20,7 +21,7 @@ const NavigationItem = ({
     customDelay,
     currentPath,
 }: NavigationItemProps) => {
-    const isActive = currentPath?.startsWith(href);
+    const isActive = currentPath ? isNavActive(currentPath, href) : false;
 
     return (
         <motion.li
@@ -33,8 +34,8 @@ const NavigationItem = ({
                 href={href}
                 className={clsx(
                     isActive
-                        ? 'text-off-black dark:text-off-white font-bold'
-                        : 'hover:text-off-black dark:hover:text-off-white font-medium text-slate-700 dark:text-slate-400 md:text-slate-500 md:dark:text-slate-400',
+                        ? 'text-slate-950 dark:text-white font-bold'
+                        : 'hover:text-slate-950 dark:hover:text-white font-medium text-slate-700 dark:text-slate-400 md:text-slate-500 md:dark:text-slate-400',
                     'md:underlined relative block whitespace-nowrap text-2xl transition md:text-lg'
                 )}
             >

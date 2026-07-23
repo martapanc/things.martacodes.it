@@ -3,6 +3,7 @@ import meta from '@/data/meta.json';
 import { headerItems } from '@/data/Navigation';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
 import MobileMenuIsland from '@/components/molecules/MobileMenuIsland';
+import { isNavActive } from '@/lib/nav';
 
 interface Props {
     headerText?: string;
@@ -35,8 +36,10 @@ const currentPath = Astro.url.pathname;
                                     class:list={[
                                         'animated-underline-2 dark:animated-underline rounded-sm font-medium text-slate-950 dark:text-blue-50',
                                         {
-                                            'underline-active':
-                                                currentPath.startsWith(href),
+                                            'underline-active': isNavActive(
+                                                currentPath,
+                                                href
+                                            ),
                                         },
                                     ]}
                                 >

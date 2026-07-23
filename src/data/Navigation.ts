@@ -5,6 +5,7 @@ type NavbarItem = {
 };
 
 export const headerItems: NavbarItem[] = [
+    { href: '/', label: 'Home' },
     { href: '/blog', label: 'Blog' },
     { href: '/updates', label: 'Updates' },
     { href: '/food', label: 'Food' },

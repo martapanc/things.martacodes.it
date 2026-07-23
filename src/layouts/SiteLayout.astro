@@ -14,7 +14,7 @@ const { title, description, image, headerText } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={image}>
-    <Header headerText={headerText} />
+    <Header headerText={`${headerText} `} />
 
     <main id='content' class='min-h-main layout relative my-5'>
         <slot />

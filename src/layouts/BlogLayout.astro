@@ -9,6 +9,7 @@ interface Props {
     title?: string;
     description?: string;
     image?: string;
+    type?: 'website' | 'article';
     breadcrumbs?: {
         past: { path: string; label: string }[];
         current?: string;
@@ -20,7 +21,7 @@ interface Props {
     showSidebar?: boolean;
 }
 
-const { title, description, image, breadcrumbs, headings, previous, next, showComments, showSidebar = false } = Astro.props;
+const { title, description, image, type, breadcrumbs, headings, previous, next, showComments, showSidebar = false } = Astro.props;
 
 // Listing pages fetch their own posts, so only pay for this when the sidebar renders
 const allPosts = showSidebar ? await getAllPostPreviews() : [];
@@ -28,7 +29,7 @@ const categories = listCategoriesWithCounts(allPosts);
 const tags = listTags(allPosts);
 ---
 
-<SiteLayout title={title} description={description} image={image} headerText='MartaWrites'>
+<SiteLayout title={title} description={description} image={image} type={type} headerText='MartaWrites'>
     {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
 
     <div class:list={['grid grid-cols-1 gap-4', showSidebar && 'lg:grid-cols-[1fr_17.5rem]']}>

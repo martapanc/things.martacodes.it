@@ -7,13 +7,14 @@ interface Props {
     title?: string;
     description?: string;
     image?: string;
+    type?: 'website' | 'article';
     headerText?: string;
 }
 
-const { title, description, image, headerText } = Astro.props;
+const { title, description, image, type, headerText } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image}>
+<BaseLayout title={title} description={description} image={image} type={type}>
     <Header headerText={`${headerText} `} />
 
     <main id='content' class='min-h-main layout relative my-5'>

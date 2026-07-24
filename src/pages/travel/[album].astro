@@ -18,6 +18,8 @@ const photos = await getTravelImages(album.id);
 
 <SiteLayout
     title={`${album.title} | Marta Makes Things`}
+    description={`Photos from ${album.title} — snapshots from the trip.`}
+    image={album.preview}
     headerText='Marta Travels'
 >
     <div class='mb-6'>

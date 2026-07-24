@@ -95,10 +95,18 @@ async function getImagesByFolder(
         .map((resource: CloudinaryResource) => {
             const src = cloudinary.url(resource.public_id, {
                 transformation: [
-                    transformation ?? {
-                        width: 1536,
-                        height: 1024,
-                        crop: 'fill',
+                    {
+                        ...(transformation ?? {
+                            width: 1536,
+                            height: 1024,
+                            crop: 'fill',
+                        }),
+                        // Matches resized() below: without these, Cloudinary
+                        // serves the original format/quality — much heavier
+                        // than the site needs for gallery thumbnails.
+                        gravity: 'auto',
+                        fetch_format: 'auto',
+                        quality: 'auto',
                     },
                 ],
                 secure: true,

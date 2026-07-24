@@ -3,6 +3,7 @@ import meta from '@/data/meta.json';
 import { headerItems } from '@/data/Navigation';
 import ThemeToggle from '@/components/atoms/ThemeToggle';
 import MobileMenuIsland from '@/components/molecules/MobileMenuIsland';
+import CornerFold from '@/components/atoms/CornerFold.astro';
 import { isNavActive } from '@/lib/nav';
 
 interface Props {
@@ -58,4 +59,8 @@ const currentPath = Astro.url.pathname;
 
         <MobileMenuIsland currentPath={currentPath} client:load />
     </div>
+
+    <CornerFold href='https://martacodes.it' ariaLabel="Check out the work stuff — visit martacodes.it">
+        Check out<br/> the work stuff &rarr;
+    </CornerFold>
 </header>

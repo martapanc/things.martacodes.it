@@ -1,0 +1,182 @@
+---
+export interface Props {
+    href: string;
+    ariaLabel: string;
+}
+
+const { href, ariaLabel } = Astro.props;
+---
+
+{/*
+  A dog-eared page corner, in the style of an e-reader's curled page.
+
+  Drawn as SVG rather than a CSS clip-path because the curl's free edge is a
+  curve, which clip-path can't express. Both shapes live in one <svg> so the
+  underside and the flap share the exact same crease line and meet seamlessly:
+  the flap's closing `Z` and the underside's hypotenuse are the same diagonal.
+  Everything below/left of the curl stays transparent, so the page itself shows
+  through there — that gap is what makes the corner read as rolled rather than
+  cut off.
+*/}
+<a
+    href={href}
+    target='_blank'
+    rel='noopener noreferrer'
+    aria-label={ariaLabel}
+    class='group pointer-events-none absolute right-0 top-0 hidden h-16 w-16 cursor-pointer transition-[width,height] duration-500 ease-out hover:h-56 hover:w-56 lg:block'
+>
+    <svg
+        viewBox='0 0 100 100'
+        class='absolute inset-0 h-full w-full overflow-visible drop-shadow-[-3px_4px_5px_rgba(2,6,23,0.35)] dark:drop-shadow-[-3px_4px_6px_rgba(0,0,0,0.6)]'
+    >
+        <defs>
+            <linearGradient
+                id='corner-fold-paper'
+                gradientUnits='userSpaceOnUse'
+                x1='65'
+                y1='35'
+                x2='5'
+                y2='95'
+            >
+                <stop offset='0' class='[stop-color:#ffffff] dark:[stop-color:#4a5872]' />
+                <stop offset='0.35' class='[stop-color:#fdfcf7] dark:[stop-color:#3e4a60]' />
+                <stop offset='0.72' class='[stop-color:#f1ede1] dark:[stop-color:#2e3849]' />
+                <stop offset='1' class='[stop-color:#cfc9b4] dark:[stop-color:#1a212c]' />
+            </linearGradient>
+
+            {/*
+              The shadow the lifted flap casts onto the revealed page. The
+              gradient axis is perpendicular to the crease (the vector (32,-32)
+              points from the diagonal toward the corner), so a stop's offset
+              tracks distance from the fold line: darkest right at the crease,
+              gone by roughly two-thirds of the way out. Painted as translucent
+              black over the flat fill so the one gradient darkens both the light
+              and dark fills without per-theme stops.
+            */}
+            <linearGradient
+                id='corner-fold-crease'
+                gradientUnits='userSpaceOnUse'
+                x1='0'
+                y1='0'
+                x2='32'
+                y2='-32'
+            >
+                <stop offset='0' stop-color='#000000' stop-opacity='0.4' />
+                <stop offset='0.5' stop-color='#000000' stop-opacity='0.12' />
+                <stop offset='1' stop-color='#000000' stop-opacity='0' />
+            </linearGradient>
+
+            {/*
+              Two shadows rather than one: lifted paper casts a tight, dark
+              contact shadow where it almost touches the page, plus a broad faint
+              one from the light it blocks overall. A single feDropShadow can
+              only be one or the other, which is what made the curl read as a
+              flat sticker.
+
+              Both are built from SourceAlpha and combined with feMerge, rather
+              than chaining two feDropShadows — chaining would shadow the first
+              shadow and paint the result over the flap itself.
+            */}
+            <filter id='corner-fold-shadow' x='-60%' y='-60%' width='240%' height='240%'>
+                <feGaussianBlur in='SourceAlpha' stdDeviation='5' result='ambientBlur' />
+                <feOffset in='ambientBlur' dx='-4' dy='5' result='ambientOffset' />
+                <feFlood flood-color='#0b1220' flood-opacity='0.18' result='ambientColor' />
+                <feComposite in='ambientColor' in2='ambientOffset' operator='in' result='ambient' />
+
+                <feGaussianBlur in='SourceAlpha' stdDeviation='1.2' result='contactBlur' />
+                <feOffset in='contactBlur' dx='-1' dy='1.5' result='contactOffset' />
+                <feFlood flood-color='#0b1220' flood-opacity='0.45' result='contactColor' />
+                <feComposite in='contactColor' in2='contactOffset' operator='in' result='contact' />
+
+                <feMerge>
+                    <feMergeNode in='ambient' />
+                    <feMergeNode in='contact' />
+                    <feMergeNode in='SourceGraphic' />
+                </feMerge>
+            </filter>
+        </defs>
+
+        {/*
+          Pointer events live on the paths, not the <a>, which is why the anchor
+          above is pointer-events-none. The anchor is a square, but the fold only
+          fills the corner of it — leaving the square clickable meant the
+          expanded fold swallowed clicks aimed at the theme toggle beneath it.
+          Hover and activation still reach the anchor by bubbling up from these
+          paths.
+        */}
+
+        {/*
+          The next page, revealed where the corner used to be.
+
+          Uses Tailwind's built-in `blue` palette rather than `primary`: in this
+          project the primary-* scale is declared in a plain `:root` block, not
+          inside `@theme`, so it exists as CSS variables but Tailwind never
+          generates `fill-primary-*` utilities from it — the path would fall back
+          to default black. blue-600/blue-800 are the same hexes (#2563eb /
+          #1e40af) and do generate. Swap these for any Tailwind palette utility
+          (e.g. fill-emerald-600) to recolour.
+        */}
+        <path
+            d='M0,0 L100,0 L100,100 Z'
+            class='pointer-events-auto fill-indigo-600 dark:fill-indigo-800'
+        />
+
+        {/*
+          Shadow of the flap on that revealed page, clipped to the same triangle
+          so it can't spill past the fill. pointer-events-none so hover still
+          reaches the fill beneath it.
+        */}
+        <path
+            d='M0,0 L100,0 L100,100 Z'
+            class='pointer-events-none'
+            fill='url(#corner-fold-crease)'
+        />
+
+        {/* The corner itself, curled over to show the back of the page */}
+        <path
+            d='M0,0 C1,38 5,70 16,84 C30,96 62,100 100,100 Z'
+            class='pointer-events-auto'
+            fill='url(#corner-fold-paper)'
+            filter='url(#corner-fold-shadow)'
+        />
+    </svg>
+
+    {/*
+      The label is printed on the revealed page underneath the fold: it stays
+      hidden until hover, then fades in as the corner opens — it never peeks at
+      rest. The wrapper is a fixed size (matching the expanded fold, not the
+      resting one) so the text holds one position through the whole animation
+      instead of drifting as the fold grows. overflow-hidden clips the inner span
+      to that box so a translate can never push it past the viewport and add a
+      horizontal scrollbar; clip-path then trims it to the revealed triangle so
+      nothing spills onto the transparent page. The text is rotated to run
+      parallel to the crease, sitting evenly across the wedge at a fixed size
+      that doesn't shrink with the fold.
+
+      Flex-centered, then nudged toward the top-right — but only slightly:
+      the real limit isn't the clip-path (which is generous), it's the paper
+      curl's own cream fill underneath. White text turns illegible the moment
+      it drifts onto that curl, which happens well before the straight
+      clip-path edge does anything. That leaves only about a one-point margin
+      on each axis above the offset a two-line label needs to clear the top
+      edge in the first place — verified empirically, not derived, since the
+      curl boundary is a bezier, not a line. Don't push this much further.
+
+      Fade timing is asymmetric: the delay belongs to the fade-in only, so the
+      label waits for the corner to open; on the way out it clears immediately,
+      before the fold shrinks past it.
+    */}
+    <span
+        class='pointer-events-none absolute right-0 top-0 h-56 w-56 overflow-hidden [clip-path:polygon(0_0,100%_0,100%_100%)] opacity-0 transition-opacity delay-0 duration-150 ease-out group-hover:opacity-100 group-hover:delay-200 group-hover:duration-300'
+    >
+        <span
+            class='absolute right-0 top-0 flex h-full w-full translate-x-[15%] translate-y-[-10%] items-center justify-center'
+        >
+            <span
+                class='font-handwritten rotate-45 whitespace-nowrap text-center text-[25px] font-medium leading-none text-white'
+            >
+                <slot />
+            </span>
+        </span>
+    </span>
+</a>

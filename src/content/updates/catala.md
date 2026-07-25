@@ -5,7 +5,7 @@ date: 2026-07-01T12:00:00.000Z
 published: true
 tags:
     - learning
-image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1735760169/Updates/espanol_fxyl1g.webp'
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1785017002/Updates/gpt-image-2_The_flags_of_Catalunya_and_Andorra_next_to_each_other_occupying_the_available_sp-1_1_gpyxm5.webp'
 ---
 
 Having started learning Spanish earlier last year, it only made sense to add Catalan to the mix 🇦🇩

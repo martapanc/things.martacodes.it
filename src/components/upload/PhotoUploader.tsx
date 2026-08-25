@@ -47,7 +47,7 @@ function loadWidgetScript(): Promise<void> {
     });
 }
 
-type Destination = 'food' | 'travel' | 'updates' | 'custom';
+type Destination = 'food' | 'travel' | 'cats' | 'updates' | 'custom';
 
 // Matches the id convention already used in albums.ts (isle-of-skye, etc.),
 // so a freehand "New York" lands in the same folder a matching albums.ts
@@ -69,6 +69,8 @@ function resolveFolder(
     switch (destination) {
         case 'food':
             return 'Food';
+        case 'cats':
+            return 'Cats';
         case 'updates':
             return 'Updates';
         case 'travel':
@@ -201,7 +203,8 @@ function Uploader() {
     const destinations: { id: Destination; label: string }[] = [
         { id: 'food', label: 'Food' },
         { id: 'travel', label: 'Travel' },
-        { id: 'updates', label: 'Updates (incl. cats)' },
+        { id: 'cats', label: 'Cats' },
+        { id: 'updates', label: 'Updates' },
         { id: 'custom', label: 'Custom folder' },
     ];
 

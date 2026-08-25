@@ -7,6 +7,7 @@ import Icon from '@/components/atoms/Icon.astro';
 import { getAllPostPreviews, getAllUpdates, formatDate } from '@/lib/posts';
 import { getFoodImages, resized } from '@/lib/cloudinary';
 import { albums } from '@/data/albums';
+import { catBubblePhotos } from '@/data/catBubbles';
 import { socialLinks } from '@/data/Navigation';
 
 /**
@@ -29,15 +30,42 @@ const latestPosts = posts.slice(0, 3);
 const updates = await getAllUpdates();
 const latestUpdates = updates.slice(0, 2);
 
-// The cats have no gallery of their own — their photos live on tagged updates
-const catImages = sample(
-    updates
-        .filter(
-            (update) => update.data.tags.includes('cats') && update.data.image
-        )
-        .map((update) => resized(update.data.image, 300, 300)),
-    3
-);
+// Curated rather than sampled — see data/catBubbles.ts
+const catImages = catBubblePhotos.map((photo) => resized(photo, 300, 300));
+
+// At `lg` the card goes two rows tall (see lg:row-span-2 below) but only
+// one column wide, so the scatter area flips from short-and-wide to
+// tall-and-narrow — sizes and positions get a dedicated `lg:` layout rather
+// than just shrinking the mobile one, so the bubbles still fill the space
+// instead of huddling small in a corner.
+const catBubbleLayout = [
+    {
+        size: 'h-24 w-24 lg:h-22 lg:w-22',
+        position: 'left-0 top-0',
+        hover: 'group-hover:-translate-x-1 group-hover:-translate-y-1',
+    },
+    {
+        size: 'h-16 w-16 lg:h-15 lg:w-15',
+        position: 'right-[6%] top-1 lg:right-0 lg:top-0',
+        hover: 'group-hover:translate-x-1 group-hover:-translate-y-1',
+    },
+    {
+        size: 'h-20 w-20 lg:h-19 lg:w-19',
+        position: 'left-[30%] top-16 lg:left-[20%] lg:top-[42%]',
+        hover: 'group-hover:-translate-x-1 group-hover:translate-y-1',
+    },
+    {
+        size: 'h-14 w-14 lg:h-13 lg:w-13',
+        position:
+            'left-[62%] top-20 lg:left-auto lg:right-[8%] lg:top-[74%]',
+        hover: 'group-hover:translate-x-1 group-hover:translate-y-1',
+    },
+    {
+        size: 'h-12 w-12 lg:h-11 lg:w-11',
+        position: 'left-[46%] top-3 lg:left-[4%] lg:top-[77%]',
+        hover: 'group-hover:translate-y-1',
+    },
+];
 
 // Food images come from Cloudinary; the tile degrades to a gradient without it
 let foodImages: (string | undefined)[] = [];
@@ -132,44 +160,24 @@ const updatesCaption = 'life updates, big and small';
         </PhotoTile>
 
         <!-- Cats -->
-        <BentoCard
-            href='/updates?tags=cats'
-            class='justify-between lg:row-span-2'
-        >
+        <BentoCard href='/cats' class='justify-between lg:row-span-2'>
             <h2 class={label}>
                 Photogenic voids<HoverArrow class='ml-1.5' />
             </h2>
 
             <!-- Scattered rather than gridded — the wonkiness is the point -->
-            <div class='relative my-3 h-36 w-full'>
+            <div class='relative my-3 h-36 w-full lg:h-52'>
                 {
-                    catImages[0] && (
-                        <img
-                            src={catImages[0]}
-                            alt=''
-                            loading='lazy'
-                            class='absolute left-0 top-0 h-24 w-24 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:-translate-x-1 group-hover:-translate-y-1 dark:ring-slate-900'
-                        />
-                    )
-                }
-                {
-                    catImages[1] && (
-                        <img
-                            src={catImages[1]}
-                            alt=''
-                            loading='lazy'
-                            class='absolute right-1 top-7 h-20 w-20 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:translate-x-1 dark:ring-slate-900'
-                        />
-                    )
-                }
-                {
-                    catImages[2] && (
-                        <img
-                            src={catImages[2]}
-                            alt=''
-                            loading='lazy'
-                            class='absolute bottom-0 left-8 h-22 w-22 rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 group-hover:translate-y-1 dark:ring-slate-900'
-                        />
+                    catBubbleLayout.map(
+                        ({ size, position, hover }, index) =>
+                            catImages[index] && (
+                                <img
+                                    src={catImages[index]}
+                                    alt=''
+                                    loading='lazy'
+                                    class={`absolute ${position} ${size} rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 ${hover} dark:ring-slate-900`}
+                                />
+                            )
                     )
                 }
             </div>

@@ -1,0 +1,29 @@
+/* Scattered paw prints on a soft pastel wash — the "cute collage" backdrop
+   for the cat photo board, distinct from the postcard-board look of Travel. */
+.paw-print-bg {
+    background-color: #fdf2f8;
+    background-image:
+        linear-gradient(
+            to bottom right,
+            rgba(253, 242, 248, 0.9),
+            rgba(237, 233, 254, 0.9)
+        ),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 60 60'%3E%3Cg fill='%23be185d' fill-opacity='0.09'%3E%3Cellipse cx='30' cy='38' rx='12' ry='10'/%3E%3Cellipse cx='16' cy='20' rx='5' ry='6.5' transform='rotate(-15 16 20)'/%3E%3Cellipse cx='27' cy='13' rx='5' ry='6.5'/%3E%3Cellipse cx='39' cy='13' rx='5' ry='6.5'/%3E%3Cellipse cx='46' cy='21' rx='5' ry='6.5' transform='rotate(20 46 21)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:
+        cover,
+        90px 90px;
+}
+
+.dark .paw-print-bg {
+    background-color: #1e1b2e;
+    background-image:
+        linear-gradient(
+            to bottom right,
+            rgba(49, 33, 61, 0.92),
+            rgba(24, 26, 46, 0.92)
+        ),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 60 60'%3E%3Cg fill='%23f9a8d4' fill-opacity='0.08'%3E%3Cellipse cx='30' cy='38' rx='12' ry='10'/%3E%3Cellipse cx='16' cy='20' rx='5' ry='6.5' transform='rotate(-15 16 20)'/%3E%3Cellipse cx='27' cy='13' rx='5' ry='6.5'/%3E%3Cellipse cx='39' cy='13' rx='5' ry='6.5'/%3E%3Cellipse cx='46' cy='21' rx='5' ry='6.5' transform='rotate(20 46 21)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:
+        cover,
+        90px 90px;
+}

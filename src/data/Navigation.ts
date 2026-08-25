@@ -10,6 +10,7 @@ export const headerItems: NavbarItem[] = [
     { href: '/updates', label: 'Updates' },
     { href: '/food', label: 'Food' },
     { href: '/travel', label: 'Travel' },
+    { href: '/cats', label: 'Cats' },
 ];
 
 export const footerItems: NavbarItem[] = [

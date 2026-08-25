@@ -67,6 +67,10 @@ export async function getFoodImages() {
     });
 }
 
+export async function getCatImages() {
+    return await getImagesByFolder('Cats');
+}
+
 async function getImagesByFolder(
     folder: string,
     transformation?: Transformation

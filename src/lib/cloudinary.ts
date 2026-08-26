@@ -9,6 +9,12 @@ cloudinary.config({
 export interface ImageProps {
     src: string;
     alt: string | undefined;
+    /** Only set when the source's own orientation was preserved (see
+     *  `getCatImages`) — the delivered image's actual dimensions, so a
+     *  consumer can size its container to match rather than forcing a
+     *  fixed ratio like a square. */
+    width?: number;
+    height?: number;
 }
 
 export interface Transformation {
@@ -67,13 +73,25 @@ export async function getFoodImages() {
     });
 }
 
+// Landscape/portrait originals forced into the same fixed box (as the other
+// galleries do) end up cropped twice — once to that box, once again by
+// whatever aspect-ratio the layout imposes. Cats keeps each photo's own
+// orientation instead, clamped to a sane range so a panorama or a strip
+// photo doesn't warp the collage, and only crops as much as clamping needs.
+const ORIENTATION_MAX_DIMENSION = 900;
+const ORIENTATION_MIN_RATIO = 2 / 3;
+const ORIENTATION_MAX_RATIO = 3 / 2;
+
 export async function getCatImages() {
-    return await getImagesByFolder('Cats');
+    return await getImagesByFolder('Cats', undefined, {
+        preserveOrientation: true,
+    });
 }
 
 async function getImagesByFolder(
     folder: string,
-    transformation?: Transformation
+    transformation?: Transformation,
+    options?: { preserveOrientation?: boolean }
 ): Promise<ImageProps[]> {
     const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
     if (!cloudName || !import.meta.env.CLOUDINARY_API_KEY) {
@@ -97,14 +115,39 @@ async function getImagesByFolder(
             return dateB.getTime() - dateA.getTime();
         })
         .map((resource: CloudinaryResource) => {
+            let appliedTransformation = transformation ?? {
+                width: 1536,
+                height: 1024,
+                crop: 'fill',
+            };
+            let outputWidth: number | undefined;
+            let outputHeight: number | undefined;
+
+            if (options?.preserveOrientation) {
+                const sourceRatio = resource.width / resource.height;
+                const ratio = Math.min(
+                    ORIENTATION_MAX_RATIO,
+                    Math.max(ORIENTATION_MIN_RATIO, sourceRatio)
+                );
+                outputWidth =
+                    ratio >= 1
+                        ? ORIENTATION_MAX_DIMENSION
+                        : Math.round(ORIENTATION_MAX_DIMENSION * ratio);
+                outputHeight =
+                    ratio >= 1
+                        ? Math.round(ORIENTATION_MAX_DIMENSION / ratio)
+                        : ORIENTATION_MAX_DIMENSION;
+                appliedTransformation = {
+                    width: outputWidth,
+                    height: outputHeight,
+                    crop: 'fill',
+                };
+            }
+
             const src = cloudinary.url(resource.public_id, {
                 transformation: [
                     {
-                        ...(transformation ?? {
-                            width: 1536,
-                            height: 1024,
-                            crop: 'fill',
-                        }),
+                        ...appliedTransformation,
                         // Matches resized() below: without these, Cloudinary
                         // serves the original format/quality — much heavier
                         // than the site needs for gallery thumbnails.
@@ -118,6 +161,6 @@ async function getImagesByFolder(
 
             const alt = resource.context?.custom?.alt;
 
-            return { src, alt };
+            return { src, alt, width: outputWidth, height: outputHeight };
         });
 }

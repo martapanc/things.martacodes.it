@@ -33,36 +33,46 @@ const latestUpdates = updates.slice(0, 2);
 // Curated rather than sampled — see data/catBubbles.ts
 const catImages = catBubblePhotos.map((photo) => resized(photo, 300, 300));
 
-// At `lg` the card goes two rows tall (see lg:row-span-2 below) but only
-// one column wide, so the scatter area flips from short-and-wide to
-// tall-and-narrow — sizes and positions get a dedicated `lg:` layout rather
-// than just shrinking the mobile one, so the bubbles still fill the space
-// instead of huddling small in a corner.
+/**
+ * Every bubble is sized and placed as a percentage of the scatter area, and
+ * that area carries a fixed aspect ratio — so the whole arrangement scales
+ * with the card instead of staying at fixed pixel sizes while the card grows.
+ * (Fixed sizes left the bubbles huddled on the left of the much wider
+ * two-column card at `sm`/`md`, with dead space beside them.)
+ *
+ * Two arrangements, because the card's shape flips: short-and-wide until
+ * `lg`, then tall-and-narrow once it becomes one column spanning two rows.
+ * Positions are the top-left of each bubble's box.
+ *
+ * Sized to cover roughly half the area between them — small enough circles
+ * read as specks on a mostly-empty card. Neighbours are allowed to clip
+ * each other by a few percent, which reads as a stack of snapshots rather
+ * than a diagram; the ring keeps each one legible where they touch.
+ */
 const catBubbleLayout = [
     {
-        size: 'h-24 w-24 lg:h-22 lg:w-22',
-        position: 'left-0 top-0',
+        size: 'w-[34%] lg:w-[46%]',
+        position: 'left-0 top-[8%] lg:top-0',
         hover: 'group-hover:-translate-x-1 group-hover:-translate-y-1',
     },
     {
-        size: 'h-16 w-16 lg:h-15 lg:w-15',
-        position: 'right-[6%] top-1 lg:right-0 lg:top-0',
+        size: 'w-[22%] lg:w-[34%]',
+        position: 'left-[30%] top-[38%] lg:left-[42%] lg:top-[6%]',
         hover: 'group-hover:translate-x-1 group-hover:-translate-y-1',
     },
     {
-        size: 'h-20 w-20 lg:h-19 lg:w-19',
-        position: 'left-[30%] top-16 lg:left-[20%] lg:top-[42%]',
+        size: 'w-[30%] lg:w-[30%]',
+        position: 'left-[48%] top-0 lg:left-[70%] lg:top-[34%]',
         hover: 'group-hover:-translate-x-1 group-hover:translate-y-1',
     },
     {
-        size: 'h-14 w-14 lg:h-13 lg:w-13',
-        position:
-            'left-[62%] top-20 lg:left-auto lg:right-[8%] lg:top-[74%]',
+        size: 'w-[20%] lg:w-[40%]',
+        position: 'left-[72%] top-[50%] lg:left-[2%] lg:top-[44%]',
         hover: 'group-hover:translate-x-1 group-hover:translate-y-1',
     },
     {
-        size: 'h-12 w-12 lg:h-11 lg:w-11',
-        position: 'left-[46%] top-3 lg:left-[4%] lg:top-[77%]',
+        size: 'w-[24%] lg:w-[36%]',
+        position: 'left-[76%] top-0 lg:left-[40%] lg:top-[60%]',
         hover: 'group-hover:translate-y-1',
     },
 ];
@@ -165,8 +175,11 @@ const updatesCaption = 'life updates, big and small';
                 Photogenic voids<HoverArrow class='ml-1.5' />
             </h2>
 
-            <!-- Scattered rather than gridded — the wonkiness is the point -->
-            <div class='relative my-3 h-36 w-full lg:h-52'>
+            <!-- Scattered rather than gridded — the wonkiness is the point.
+                 The aspect ratio is what makes the percentages above hold
+                 their shape: it ties the area's height to its width, so the
+                 bubbles keep their spacing as the card resizes. -->
+            <div class='relative my-3 aspect-[5/2] w-full lg:aspect-square'>
                 {
                     catBubbleLayout.map(
                         ({ size, position, hover }, index) =>
@@ -175,7 +188,7 @@ const updatesCaption = 'life updates, big and small';
                                     src={catImages[index]}
                                     alt=''
                                     loading='lazy'
-                                    class={`absolute ${position} ${size} rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 ${hover} dark:ring-slate-900`}
+                                    class={`absolute ${position} ${size} aspect-square rounded-full object-cover ring-4 ring-[#fffcf8] transition-transform duration-500 ${hover} dark:ring-slate-900`}
                                 />
                             )
                     )

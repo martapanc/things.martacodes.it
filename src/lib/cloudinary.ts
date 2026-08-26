@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+    cloud_name: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME,
     api_key: import.meta.env.CLOUDINARY_API_KEY,
     api_secret: import.meta.env.CLOUDINARY_API_SECRET,
 });
@@ -75,10 +75,10 @@ async function getImagesByFolder(
     folder: string,
     transformation?: Transformation
 ): Promise<ImageProps[]> {
-    const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
+    const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
     if (!cloudName || !import.meta.env.CLOUDINARY_API_KEY) {
         console.warn(
-            `[cloudinary] Missing credentials — skipping fetch for "${folder}". Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.`
+            `[cloudinary] Missing credentials — skipping fetch for "${folder}". Set PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.`
         );
         return [];
     }

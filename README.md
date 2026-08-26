@@ -40,12 +40,12 @@ cp .env.example .env
 
 ### Environment Variables
 
-| Variable                | Description                                         |
-|-------------------------|-----------------------------------------------------|
-| `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name                          |
-| `CLOUDINARY_API_KEY`    | Cloudinary API key                                  |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret                               |
-| `SITE_URL`              | Full site URL (e.g. `https://things.martacodes.it`) |
+| Variable                       | Description                                         |
+|--------------------------------|-----------------------------------------------------|
+| `PUBLIC_CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name                          |
+| `CLOUDINARY_API_KEY`           | Cloudinary API key                                  |
+| `CLOUDINARY_API_SECRET`        | Cloudinary API secret                               |
+| `SITE_URL`                     | Full site URL (e.g. `https://things.martacodes.it`) |
 
 ### Development
 

@@ -99,6 +99,11 @@ function Uploader() {
     const [customFolder, setCustomFolder] = useState('');
     const [caption, setCaption] = useState('');
     const [tags, setTags] = useState('');
+    // Cloudinary's widget only supports cropping one file at a time — turning
+    // it on silently caps the widget to a single file, which is why
+    // "multiple + cropping" together only ever let you upload one photo per
+    // run. Default to multi-upload; crop mode is an opt-in single-photo flow.
+    const [cropBeforeUpload, setCropBeforeUpload] = useState(false);
     const [scriptReady, setScriptReady] = useState(false);
     const [opening, setOpening] = useState(false);
     const [uploaded, setUploaded] = useState<UploadedPhoto[]>([]);
@@ -144,9 +149,9 @@ function Uploader() {
                 tags: tagList.length ? tagList : undefined,
                 context: caption ? { alt: caption } : undefined,
                 sources: ['camera', 'local'],
-                multiple: true,
-                maxFiles: 20,
-                cropping: true,
+                multiple: !cropBeforeUpload,
+                maxFiles: cropBeforeUpload ? 1 : 20,
+                cropping: cropBeforeUpload,
                 croppingShowDimensions: true,
                 showAdvancedOptions: false,
                 styles: {
@@ -314,6 +319,25 @@ function Uploader() {
                     className='rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900'
                 />
             </div>
+
+            <label className='flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300'>
+                <input
+                    type='checkbox'
+                    checked={cropBeforeUpload}
+                    onChange={(event) =>
+                        setCropBeforeUpload(event.target.checked)
+                    }
+                    className='mt-0.5 h-4 w-4 shrink-0'
+                />
+                <span>
+                    Crop before uploading
+                    <span className='block text-xs text-slate-400'>
+                        Cloudinary's widget only crops one file at a time, so
+                        this limits you to a single photo per upload — leave
+                        it off to select and upload several at once.
+                    </span>
+                </span>
+            </label>
 
             <button
                 type='button'

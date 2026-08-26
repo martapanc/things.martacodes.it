@@ -75,7 +75,6 @@ export default function PinGate({ children }: Props) {
             </p>
             <input
                 type='password'
-                inputMode='numeric'
                 autoFocus
                 value={pin}
                 onChange={(event) => {

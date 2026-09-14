@@ -22,4 +22,7 @@ export const allTags: { [key: string]: string } = {
     'software-development': 'software dev',
     aoc2024: 'aoc2024',
     aoc2025: 'aoc2025',
+    bugs: 'bugs',
+    'user-experience': 'user experience',
+    'website-design': 'website design',
 };

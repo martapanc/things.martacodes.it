@@ -1,0 +1,55 @@
+---
+title: Login fails if the user has a broken arm
+description: The mystery of a Ministry login page that only works if you click fast enough - solved by my mum's broken wrist
+slug: login-fails-broken-arm
+date: 2026-07-30T22:00:00.000Z
+toc: false
+published: true
+category: software-development
+tags:
+    - bugs
+    - user-experience
+    - website-design
+    - software-development
+image: /blog/not-a-bug-its-a-feature.jpg
+hideCoverImage: true
+---
+
+I guess I'm not the only software engineer who has to provide free tech support to family and friends. It can be frustrating at times, but trust me, in some cases the outcome is hilarious.
+
+One day my mother, a high school teacher, wants to access her school's portal after some time to redeem part of the bonus kindly offered to her by the local Ministry of Education (I'll call it "ME" from now on). Imagine her as someone who has theoretically used a PC for most of her life, but who rarely has to do anything other than write on Word or open Chrome to read emails.
+
+I'm struggling to define her level too, because on the one hand she knows the Equation Editor perfectly, but on the other hand she panics if asked to open a new tab in the browser. In short, since I live and work abroad, I installed TeamViewer on her Windows so I can help her in cases like this – because explaining the steps on a phone call and sending screenshots scribbled with "press that key over there" is not as efficient as it would seem…
+
+So, my mother tries to enter the Ministry website, which requires a third-party digital ID verification service to log in (think about when you sign in via your Google or GitHub account – same idea, but we call it "SPID"), but after a whole morning of failed attempts she gives up and phones me.
+
+The bottom line: she can't log in. I find out she's tried all day, even contacting both the ME and SPID help desks, who suggested changing her password and clearing the cache – without success. From her attempts to explain it, I can't even tell if the problem is on the SPID or ME side, in the browser, or somewhere between keyboard and chair.
+
+I try with her password, making sure she resets it afterwards, and access the account: "Log in with SPID", choose SPID service, enter credentials and 2FA code, "welcome to the Teacher's portal" – everything is fine, smooth as silk.
+
+I describe the steps to my mum and discover that she hasn't even got to the actual login page, but apparently the SPID choice menu doesn't really work for her.
+
+So I connect with TeamViewer and repeat the steps: everything still works, so it's not a problem with her Chrome or whatever. She tries: nothing. She clicks on the menu and it disappears instantly, making the login unusable.
+
+<figure class='mx-auto w-2/5'>
+    <img src='/blog/not-a-bug-its-a-feature.jpg' alt="It's not a bug, it's a feature." />
+    <figcaption class='text-center text-sm italic text-dark/60 dark:text-light/60'>
+        Clearly.
+    </figcaption>
+</figure>
+
+Maybe for the first time in my life, I'm at a loss. What I'm seeing doesn't make sense: a task I have zero trouble with – even over TeamViewer on a crappy connection – simply doesn't work for her. I give up too and tell her to try with my dad's Mac, but obviously I can't get the problem out of my head.
+
+I try again on an old laptop and, surprise, everything works – but thanks to its shabby trackpad, I finally manage to reproduce the bug: if you hold down any button in the dropdown menu for a fraction of a second too long, it closes without letting you pick an option. You'd have to do it on purpose – unless your trackpad happens to stick, apparently.
+
+I report to my mum, who replies "Now I'll try it with my left hand".
+
+_The left hand?_ 🤔
+
+Suddenly I remember: my mother broke her right wrist falling in the garden just a few weeks ago, and it's still in a brace – one that lets her use a mouse, but not with much mobility.
+
+And there's the mystery of the Ministry, solved: the menu buttons only work if you click and release them instantly – and it took my mom, with a broken wrist, to find that out.
+
+---
+
+TL;DR: Here's an accessibility testing tip nobody asked for: forget WCAG checklists – just break your QA engineer's wrist. Bugs you'd never find in a sprint retro surface in about a day 🫠

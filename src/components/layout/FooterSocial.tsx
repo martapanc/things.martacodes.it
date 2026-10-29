@@ -33,7 +33,7 @@ export default function FooterSocial() {
 
             <div className='mt-4 flex w-full flex-col-reverse items-center md:flex-row md:justify-between'>
                 <div className='mt-10 flex md:mt-0'>
-                    © {year} ~ Marta Pancaldi
+                    © {year} ~ MartaCodes.it
                 </div>
 
                 <div className='mt-8 flex space-x-4 md:mt-2'>
